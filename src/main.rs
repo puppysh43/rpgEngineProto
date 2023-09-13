@@ -125,7 +125,7 @@ impl GameState for State {
         ctx.cls();
         self.resources.insert(ctx.key); //give the ECS access to what keys are being pressed at the time of the tick
         ctx.set_active_console(0);
-        self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
+        self.resources.insert(Point::from_tuple(ctx.mouse_pos())); //gives the ecs access to the current mouse position
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
         match current_state {
             TurnState::AwaitingInput => self
