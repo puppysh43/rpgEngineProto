@@ -1,0 +1,30 @@
+#[derive(Copy, Clone, PartialEq)]
+///Represents different kind of tiles in local dungeon maps.
+pub enum TileType {
+    Wall,
+    Floor,
+    Exit,
+}
+
+#[derive(Copy, Clone, PartialEq)]
+pub enum WorldTileType {
+    //enum that will correspond to the different kinds of tiles on the worldmap.
+    ProceduralDesert,
+    Town(MapID),
+    Dungeon,
+    SaltMarsh,
+}
+
+#[derive(Copy, Clone, PartialEq)]
+pub enum MapID {
+    StartingTown,
+}
+///gets the actual vec usize for interacting w/ the map given an x and y coordinates
+pub fn map_idx(x: i32, y: i32) -> usize {
+    ((y * MAP_WIDTH) + x) as usize
+}
+
+pub struct Map {
+    pub tiles: Vec<TileType>,
+    pub revealed_tiles: Vec<bool>,
+}

@@ -1,0 +1,5 @@
+use code up to Memory version to have SIMPLE clean slate to build from, before "More Interesting Dungeons"
+incorporate item and inventory system from "carrying_items" to add rudimentory inventory system
+use "dungeon_crawl_rooms" as reference for how to handle simple map rendering? but will need to adapt for map coloring themes later
+
+finally look to better_combat for potential ways to handle more dynamic combat.
