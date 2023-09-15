@@ -1,6 +1,7 @@
 #![warn(clippy::pedantic)]
 
 mod components;
+mod control_state;
 mod map;
 mod map_builder;
 mod spawner;
@@ -29,6 +30,7 @@ mod prelude {
     pub const TEXT_LAYER: usize = 3;
 
     pub use crate::components::*;
+    pub use crate::control_state::*;
     pub use crate::map::*;
     pub use crate::map_builder::*;
     pub use crate::spawner::*;
@@ -61,6 +63,7 @@ impl State {
             .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos));
         resources.insert(map_builder.map);
         resources.insert(TurnState::AwaitingInput);
+        resources.insert(ControlState::Default);
         Self {
             ecs,
             resources,

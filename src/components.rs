@@ -16,9 +16,6 @@ pub struct Enemy;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Item;
 
-// #[derive(Clone, Copy, Debug, PartialEq)]
-// pub struct AmuletOfYala;
-
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct MovingRandomly;
 
@@ -46,6 +43,11 @@ pub struct Health {
 #[derive(Clone, PartialEq)]
 pub struct Name(pub String);
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+///Tagging component that marks something as a reticule for selecting stuff in game
+pub struct Reticule;
+
+//FOV Related Components
 #[derive(Clone, Debug, PartialEq)]
 pub struct FieldOfView {
     pub visible_tiles: HashSet<Point>,
