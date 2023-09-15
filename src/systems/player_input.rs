@@ -29,9 +29,18 @@ pub fn player_input(
             VirtualKeyCode::V => {
                 println!("You pressed the look key!");
                 //this will create a new entity in the world that's the reticule, spawn it on the player's position, and switch the control state to looking
-                //code that isolates the player position
-                let player_pos = Point::new(0, 0);
-                // spawn_reticule(ecs, player_pos);//this isn't working cuz it needs a whole world not just a subworld
+                let player_pos = Point::new(5, 5); //generate a random fixed point as proof of concept
+
+                commands.push((
+                    Effect,
+                    Reticule,
+                    player_pos,
+                    Render {
+                        color: ColorPair::new(CYAN, BLACK),
+                        glyph: to_cp437('X'),
+                    },
+                ));
+                *control_state = ControlState::Looking;
                 Point::new(0, 0)
             }
             _ => Point::new(0, 0),

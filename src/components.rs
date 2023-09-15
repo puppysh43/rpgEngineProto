@@ -14,6 +14,10 @@ pub struct Player;
 pub struct Enemy;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+//tagging component that marks something as an effect to be rendered over the other game objects
+pub struct Effect;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Item;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
