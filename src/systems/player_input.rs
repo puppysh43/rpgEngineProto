@@ -13,8 +13,9 @@ pub fn player_input(
     #[resource] control_state: &mut ControlState,
 ) {
     let mut players = <(Entity, &Point)>::query().filter(component::<Player>());
+    //get all entities with a point component from the ECS and filter out anything that doesn't have a player tag
     let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
-
+    //get all entities with a point component from the ecs and filter out any that don't have the enemy tag
     if let Some(key) = *key {
         let delta = match key {
             //more advanced movement w/ numpad including diagonals
@@ -46,13 +47,14 @@ pub fn player_input(
             _ => Point::new(0, 0),
         };
 
-        let (player_entity, destination) = players
+        let (player_entity, destination) = players //destructures the results of the iterator into two different variables
             .iter(ecs)
             .find_map(|(entity, pos)| Some((*entity, *pos + delta)))
             .unwrap();
 
         let mut did_something = false;
         if delta.x != 0 || delta.y != 0 {
+            //if the player moved at all
             let mut hit_something = false;
             enemies
                 .iter(ecs)

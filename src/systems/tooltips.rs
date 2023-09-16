@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-#[system]
+#[system] //macro that does all the boilerplate to mark this function as a system
 #[read_component(Point)]
 #[read_component(Name)]
 #[read_component(FieldOfView)]
