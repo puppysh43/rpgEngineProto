@@ -16,43 +16,76 @@ pub fn player_input(
     //get all entities with a point component from the ECS and filter out anything that doesn't have a player tag
     let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
     //get all entities with a point component from the ecs and filter out any that don't have the enemy tag
+
+    //This is the current control block match statement
+    let mut player_delta = Point::new(0, 0);
+    let mut reticule_delta = Point::new(0, 0);
     if let Some(key) = *key {
-        let delta = match key {
-            //more advanced movement w/ numpad including diagonals
-            VirtualKeyCode::Numpad4 => Point::new(-1, 0), //move west
-            VirtualKeyCode::Numpad6 => Point::new(1, 0),  //move east
-            VirtualKeyCode::Numpad8 => Point::new(0, -1), //move north
-            VirtualKeyCode::Numpad2 => Point::new(0, 1),  //move south
-            VirtualKeyCode::Numpad7 => Point::new(-1, -1), //move northwest
-            VirtualKeyCode::Numpad9 => Point::new(1, -1), //move northeast
-            VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
-            VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
-            VirtualKeyCode::V => {
-                println!("You pressed the look key!");
-                //this will create a new entity in the world that's the reticule, spawn it on the player's position, and switch the control state to looking
-                // let player_pos = Point::new(10, 10); //generate a random fixed point as proof of concept
-                // commands.push((
-                // Effect,
-                // Reticule,
-                // player_pos,
-                // Render {
-                // color: ColorPair::new(CYAN, BLACK),
-                // glyph: to_cp437('X'),
-                // },
-                // ));
-                // *control_state = ControlState::Looking;
-                Point::new(0, 0)
+        match control_state {
+            ControlState::Default => {
+                player_delta = match key {
+                    //more advanced movement w/ numpad including diagonals
+                    VirtualKeyCode::Numpad4 => Point::new(-1, 0), //move west
+                    VirtualKeyCode::Numpad6 => Point::new(1, 0),  //move east
+                    VirtualKeyCode::Numpad8 => Point::new(0, -1), //move north
+                    VirtualKeyCode::Numpad2 => Point::new(0, 1),  //move south
+                    VirtualKeyCode::Numpad7 => Point::new(-1, -1), //move northwest
+                    VirtualKeyCode::Numpad9 => Point::new(1, -1), //move northeast
+                    VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
+                    VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
+                    VirtualKeyCode::V => {
+                        println!("You pressed the look key!");
+                        //this will create a new entity in the world that's the reticule, spawn it on the player's position, and switch the control state to looking
+                        let (_, player_pos) = players //gonna be honest don't quite understand what all this means but it works!
+                            .iter(ecs)
+                            .find_map(|(entity, pos)| Some((*entity, *pos)))
+                            .unwrap(); //get the player's position
+
+                        commands.push((
+                            //creates a reticule object in the world
+                            Effect,
+                            Reticule,
+                            player_pos,
+                            Render {
+                                color: ColorPair::new(CYAN, BLACK),
+                                glyph: to_cp437('X'),
+                            },
+                        ));
+                        //this currently just spawns a reticule wherever the player is. in the future I'll need to check if a reticule already exists and have it do nothing
+                        *control_state = ControlState::Looking;
+                        Point::new(0, 0)
+                    }
+                    _ => Point::new(0, 0),
+                };
             }
-            _ => Point::new(0, 0),
+
+            ControlState::Looking => {
+                //look at examples from earlier in the book on how to move an object w/out using message of intent
+                println!("Looking control state.");
+                reticule_delta = match key {
+                    VirtualKeyCode::Numpad4 => Point::new(-1, 0), //move west
+                    VirtualKeyCode::Numpad6 => Point::new(1, 0),  //move east
+                    VirtualKeyCode::Numpad8 => Point::new(0, -1), //move north
+                    VirtualKeyCode::Numpad2 => Point::new(0, 1),  //move south
+                    VirtualKeyCode::Numpad7 => Point::new(-1, -1), //move northwest
+                    VirtualKeyCode::Numpad9 => Point::new(1, -1), //move northeast
+                    VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
+                    VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
+                    _ => Point::new(0, 0),
+                }
+            }
+            _ => {
+                println!("This shouldn't happen!")
+            }
         };
 
         let (player_entity, destination) = players //destructures the results of the iterator into two different variables
             .iter(ecs)
-            .find_map(|(entity, pos)| Some((*entity, *pos + delta)))
+            .find_map(|(entity, pos)| Some((*entity, *pos + player_delta)))
             .unwrap();
 
         let mut did_something = false;
-        if delta.x != 0 || delta.y != 0 {
+        if player_delta.x != 0 || player_delta.y != 0 {
             //if the player moved at all
             let mut hit_something = false;
             enemies

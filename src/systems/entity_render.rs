@@ -6,11 +6,11 @@ use crate::prelude::*;
 #[read_component(FieldOfView)]
 #[read_component(Player)]
 pub fn entity_render(ecs: &SubWorld) {
-    let mut renderables = <(&Point, &Render)>::query();
+    let mut renderables = <(&Point, &Render)>::query().filter(!component::<Effect>());
     let mut fov = <&FieldOfView>::query().filter(component::<Player>());
     let mut draw_batch = DrawBatch::new();
     // draw_batch.target(1);
-    draw_batch.target(0);
+    draw_batch.target(MAIN_LAYER);
 
     let player_fov = fov.iter(ecs).nth(0).unwrap();
 

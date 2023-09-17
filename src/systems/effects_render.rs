@@ -1,4 +1,3 @@
-
 use crate::prelude::*;
 
 #[system]
@@ -7,25 +6,18 @@ use crate::prelude::*;
 #[read_component(FieldOfView)]
 #[read_component(Player)]
 pub fn effects_render(ecs: &SubWorld) {
-    //WHAT I NEED TO DO
-    //GET ALL RENDERABLES THAT HAVE THE EFFECTS TAG
-    //ONLY RENDER THOSE
-    let mut renderables = <(&Point, &Render)>::query();
+    let mut renderables = <(&Point, &Render)>::query().filter(component::<Effect>());
+    let mut fov = <&FieldOfView>::query().filter(component::<Player>());
     let mut draw_batch = DrawBatch::new();
-    // draw_batch.target(1);
-    draw_batch.target(0);
+    draw_batch.target(EFFECTS_LAYER);
 
-rednerables
-        .iter(ecs)
-        .filter()
-
-    /*
+    let player_fov = fov.iter(ecs).nth(0).unwrap();
     renderables
         .iter(ecs)
         .filter(|(pos, _)| player_fov.visible_tiles.contains(&pos))
         .for_each(|(pos, render)| {
             draw_batch.set(*pos, render.color, render.glyph);
         });
-*/
+
     draw_batch.submit(5000).expect("Batch error");
 }
