@@ -5,6 +5,7 @@ use crate::prelude::*;
 #[read_component(Player)]
 #[read_component(Enemy)]
 #[write_component(Health)]
+#[write_component(Point)]
 pub fn player_input(
     ecs: &mut SubWorld,
     commands: &mut CommandBuffer,
@@ -51,7 +52,6 @@ pub fn player_input(
                                 glyph: to_cp437('X'),
                             },
                         ));
-                        //this currently just spawns a reticule wherever the player is. in the future I'll need to check if a reticule already exists and have it do nothing
                         *control_state = ControlState::Looking;
                         Point::new(0, 0)
                     }
@@ -71,7 +71,18 @@ pub fn player_input(
                     VirtualKeyCode::Numpad9 => Point::new(1, -1), //move northeast
                     VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
                     VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
+                    VirtualKeyCode::V => {
+                        println!("This will print the monster description eventually!");
+                        Point::new(0, 0)
+                    }
+                    VirtualKeyCode::Escape => {
+                        //this exits the looking turnstate and also deletes the reticule entity.
+                        *control_state = ControlState::Default;
+                        Point::new(0, 0)
+                    }
                     _ => Point::new(0, 0),
+                    //to figure out to move reticule investigate TurnBasedGames/turnbased/src/systems/player_input.rs
+                    //copy over
                 }
             }
             _ => {
@@ -124,6 +135,21 @@ pub fn player_input(
                 health.current = i32::min(health.max, health.current + 1);
             }
         }
-        *turn_state = TurnState::PlayerTurn;
+
+        //This checks the reticule_delta and moves it around the screen!
+        if reticule_delta.x != 0 || reticule_delta.y != 0 {
+            //this currently crashes the game for some reason!!
+            let mut reticules = <&mut Point>::query().filter(component::<Reticule>());
+            reticules.iter_mut(ecs).for_each(|pos| {
+                let destination = *pos + reticule_delta;
+                *pos = destination;
+            });
+        };
+
+        //This match statement ensures the turn only continues if the player is done with inputs e.g targeting ranged attack, looking around, etc
+        match control_state {
+            ControlState::Default => *turn_state = TurnState::PlayerTurn,
+            ControlState::Looking => *turn_state = TurnState::AwaitingInput,
+        }
     }
 }
