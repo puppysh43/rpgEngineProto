@@ -17,7 +17,8 @@ pub fn player_input(
     //get all entities with a point component from the ECS and filter out anything that doesn't have a player tag
     let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
     //get all entities with a point component from the ecs and filter out any that don't have the enemy tag
-
+    // let mut player_positions = <&Point>::query().filter(component::<Player>());
+    // let player_position = player_positions.iter(ecs).nth(0).unwrap(); //this is how I would get the player position as a standalone thing
     //This is the current control block match statement
     let mut player_delta = Point::new(0, 0);
     let mut reticule_delta = Point::new(0, 0);
@@ -41,7 +42,6 @@ pub fn player_input(
                             .iter(ecs)
                             .find_map(|(entity, pos)| Some((*entity, *pos)))
                             .unwrap(); //get the player's position
-
                         commands.push((
                             //creates a reticule object in the world
                             Effect,
@@ -77,6 +77,12 @@ pub fn player_input(
                     }
                     VirtualKeyCode::Escape => {
                         //this exits the looking turnstate and also deletes the reticule entity.
+                        let reticule = <Entity>::query()
+                            .filter(component::<Reticule>())
+                            .iter(ecs)
+                            .nth(0)
+                            .unwrap();
+                        commands.remove(*reticule);
                         *control_state = ControlState::Default;
                         Point::new(0, 0)
                     }

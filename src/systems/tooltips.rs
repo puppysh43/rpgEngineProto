@@ -8,7 +8,7 @@ use crate::prelude::*;
 pub fn tooltips(ecs: &SubWorld, #[resource] mouse_pos: &Point) {
     let mut positions = <(Entity, &Point, &Name)>::query();
     let mut fov = <&FieldOfView>::query().filter(component::<Player>());
-    let map_pos = *mouse_pos;
+    let map_pos = *mouse_pos; //replace it so map_pos = position of the reticule?
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(TOOLTIP_LAYER);
     let player_fov = fov.iter(ecs).nth(0).unwrap();
@@ -26,4 +26,5 @@ pub fn tooltips(ecs: &SubWorld, #[resource] mouse_pos: &Point) {
             draw_batch.print(screen_pos, &display);
         });
     draw_batch.submit(10100).expect("Batch error");
+    //have a match statement that decides whether it displays the name of the entity, the chance to hit with a ranged attack, etc
 }
