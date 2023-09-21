@@ -126,6 +126,8 @@ impl GameState for State {
         ctx.cls();
         ctx.set_active_console(2);
         ctx.cls();
+        ctx.set_active_console(3);
+        ctx.cls();
         self.resources.insert(ctx.key); //give the ECS access to what keys are being pressed at the time of the tick
         ctx.set_active_console(0);
         self.resources.insert(Point::from_tuple(ctx.mouse_pos())); //gives the ecs access to the current mouse position
@@ -160,11 +162,11 @@ fn main() -> BError {
         .with_tile_dimensions(24, 24)
         .with_resource_path("resources/")
         .with_font("24x24_official.png", 24, 24)
-        .with_font("terminal8x8.png", 8, 8)
+        .with_font("12x12_official.png", 12, 12)
         .with_font("12x24_official.png", 12, 24)
         .with_simple_console(SCREEN_WIDTH, SCREEN_HEIGHT, "24x24_official.png") //console that the map prints to
         .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "24x24_official.png") //console for effects
-        .with_simple_console_no_bg(SCREEN_WIDTH * 3, SCREEN_HEIGHT * 3, "terminal8x8.png") //console for text popups in game
+        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "12x12_official.png") //console for text popups in game
         .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT, "12x24_official.png") //console for text on the sidebar for the UI and logs
         .build()?;
     //in the future both entities and map tiles will be on the same terminal, with one for UI elements, one 12x24 for the log/UI and the 8x8 for text popups

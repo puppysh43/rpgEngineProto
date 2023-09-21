@@ -5,18 +5,31 @@ use crate::prelude::*;
 #[read_component(Name)]
 #[read_component(FieldOfView)]
 #[read_component(Player)]
-pub fn tooltips(ecs: &SubWorld, #[resource] mouse_pos: &Point) {
+#[read_component(Reticule)]
+pub fn tooltips(ecs: &SubWorld, #[resource] control_state: &ControlState) {
+    //function requests access to the current control state so that it can know what to display
     let mut positions = <(Entity, &Point, &Name)>::query();
-    let mut fov = <&FieldOfView>::query().filter(component::<Player>());
-    let map_pos = *mouse_pos; //replace it so map_pos = position of the reticule?
+    let mut fov = <&FieldOfView>::query().filter(component::<Player>()); //gets the player's FOV so you can't use the tooltip to cheat and find monsters your PC can't see
+    let mut reticule_pos = &Point::new(0, 0);
+    if let Some(&pos) = <&Point>::query()
+        .filter(component::<Reticule>())
+        .iter(ecs)
+        .nth(0)
+    {
+        reticule_pos = <&Point>::query()
+            .filter(component::<Reticule>())
+            .iter(ecs)
+            .nth(0)
+            .unwrap();
+    }
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(TOOLTIP_LAYER);
     let player_fov = fov.iter(ecs).nth(0).unwrap();
     positions
         .iter(ecs)
-        .filter(|(_, pos, _)| **pos == map_pos && player_fov.visible_tiles.contains(&pos))
+        .filter(|(_, pos, _)| **pos == *reticule_pos && player_fov.visible_tiles.contains(&pos))
         .for_each(|(entity, _, name)| {
-            let screen_pos = *mouse_pos * 3;
+            let screen_pos = *reticule_pos * 2;
             let display =
                 if let Ok(health) = ecs.entry_ref(*entity).unwrap().get_component::<Health>() {
                     format!("{} : {} hp", &name.0, health.current)
