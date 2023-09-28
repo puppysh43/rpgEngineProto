@@ -27,7 +27,7 @@ mod prelude {
     ///virtual terminal used for tooltips using the 8x8 terminal font such as entity names, hitchance when targeting enemies, etc
     pub const TOOLTIP_LAYER: usize = 2;
     ///virtual terminal used for the text bar on the side of the screen w/ the log, stats, etc
-    pub const TEXT_LAYER: usize = 3;
+    pub const UI_LAYER: usize = 3;
 
     pub use crate::components::*;
     pub use crate::control_state::*;
@@ -161,13 +161,14 @@ fn main() -> BError {
         // .with_dimensions(MAP_WIDTH, MAP_HEIGHT)
         .with_tile_dimensions(24, 24)
         .with_resource_path("resources/")
-        .with_font("24x24_official.png", 24, 24)
-        .with_font("12x12_official.png", 12, 12)
-        .with_font("12x24_official.png", 12, 24)
-        .with_simple_console(SCREEN_WIDTH, SCREEN_HEIGHT, "24x24_official.png") //console that the map prints to
-        .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "24x24_official.png") //console for effects
-        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "12x12_official.png") //console for text popups in game
-        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT, "12x24_official.png") //console for text on the sidebar for the UI and logs
+        .with_font("main_font.png", 24, 24)
+        .with_font("effects_font.png", 24, 24)
+        .with_font("tooltip_font.png", 12, 12)
+        .with_font("ui_font.png", 12, 24)
+        .with_simple_console(SCREEN_WIDTH, SCREEN_HEIGHT, "main_font.png") //console that the map prints to
+        .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "effects_font.png") //console for effects
+        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "tooltip_font.png") //console for text popups in game
+        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT, "ui_font.png") //console for text on the sidebar for the UI and logs
         .build()?;
     //in the future both entities and map tiles will be on the same terminal, with one for UI elements, one 12x24 for the log/UI and the 8x8 for text popups
 

@@ -49,7 +49,7 @@ pub fn player_input(
                             player_pos,
                             Render {
                                 color: ColorPair::new(CYAN, BLACK),
-                                glyph: to_cp437('X'),
+                                glyph: to_cp437('♥'),
                             },
                         ));
                         *control_state = ControlState::Looking;
