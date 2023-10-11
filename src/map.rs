@@ -12,6 +12,22 @@ pub fn map_idx(x: i32, y: i32) -> usize {
     ((y * MAP_WIDTH) + x) as usize
 }
 
+pub struct Structure {
+    pub body: String,
+    pub height: i32,
+    pub width: i32,
+}
+impl Structure {
+    pub fn new(bdy: String, hght: i32, wdth: i32) -> Self {
+        Self {
+            body: bdy,
+            height: hght,
+            width: wdth,
+        }
+    }
+}
+
+#[derive(Clone)]
 pub struct Map {
     pub tiles: Vec<TileType>,
     pub revealed_tiles: Vec<bool>,
@@ -23,6 +39,41 @@ impl Map {
             tiles: vec![TileType::Floor; NUM_TILES],
             revealed_tiles: vec![false; NUM_TILES],
         }
+    }
+
+pub fn blank_canvas(tile: TileType) -> Self {
+        Self {
+            tiles: vec![tile; NUM_TILES],
+            revealed_tiles: vec![false; NUM_TILES],
+        }
+    }
+
+    pub fn new_from_string(raw_string: String) -> Self {
+        //this will take in a string and convert it into a map, or return a blank map of only floors if it's not the right size or otherwise not fit for purpose
+        let mut map: Vec<TileType> = Vec::new();
+        //need to trim the string and make sure it's exactly NUM_TILES long
+        for i in raw_string.chars() {
+            match i {
+                '#' => map.push(TileType::Wall),
+                '.' => map.push(TileType::Floor),
+                _ => map.push(TileType::Floor),
+            }
+        }
+        if map.len() == NUM_TILES {
+            return Self {
+                tiles: map,
+                revealed_tiles: vec![false; NUM_TILES],
+            };
+        } else {
+            return Self {
+                tiles: vec![TileType::Floor; NUM_TILES],
+                revealed_tiles: vec![false; NUM_TILES],
+            };
+        }
+    }
+    ///will insert tiles into a map, replacing them with the structure passed in given a point representing the location of the top left tile of the structure
+    pub fn add(&mut self, structure: Structure, spawn_pos: Point) {
+        //will need to add a function that somehow inserts the string into the vec at the right point.
     }
 
     pub fn in_bounds(&self, point: Point) -> bool {

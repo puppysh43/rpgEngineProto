@@ -52,16 +52,9 @@ impl State {
     fn new() -> Self {
         let mut ecs = World::default();
         let mut resources = Resources::default();
-        let mut rng = RandomNumberGenerator::new();
-        let map_builder = MapBuilder::new(&mut rng);
-        spawn_player(&mut ecs, map_builder.player_start);
-        map_builder
-            .rooms
-            .iter()
-            .skip(1)
-            .map(|r| r.center())
-            .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos));
-        resources.insert(map_builder.map);
+        let map = build_devroom01();
+        spawn_player(&mut ecs, Point::new(1, 1));
+        resources.insert(map);
         resources.insert(TurnState::AwaitingInput);
         //will need to insert a vec of strings to act as the
         resources.insert(ControlState::Default);
@@ -77,17 +70,11 @@ impl State {
     fn reset_game_state(&mut self) {
         self.ecs = World::default();
         self.resources = Resources::default();
-        let mut rng = RandomNumberGenerator::new();
-        let map_builder = MapBuilder::new(&mut rng);
-        spawn_player(&mut self.ecs, map_builder.player_start);
-        map_builder
-            .rooms
-            .iter()
-            .skip(1)
-            .map(|r| r.center())
-            .for_each(|pos| spawn_monster(&mut self.ecs, &mut rng, pos));
-        self.resources.insert(map_builder.map);
+        let map = build_devroom01();
+        spawn_player(&mut self.ecs, Point::new(1, 1));
+        self.resources.insert(map);
         self.resources.insert(TurnState::AwaitingInput);
+        self.resources.insert(ControlState::Default);
     }
 
     fn game_over(&mut self, ctx: &mut BTerm) {
