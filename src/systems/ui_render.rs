@@ -7,9 +7,6 @@ use crate::prelude::*;
 pub fn ui_render(ecs: &SubWorld, #[resource] log: &Vec<String>) {
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(UI_LAYER);
-    log.iter().for_each(|entry| {
-        println!("{}", entry);
-    });
 
     draw_batch.submit(5000).expect("Batch Error");
 }
