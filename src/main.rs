@@ -53,10 +53,11 @@ impl State {
         let mut ecs = World::default();
         let mut resources = Resources::default();
         let map = build_devroom01();
+        let log: Vec<String> = Vec::new();
         spawn_player(&mut ecs, Point::new(1, 1));
         resources.insert(map);
         resources.insert(TurnState::AwaitingInput);
-        //will need to insert a vec of strings to act as the
+        resources.insert(log);
         resources.insert(ControlState::Default);
         Self {
             ecs,

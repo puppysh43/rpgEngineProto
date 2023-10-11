@@ -14,7 +14,7 @@ pub struct Player;
 pub struct Enemy;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-//tagging component that marks something as an effect to be rendered over the other game objects
+///tagging component that marks something as an effect to be rendered over the other game objects
 pub struct Effect;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -26,6 +26,7 @@ pub struct MovingRandomly;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ChasingPlayer;
 
+//Messages of Intent START
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WantsToMove {
     pub entity: Entity,
@@ -37,6 +38,12 @@ pub struct WantsToAttack {
     pub attacker: Entity,
     pub victim: Entity,
 }
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct AddToLog {
+    pub body: String,
+}
+//Messages of Intent END
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Health {
