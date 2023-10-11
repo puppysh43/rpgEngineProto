@@ -63,6 +63,7 @@ impl State {
             .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos));
         resources.insert(map_builder.map);
         resources.insert(TurnState::AwaitingInput);
+        //will need to insert a vec of strings to act as the
         resources.insert(ControlState::Default);
         Self {
             ecs,
