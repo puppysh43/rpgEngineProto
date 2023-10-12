@@ -130,6 +130,12 @@ pub fn player_input(
                         destination,
                     },
                 ));
+                // commands.push((
+                // (),
+                // AddToLog {
+                // body: "You have moved!".to_string(),
+                // },
+                // ));
             }
         };
         if !did_something {
