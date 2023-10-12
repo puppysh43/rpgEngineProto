@@ -130,12 +130,12 @@ pub fn player_input(
                         destination,
                     },
                 ));
-                // commands.push((
-                // (),
-                // AddToLog {
-                // body: "You have moved!".to_string(),
-                // },
-                // ));
+                commands.push((
+                    (),
+                    AddToLog {
+                        body: "You have moved!".to_string(),
+                    },
+                ));
             }
         };
         if !did_something {
@@ -145,6 +145,12 @@ pub fn player_input(
                 .get_component_mut::<Health>()
             {
                 health.current = i32::min(health.max, health.current + 1);
+                commands.push((
+                    (),
+                    AddToLog {
+                        body: "You have regained health!".to_string(),
+                    },
+                ));
             }
         }
 
