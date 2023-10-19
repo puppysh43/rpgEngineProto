@@ -1,25 +1,33 @@
-use crate::prelude::*;
+use crate::prelude::{spawn_reticule, *};
 
-#[system]
-#[read_component(Point)]
-#[read_component(Player)]
-#[read_component(Enemy)]
-#[write_component(Health)]
-#[write_component(Point)]
+// #[system]
+// #[read_component(Point)]
+// #[read_component(Player)]
+// #[read_component(Enemy)]
+// #[write_component(Health)]
+// #[write_component(Point)]
+/*
 pub fn player_input(
     ecs: &mut SubWorld,
     commands: &mut CommandBuffer,
     #[resource] key: &Option<VirtualKeyCode>,
     #[resource] turn_state: &mut TurnState,
     #[resource] control_state: &mut ControlState,
-) {
+)*/
+pub fn player_input(state: &mut State) {
+    let commands = &mut CommandBuffer::new(); //create the command buffer for writing to the ecs.
+    let player_pos = Point::new(0, 0); //init the var to store the player's position
+    for (_, pos) in state.ecs.query_mut::<With<&Point, &Player>>() {
+        //query for the player's position and assign it to the player_pos var
+        player_pos = pos;
+    }
+
     let mut players = <(Entity, &Point)>::query().filter(component::<Player>());
     //get all entities with a point component from the ECS and filter out anything that doesn't have a player tag
     let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
     //get all entities with a point component from the ecs and filter out any that don't have the enemy tag
-    // let mut player_positions = <&Point>::query().filter(component::<Player>());
-    // let player_position = player_positions.iter(ecs).nth(0).unwrap(); //this is how I would get the player position as a standalone thing
     //This is the current control block match statement
+    //the match statement returns a point
     let mut player_delta = Point::new(0, 0);
     let mut reticule_delta = Point::new(0, 0);
     if let Some(key) = *key {
@@ -36,23 +44,8 @@ pub fn player_input(
                     VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
                     VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
                     VirtualKeyCode::V => {
-                        println!("You pressed the look key!");
-                        //this will create a new entity in the world that's the reticule, spawn it on the player's position, and switch the control state to looking
-                        let (_, player_pos) = players //gonna be honest don't quite understand what all this means but it works!
-                            .iter(ecs)
-                            .find_map(|(entity, pos)| Some((*entity, *pos)))
-                            .unwrap(); //get the player's position
-                        commands.push((
-                            //creates a reticule object in the world
-                            Effect,
-                            Reticule,
-                            player_pos,
-                            Render {
-                                color: ColorPair::new(CYAN, BLACK),
-                                glyph: to_cp437('♥'),
-                            },
-                        ));
-                        *control_state = ControlState::Looking;
+                        spawn_reticule(commands, player_pos);
+                        state.controlstate = ControlState::Looking;
                         Point::new(0, 0)
                     }
                     _ => Point::new(0, 0),
@@ -77,12 +70,10 @@ pub fn player_input(
                     }
                     VirtualKeyCode::Escape => {
                         //this exits the looking turnstate and also deletes the reticule entity.
-                        let reticule = <Entity>::query()
-                            .filter(component::<Reticule>())
-                            .iter(ecs)
-                            .nth(0)
-                            .unwrap();
-                        commands.remove(*reticule);
+                        for (reticule, _) in state.ecs.query_mut::<With<&Point, &Reticule>>() {
+                            commands.despawn(reticule);
+                        }
+
                         *control_state = ControlState::Default;
                         Point::new(0, 0)
                     }
@@ -166,8 +157,21 @@ pub fn player_input(
 
         //This match statement ensures the turn only continues if the player is done with inputs e.g targeting ranged attack, looking around, etc
         match control_state {
-            ControlState::Default => *turn_state = TurnState::PlayerTurn,
-            ControlState::Looking => *turn_state = TurnState::AwaitingInput,
+            ControlState::Default => state.turnstate = TurnState::PlayerTurn,
+            ControlState::Looking => state.turnstate = TurnState::AwaitingInput,
         }
     }
+}
+
+fn spawn_reticule(cmd: &mut CommandBuffer, player_pos: Point) {
+    cmd.spawn((
+        //creates a reticule object in the world
+        Effect,
+        Reticule,
+        player_pos,
+        Render {
+            color: ColorPair::new(CYAN, BLACK),
+            glyph: to_cp437('♥'),
+        },
+    ));
 }

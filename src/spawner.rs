@@ -46,14 +46,3 @@ fn goblin() -> (i32, String, FontCharType) {
 fn orc() -> (i32, String, FontCharType) {
     (2, "Orc".to_string(), to_cp437('o'))
 }
-
-pub fn spawn_reticule(ecs: &mut World, pos: Point) {
-    ecs.push((
-        Reticule,
-        pos,
-        Render {
-            color: ColorPair::new(CYAN, BLACK),
-            glyph: to_cp437('X'),
-        },
-    ));
-}

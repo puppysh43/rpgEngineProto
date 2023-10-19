@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 bracket-lib = "~0.8.1"
+hecs = "0.10.3"
 legion = "=0.3.1"

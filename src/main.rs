@@ -7,12 +7,11 @@ mod map_builder;
 mod spawner;
 mod systems;
 mod turn_state;
+mod ui_state;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
-    pub use legion::systems::CommandBuffer;
-    pub use legion::world::SubWorld;
-    pub use legion::*;
+    pub use hecs::*;
     //size of the full window including UI elements
     pub const SCREEN_WIDTH: i32 = 70;
     pub const SCREEN_HEIGHT: i32 = 35;
@@ -36,74 +35,53 @@ mod prelude {
     pub use crate::spawner::*;
     pub use crate::systems::*;
     pub use crate::turn_state::*;
+    pub use crate::ui_state::*;
+    pub use crate::State;
 }
 
 use prelude::*;
 
-struct State {
+pub struct State {
     ecs: World,
-    resources: Resources,
-    input_systems: Schedule,
-    player_systems: Schedule,
-    monster_systems: Schedule,
+    key: Option<VirtualKeyCode>,
+    turnstate: TurnState,
+    controlstate: ControlState,
+    map: Map,
+    log: Vec<String>,
+    numberturns: u32,
+    uistate: UiState,
 }
 
 impl State {
     fn new() -> Self {
-        let mut ecs = World::default();
-        let mut resources = Resources::default();
+        let mut ecs = World::new();
         let map = build_devroom01();
         let log: Vec<String> = Vec::new();
-        spawn_player(&mut ecs, Point::new(1, 1));
-        resources.insert(map);
-        resources.insert(TurnState::AwaitingInput);
-        resources.insert(log);
-        resources.insert(ControlState::Default);
+        spawn_player(&mut ecs, Point::new(1, 1)); //needs to be updated
         Self {
             ecs,
-            resources,
-            input_systems: build_input_scheduler(),
-            player_systems: build_player_scheduler(),
-            monster_systems: build_monster_scheduler(),
+            key: None,
+            turnstate: TurnState::AwaitingInput,
+            controlstate: ControlState::Default,
+            map,
+            log,
+            numberturns: 0,
+            uistate: UiState::Default,
         }
     }
 
     fn reset_game_state(&mut self) {
         self.ecs = World::default();
-        self.resources = Resources::default();
+        self.key = None;
         let map = build_devroom01();
+        self.map = map;
+        self.turnstate = TurnState::AwaitingInput;
+        self.controlstate = ControlState::Default;
+        self.log = vec!["Welcome to my game!".to_string()];
+        self.numberturns = 0;
+        self.uistate = UiState::Default;
         spawn_player(&mut self.ecs, Point::new(1, 1));
-        self.resources.insert(map);
-        self.resources.insert(TurnState::AwaitingInput);
-        self.resources.insert(ControlState::Default);
-    }
-
-    fn game_over(&mut self, ctx: &mut BTerm) {
-        ctx.set_active_console(2);
-        ctx.print_color_centered(2, RED, BLACK, "Your quest has ended.");
-        ctx.print_color_centered(
-            4,
-            WHITE,
-            BLACK,
-            "Slain by a monster, your hero's journey has come to a premature end.",
-        );
-        ctx.print_color_centered(
-            5,
-            WHITE,
-            BLACK,
-            "The Amulet of Yala remains unclaimed, and your home town is not saved.",
-        );
-        ctx.print_color_centered(
-            8,
-            YELLOW,
-            BLACK,
-            "Don't worry, you can always try again with a new hero.",
-        );
-        ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to play again.");
-
-        if let Some(VirtualKeyCode::Key1) = ctx.key {
-            self.reset_game_state();
-        }
+        //then I'll need to reset all the entity spawns lmao
     }
 }
 
@@ -117,25 +95,8 @@ impl GameState for State {
         ctx.cls();
         ctx.set_active_console(3);
         ctx.cls();
-        self.resources.insert(ctx.key); //give the ECS access to what keys are being pressed at the time of the tick
-        ctx.set_active_console(0);
-        self.resources.insert(Point::from_tuple(ctx.mouse_pos())); //gives the ecs access to the current mouse position
-        let current_state = self.resources.get::<TurnState>().unwrap().clone();
-        match current_state {
-            TurnState::AwaitingInput => self
-                .input_systems
-                .execute(&mut self.ecs, &mut self.resources),
-            TurnState::PlayerTurn => {
-                self.player_systems
-                    .execute(&mut self.ecs, &mut self.resources);
-            }
-            TurnState::MonsterTurn => self
-                .monster_systems
-                .execute(&mut self.ecs, &mut self.resources),
-            TurnState::GameOver => {
-                self.game_over(ctx);
-            }
-        }
+        self.key = ctx.key;
+        systems::run_systems(self);
         render_draw_buffer(ctx).expect("Render error");
     }
 }

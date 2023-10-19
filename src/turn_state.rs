@@ -1,7 +1,9 @@
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum TurnState {
     AwaitingInput,
-    PlayerTurn,
-    MonsterTurn,
+    PcTurn,
+    NpcTurn,
     GameOver,
+    EndingSlides,
+    MainMenu,
 }

@@ -14,56 +14,69 @@ mod tooltips;
 mod ui_render;
 mod update_log;
 
-pub fn build_input_scheduler() -> Schedule {
-    Schedule::builder()
-        .add_system(player_input::player_input_system())
-        .add_system(fov::fov_system())
-        .flush()
-        .add_system(update_log::update_log_system())
-        .flush()
-        .add_system(map_render::map_render_system())
-        .add_system(entity_render::entity_render_system())
-        .add_system(effects_render::effects_render_system())
-        .add_system(tooltips::tooltips_system())
-        .add_system(ui_render::ui_render_system())
-        .build()
+pub fn run_systems(state: &mut State) {
+    let current_turn = state.turnstate;
+    match current_turn {
+        TurnState::MainMenu => main_menu(state),
+        TurnState::AwaitingInput => input_systems(state),
+        TurnState::PcTurn => pc_systems(state),
+        TurnState::NpcTurn => npc_systems(state),
+        TurnState::GameOver => game_over(state),
+        TurnState::EndingSlides => ending_slides(state),
+    }
 }
 
-pub fn build_player_scheduler() -> Schedule {
-    Schedule::builder()
-        .add_system(combat::combat_system())
-        .flush()
-        .add_system(movement::movement_system())
-        .flush()
-        .add_system(fov::fov_system())
-        .flush()
-        .add_system(update_log::update_log_system())
-        .flush()
-        .add_system(map_render::map_render_system())
-        .add_system(entity_render::entity_render_system())
-        .add_system(effects_render::effects_render_system())
-        .add_system(ui_render::ui_render_system())
-        .add_system(end_turn::end_turn_system())
-        .build()
+///All input related systems that happen before a player's turn is over such as looking,
+///talking to NPCs, going through their inventory, etc.
+fn input_systems(state: &mut State) {
+    player_input::player_input(state);
+    fov::fov(state);
+    update_log::update_log(state);
+    map_render::map_render(state);
+    entity_render::entity_render(state);
+    effects_render::effects_render(state);
+    tooltips::tooltips(state);
+    ui_render::ui_render(state);
+}
+///All player related functions go here.
+fn pc_systems(state: &mut State) {
+    combat::combat(state); //will need to tweak the combat system
+    movement::movement(state);
+    fov::fov(state);
+    update_log::update_log(state);
+    map_render::map_render(state);
+    entity_render::entity_render(state);
+    effects_render::effects_render(state);
+    ui_render::ui_render(state);
+    end_turn::end_turn(state);
+}
+///All NPC related systems as well as worldsystems that progress once a turn such as
+///the spread of fire, growth of plants, etc.
+fn npc_systems(state: &mut State) {
+    random_move::random_move(state);
+    chasing::chasing(state);
+    combat::combat(state);
+    movement::movement(state);
+    fov::fov(state);
+    update_log::update_log(state);
+    map_render::map_render(state);
+    entity_render::entity_render(state);
+    effects_render::effects_render(state);
+    ui_render::ui_render(state);
+    end_turn::end_turn(stat);
+}
+///will play a screen telling the player they died, maybe show some stats, and then
+///will ask if they either wanna reload or check
+fn game_over(state: &mut State) {
+    //filler
 }
 
-pub fn build_monster_scheduler() -> Schedule {
-    Schedule::builder()
-        .add_system(random_move::random_move_system())
-        .add_system(chasing::chasing_system())
-        .flush()
-        .add_system(combat::combat_system())
-        .flush()
-        .add_system(movement::movement_system())
-        .flush()
-        .add_system(fov::fov_system())
-        .flush()
-        .add_system(update_log::update_log_system())
-        .flush()
-        .add_system(map_render::map_render_system())
-        .add_system(entity_render::entity_render_system())
-        .add_system(effects_render::effects_render_system())
-        .add_system(ui_render::ui_render_system())
-        .add_system(end_turn::end_turn_system())
-        .build()
+///plays through ending slides
+fn ending_slides(state: &mut State) {
+    //filler
+}
+
+///the main menu, used for saving and loading games
+fn main_menu(state: &mut State) {
+    //filler
 }
