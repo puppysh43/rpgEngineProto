@@ -1,23 +1,17 @@
 use crate::prelude::*;
 
-#[system]
-#[read_component(Point)]
-#[read_component(Render)]
-#[read_component(FieldOfView)]
-#[read_component(Player)]
-pub fn entity_render(ecs: &SubWorld) {
-    let mut renderables = <(&Point, &Render)>::query().filter(!component::<Effect>());
-    let mut fov = <&FieldOfView>::query().filter(component::<Player>());
+pub fn entity_render(state: &mut State) {
+    let mut renderables = state.ecs.query::<Without<(&Point, &Render), &Effect>>();
+    let mut fov = state.ecs.query::<With<&FieldOfView, &Player>>();
     let mut draw_batch = DrawBatch::new();
-    // draw_batch.target(1);
     draw_batch.target(MAIN_LAYER);
 
-    let player_fov = fov.iter(ecs).nth(0).unwrap();
+    let player_fov = fov.iter().nth(0).unwrap().1;
 
-    renderables
-        .iter(ecs)
-        .filter(|(pos, _)| player_fov.visible_tiles.contains(&pos))
-        .for_each(|(pos, render)| {
+    renderables //this is a really slick little iter chain that I'll consider replacing with a for loop but we shall see.
+        .iter()
+        .filter(|(_, (pos, _))| player_fov.visible_tiles.contains(&pos))
+        .for_each(|(_, (pos, render))| {
             draw_batch.set(*pos, render.color, render.glyph);
         });
 

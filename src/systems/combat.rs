@@ -1,14 +1,11 @@
 use crate::prelude::*;
 
-#[system]
-#[read_component(WantsToAttack)]
-#[read_component(Player)]
-#[write_component(Health)]
-pub fn combat(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
-    let mut attackers = <(Entity, &WantsToAttack)>::query();
+pub fn combat(state: &mut State) {
+    let mut commands = CommandBuffer::new();
+    let mut attackers = state.ecs.query::<&WantsToAttack>();
     let victims: Vec<(Entity, Entity)> = attackers
-        .iter(ecs)
-        .map(|(entity, attack)| (*entity, attack.victim))
+        .iter()
+        .map(|(entity, attack)| (entity, attack.victim))
         .collect();
 
     victims.iter().for_each(|(message, victim)| {

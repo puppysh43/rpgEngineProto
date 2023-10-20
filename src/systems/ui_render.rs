@@ -8,11 +8,7 @@ NOTES ON DRAWING UI
 * might want to break individual sections into their own functions
 * you have space for 39 characters between the first border and the edge of the screen
 */
-#[system]
-#[read_component(Player)]
-#[read_component(Health)]
-//will later read stuff like items attributes and the log
-pub fn ui_render(ecs: &SubWorld, #[resource] log: &mut Vec<String>) {
+pub fn ui_render(state: &mut State) {
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(UI_LAYER);
     //draw the border between the gameplay zone and the UI
@@ -46,7 +42,7 @@ pub fn ui_render(ecs: &SubWorld, #[resource] log: &mut Vec<String>) {
     //will need to keep track of how many lines have been printed to ensure that you don't exceed the bounds of the screen
     let mut free_log_space = LOG_YSTART;
 
-    log.iter().rev().for_each(|message| {
+    state.log.iter().rev().for_each(|message| {
         if free_log_space < MAP_HEIGHT && message.len() < 39 {
             draw_batch.print_color(
                 Point::new(UI_XSTART, free_log_space),

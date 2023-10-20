@@ -1,24 +1,22 @@
 use crate::prelude::*;
 
-#[system]
-#[read_component(Health)]
-#[read_component(Point)]
-#[read_component(Player)]
-pub fn end_turn(ecs: &SubWorld, #[resource] turn_state: &mut TurnState) {
-    let mut player_hp = <(&Health, &Point)>::query().filter(component::<Player>());
-    let current_state = turn_state.clone();
+pub fn end_turn(state: &mut State) {
+    // let mut player_hp = <(&Health, &Point)>::query().filter(component::<Player>());
+    let mut player_hp = state.ecs.query::<With<&Health, &Player>>();
+    let current_state = state.turnstate.clone();
     let mut new_state = match current_state {
         TurnState::AwaitingInput => return,
-        TurnState::PlayerTurn => TurnState::MonsterTurn,
-        TurnState::MonsterTurn => TurnState::AwaitingInput,
+        TurnState::PcTurn => TurnState::NpcTurn,
+        TurnState::NpcTurn => TurnState::AwaitingInput,
         _ => current_state,
     };
 
-    player_hp.iter(ecs).for_each(|(hp, pos)| {
+    //check to see if the player's dead and if so switch the gamemode to game over.
+    player_hp.iter().for_each(|(_, hp)| {
         if hp.current < 1 {
             new_state = TurnState::GameOver;
         }
     });
 
-    *turn_state = new_state;
+    state.turnstate = new_state;
 }

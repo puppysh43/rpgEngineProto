@@ -1,36 +1,18 @@
-use crate::prelude::{spawn_reticule, *};
+use crate::prelude::*;
 
-// #[system]
-// #[read_component(Point)]
-// #[read_component(Player)]
-// #[read_component(Enemy)]
-// #[write_component(Health)]
-// #[write_component(Point)]
-/*
-pub fn player_input(
-    ecs: &mut SubWorld,
-    commands: &mut CommandBuffer,
-    #[resource] key: &Option<VirtualKeyCode>,
-    #[resource] turn_state: &mut TurnState,
-    #[resource] control_state: &mut ControlState,
-)*/
 pub fn player_input(state: &mut State) {
     let commands = &mut CommandBuffer::new(); //create the command buffer for writing to the ecs.
-    let player_pos = Point::new(0, 0); //init the var to store the player's position
+    let mut player_pos = Point::new(0, 0); //init the var to store the player's position
     for (_, pos) in state.ecs.query_mut::<With<&Point, &Player>>() {
         //query for the player's position and assign it to the player_pos var
-        player_pos = pos;
+        player_pos = *pos;
     }
+    let key = state.key;
+    let control_state = state.controlstate;
 
-    let mut players = <(Entity, &Point)>::query().filter(component::<Player>());
-    //get all entities with a point component from the ECS and filter out anything that doesn't have a player tag
-    let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
-    //get all entities with a point component from the ecs and filter out any that don't have the enemy tag
-    //This is the current control block match statement
-    //the match statement returns a point
     let mut player_delta = Point::new(0, 0);
     let mut reticule_delta = Point::new(0, 0);
-    if let Some(key) = *key {
+    if let Some(key) = key {
         match control_state {
             ControlState::Default => {
                 player_delta = match key {
@@ -55,6 +37,8 @@ pub fn player_input(state: &mut State) {
             ControlState::Looking => {
                 //look at examples from earlier in the book on how to move an object w/out using message of intent
                 println!("Looking control state.");
+                //player will be able to move the reticule with the numpad, print a brief description to the log with v and view a full screen description with V
+                //escape will let the player exit looking mode and go back to default mode
                 reticule_delta = match key {
                     VirtualKeyCode::Numpad4 => Point::new(-1, 0), //move west
                     VirtualKeyCode::Numpad6 => Point::new(1, 0),  //move east
@@ -65,7 +49,13 @@ pub fn player_input(state: &mut State) {
                     VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
                     VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
                     VirtualKeyCode::V => {
-                        println!("This will print the monster description eventually!");
+                        println!(
+                            "This will pop up the full detailed description as its own window!"
+                        );
+                        Point::new(0, 0)
+                    }
+                    VirtualKeyCode::Return | VirtualKeyCode::NumpadEnter => {
+                        println!("This will print the entity description to the log!");
                         Point::new(0, 0)
                     }
                     VirtualKeyCode::Escape => {
@@ -74,7 +64,7 @@ pub fn player_input(state: &mut State) {
                             commands.despawn(reticule);
                         }
 
-                        *control_state = ControlState::Default;
+                        state.controlstate = ControlState::Default;
                         Point::new(0, 0)
                     }
                     _ => Point::new(0, 0),
@@ -87,41 +77,46 @@ pub fn player_input(state: &mut State) {
             }
         };
 
-        let (player_entity, destination) = players //destructures the results of the iterator into two different variables
-            .iter(ecs)
-            .find_map(|(entity, pos)| Some((*entity, *pos + player_delta)))
-            .unwrap();
+        let mut players = state.ecs.query::<With<&Point, &Player>>(); //query of all the player entities and their point component
+        let mut enemies = state.ecs.query::<With<&Point, &Enemy>>(); //query of all the enemy entities and their point component
+        let (player_entity, _) = players.iter().next().unwrap();
+        let destination = player_pos + player_delta;
 
         let mut did_something = false;
         if player_delta.x != 0 || player_delta.y != 0 {
             //if the player moved at all
             let mut hit_something = false;
-            enemies
-                .iter(ecs)
-                .filter(|(_, pos)| **pos == destination)
-                .for_each(|(entity, _)| {
-                    hit_something = true;
-                    did_something = true;
 
-                    commands.push((
+            for (enemy_entity, pos) in enemies.iter() {
+                //iterate through all enemies in the world.
+                if *pos == destination {
+                    //if their position is the same as where the player is moving
+                    hit_something = true;
+                    did_something = true; //then track that they hit something
+                    commands.spawn((
+                        //and create an attack message of intent w/ the player as the attacker and the enemy as the victim!
                         (),
                         WantsToAttack {
                             attacker: player_entity,
-                            victim: *entity,
+                            victim: enemy_entity,
                         },
                     ));
-                });
+                }
+            }
 
             if !hit_something {
-                did_something = true;
-                commands.push((
+                //if the player didn't hit anything on the way to their destination
+                did_something = true; //note that they did something!
+                commands.spawn((
+                    //spawn a message of intent entity for moving the player
                     (),
                     WantsToMove {
                         entity: player_entity,
                         destination,
                     },
                 ));
-                commands.push((
+                commands.spawn((
+                    //and create a log message just for testing purposes, will remove later
                     (),
                     AddToLog {
                         body: "You have moved!".to_string(),
@@ -129,38 +124,24 @@ pub fn player_input(state: &mut State) {
                 ));
             }
         };
-        if !did_something {
-            if let Ok(mut health) = ecs
-                .entry_mut(player_entity)
-                .unwrap()
-                .get_component_mut::<Health>()
-            {
-                health.current = i32::min(health.max, health.current + 1);
-                commands.push((
-                    (),
-                    AddToLog {
-                        body: "You have regained health!".to_string(),
-                    },
-                ));
-            }
-        }
 
         //This checks the reticule_delta and moves it around the screen!
         if reticule_delta.x != 0 || reticule_delta.y != 0 {
-            //this currently crashes the game for some reason!!
-            let mut reticules = <&mut Point>::query().filter(component::<Reticule>());
-            reticules.iter_mut(ecs).for_each(|pos| {
-                let destination = *pos + reticule_delta;
-                *pos = destination;
-            });
-        };
+            for (reticule_id, reticule_pos) in state.ecs.query_mut::<With<&mut Point, &Reticule>>()
+            {
+                let new_pos = *reticule_pos + reticule_delta;
+                commands.remove_one::<Point>(reticule_id);
+                commands.insert_one(reticule_id, new_pos);
+            }
+        }
 
         //This match statement ensures the turn only continues if the player is done with inputs e.g targeting ranged attack, looking around, etc
         match control_state {
-            ControlState::Default => state.turnstate = TurnState::PlayerTurn,
+            ControlState::Default => state.turnstate = TurnState::PcTurn,
             ControlState::Looking => state.turnstate = TurnState::AwaitingInput,
         }
     }
+    commands.run_on(&mut state.ecs);
 }
 
 fn spawn_reticule(cmd: &mut CommandBuffer, player_pos: Point) {
