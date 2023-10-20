@@ -40,8 +40,8 @@ fn input_systems(state: &mut State) {
 }
 ///All player related functions go here.
 fn pc_systems(state: &mut State) {
-    combat::combat(state); //will need to tweak the combat system
-    movement::movement(state);
+    combat::combat(state); //will need to tweak the combat system NOT WORKING
+    movement::movement(state); //NOT WORKING
     fov::fov(state); //WORKING(?)
     update_log::update_log(state); //WORKING(?)
     map_render::map_render(state); //WORKING(?)
@@ -53,10 +53,10 @@ fn pc_systems(state: &mut State) {
 ///All NPC related systems as well as worldsystems that progress once a turn such as
 ///the spread of fire, growth of plants, etc.
 fn npc_systems(state: &mut State) {
-    random_move::random_move(state);
-    chasing::chasing(state);
-    combat::combat(state);
-    movement::movement(state);
+    random_move::random_move(state); //NOT WORKING YET
+    chasing::chasing(state); //NOT WORKING YET
+    combat::combat(state); //NOT WORKING
+    movement::movement(state); //NOT WORKING
     fov::fov(state); //WORKING(?)
     update_log::update_log(state); //WORKING(?)
     map_render::map_render(state); //WORKING(?)
