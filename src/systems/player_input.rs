@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-pub fn player_input(state: &mut State) {
+pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
     let commands = &mut CommandBuffer::new(); //create the command buffer for writing to the ecs.
     let mut player_pos = Point::new(0, 0); //init the var to store the player's position
     for (_, pos) in state.ecs.query_mut::<With<&Point, &Player>>() {
@@ -127,7 +127,8 @@ pub fn player_input(state: &mut State) {
 
         //This checks the reticule_delta and moves it around the screen!
         if reticule_delta.x != 0 || reticule_delta.y != 0 {
-            for (reticule_id, reticule_pos) in state.ecs.query_mut::<With<&mut Point, &Reticule>>()
+            for (reticule_id, reticule_pos) in
+                state.ecs.query::<With<&mut Point, &Reticule>>().iter()
             {
                 let new_pos = *reticule_pos + reticule_delta;
                 commands.remove_one::<Point>(reticule_id);
@@ -141,7 +142,6 @@ pub fn player_input(state: &mut State) {
             ControlState::Looking => state.turnstate = TurnState::AwaitingInput,
         }
     }
-    commands.run_on(&mut state.ecs);
 }
 
 fn spawn_reticule(cmd: &mut CommandBuffer, player_pos: Point) {

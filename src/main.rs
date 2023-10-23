@@ -46,9 +46,10 @@ pub struct State {
     key: Option<VirtualKeyCode>,
     turnstate: TurnState,
     controlstate: ControlState,
+    commands: CommandBuffer,
     map: Map,
     log: Vec<String>,
-    numberturns: u32,
+    numberturns: u32, //each turn represents 1 second
     uistate: UiState,
 }
 
@@ -63,11 +64,15 @@ impl State {
             key: None,
             turnstate: TurnState::AwaitingInput,
             controlstate: ControlState::Default,
+            commands: CommandBuffer::new(),
             map,
             log,
             numberturns: 0,
             uistate: UiState::Default,
         }
+    }
+    fn flush(&mut self) {
+        self.commands.run_on(&mut self.ecs);
     }
 
     fn reset_game_state(&mut self) {
@@ -80,8 +85,8 @@ impl State {
         self.log = vec!["Welcome to my game!".to_string()];
         self.numberturns = 0;
         self.uistate = UiState::Default;
-        spawn_player(&mut self.ecs, Point::new(1, 1));
-        //then I'll need to reset all the entity spawns lmao
+        spawn_player(&mut self.ecs, Point::new(1, 1)); //placeholder position the spawn player function will be handled by the
+                                                       //then I'll need to reset all the entity spawns lmao
     }
 }
 

@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-pub fn fov(state: &mut State) {
+pub fn fov(state: &mut State, commands: &mut CommandBuffer) {
     let mut views = state.ecs.query::<(&Point, &mut FieldOfView)>();
     views //this needs to be commented better I'm still not sure how exactly
         .iter()

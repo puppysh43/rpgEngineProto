@@ -1,7 +1,6 @@
 use crate::prelude::*;
 
 pub fn end_turn(state: &mut State) {
-    // let mut player_hp = <(&Health, &Point)>::query().filter(component::<Player>());
     let mut player_hp = state.ecs.query::<With<&Health, &Player>>();
     let current_state = state.turnstate.clone();
     let mut new_state = match current_state {
@@ -17,6 +16,13 @@ pub fn end_turn(state: &mut State) {
             new_state = TurnState::GameOver;
         }
     });
+
+    if current_state == TurnState::NpcTurn {
+        state.numberturns += 1;
+        let numberturns = state.numberturns;
+        println!("Turn Number: {}", numberturns);
+        //temporarily prints out the number of turns. in the future this will be only used internally for stuff like the passage of time
+    }
 
     state.turnstate = new_state;
 }

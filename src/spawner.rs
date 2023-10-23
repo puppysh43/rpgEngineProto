@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 pub fn spawn_player(ecs: &mut World, pos: Point) {
-    ecs.push((
+    ecs.spawn((
         Player,
         pos,
         Render {
@@ -22,7 +22,7 @@ pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Poin
         _ => orc(),
     };
 
-    ecs.push((
+    ecs.spawn((
         Enemy,
         pos,
         Render {

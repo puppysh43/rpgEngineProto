@@ -5,6 +5,7 @@ pub enum UiState {
     ViewingCarried,
     ViewingEquipped,
     ExaminingEntity,
-    Talking,
+    InDialogue,
     ViewingJournal,
+    ViewingLog,
 }
