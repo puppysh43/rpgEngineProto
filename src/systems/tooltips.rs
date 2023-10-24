@@ -6,16 +6,8 @@ pub fn tooltips(state: &mut State) {
     let mut fov = state.ecs.query::<With<&FieldOfView, &Player>>();
     //gets the player's FOV so you can't use the tooltip to cheat and find monsters your PC can't see
     let mut reticule_pos = Point::new(0, 0);
-    let reticule_query = state.ecs.query::<&Reticule>().iter().nth(0);
-    if reticule_query == Some {
-        reticule_pos = state
-            .ecs
-            .query::<With<&Point, &Reticule>>()
-            .iter()
-            .nth(0)
-            .expect("There is no reticule!")
-            .1
-            .clone();
+    for (_, pos) in state.ecs.query::<With<&Point, &Reticule>>().iter() {
+        reticule_pos = pos.clone();
     }
 
     let mut draw_batch = DrawBatch::new();
@@ -24,7 +16,7 @@ pub fn tooltips(state: &mut State) {
     //this match statement decides what's displayed, whether it's an entity name, the chance to hit, etc.
     match control_state {
         ControlState::Default => {
-            println!("This shouldn't happen! There should never be a reticule spawned in during the default controlstate!!");
+            //filler comment b/c the tooltip isn't gonna do anything!
         }
         ControlState::Looking => {
             positions

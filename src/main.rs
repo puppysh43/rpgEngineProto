@@ -46,7 +46,6 @@ pub struct State {
     key: Option<VirtualKeyCode>,
     turnstate: TurnState,
     controlstate: ControlState,
-    commands: CommandBuffer,
     map: Map,
     log: Vec<String>,
     numberturns: u32, //each turn represents 1 second
@@ -64,15 +63,11 @@ impl State {
             key: None,
             turnstate: TurnState::AwaitingInput,
             controlstate: ControlState::Default,
-            commands: CommandBuffer::new(),
             map,
             log,
             numberturns: 0,
             uistate: UiState::Default,
         }
-    }
-    fn flush(&mut self) {
-        self.commands.run_on(&mut self.ecs);
     }
 
     fn reset_game_state(&mut self) {
@@ -96,9 +91,9 @@ impl GameState for State {
         ctx.cls(); //clear it to prevent bleedover of printed tiles between ticks
         ctx.set_active_console(EFFECTS_LAYER); //set the active s
         ctx.cls();
-        ctx.set_active_console(2);
+        ctx.set_active_console(TOOLTIP_LAYER);
         ctx.cls();
-        ctx.set_active_console(3);
+        ctx.set_active_console(UI_LAYER);
         ctx.cls();
         self.key = ctx.key;
         systems::run_systems(self);
