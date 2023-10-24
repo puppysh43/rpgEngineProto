@@ -13,6 +13,8 @@ pub fn entity_render(state: &mut State) {
         .filter(|(_, (pos, _))| player_fov.visible_tiles.contains(&pos))
         .for_each(|(_, (pos, render))| {
             draw_batch.set(*pos, render.color, render.glyph);
+            //print statement that will list the position and possibly the name
+            println!("x: {}, y: {}", pos.x, pos.y);
         });
 
     draw_batch.submit(5000).expect("Batch error");

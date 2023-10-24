@@ -2,10 +2,6 @@ use crate::prelude::*;
 
 pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
     let player = state.ecs.query::<&Player>().iter().nth(0).unwrap().0;
-    // let player_entity_ref = state
-    // .ecs
-    // .entity(player_id_query)
-    // .expect("There is no player somehow!!");
     for (entity, want_move) in state.ecs.query::<&WantsToMove>().iter() {
         if state.map.can_enter_tile(want_move.destination) {
             commands.insert_one(want_move.entity, want_move.destination);
