@@ -1,7 +1,6 @@
 use crate::prelude::*;
 
 pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
-    let commands = &mut CommandBuffer::new(); //create the command buffer for writing to the ecs.
     let mut player_pos = Point::new(0, 0); //init the var to store the player's position
     for (_, pos) in state.ecs.query_mut::<With<&Point, &Player>>() {
         //query for the player's position and assign it to the player_pos var
