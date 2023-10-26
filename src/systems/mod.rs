@@ -13,6 +13,7 @@ mod random_move;
 mod tooltips;
 mod ui_render;
 mod update_log;
+mod debugging;
 //TODO IMPLEMENT A FUCKING FLUSH SYSTEM AND PERSISTENT
 
 pub fn run_systems(state: &mut State) {
@@ -83,6 +84,7 @@ fn npc_systems(state: &mut State) {
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)
     ui_render::ui_render(state); //WORKING(?)
+    debugging::println_debugger(state);
     end_turn::end_turn(state); //WORKING(?)
 }
 ///will play a screen telling the player they died, maybe show some stats, and then
