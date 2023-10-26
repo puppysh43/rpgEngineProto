@@ -16,6 +16,25 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
     ));
 }
 
+pub fn spawn_statue(
+    ecs: &mut World,
+    pos: Point,
+    name: String,
+    short_desc: String,
+    long_desc: String,
+) {
+    ecs.spawn((
+        pos,
+        Render {
+            color: ColorPair::new(LAVENDER, BLACK),
+            glyph: to_cp437('δ'),
+        },
+        Name(name),
+        ShortDescription(short_desc),
+        LongDescription(long_desc),
+    ));
+}
+
 pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
     let (hp, name, glyph) = match rng.roll_dice(1, 10) {
         1..=8 => goblin(),

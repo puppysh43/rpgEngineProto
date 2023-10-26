@@ -48,13 +48,46 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                     VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
                     VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
                     VirtualKeyCode::V => {
-                        println!(
-                            "This will pop up the full detailed description as its own window!"
-                        );
+                        let mut reticule_pos = Point::new(0, 0); //create a temp variable to store the reticule's position for logic reasons
+                        for (_, pos) in state.ecs.query::<With<&Point, &Reticule>>().iter() {
+                            //use a simple query to grab the reticule's position
+                            reticule_pos = *pos;
+                        }
+
+                        for (entity, pos) in
+                            state.ecs.query::<With<&Point, &LongDescription>>().iter()
+                        //go through all entities with a position and a long description
+                        {
+                            if *pos == reticule_pos {
+                                //if they're in the same place as the reticule
+                                commands.insert_one(entity, Examining); //then add an "Examining" tagging component to it so the UI system can pick it up later and display it
+                                state.uistate = UiState::ExaminingEntity; //set the UI state to examining entity so it'll be displayed properly
+                            }
+                        }
+                        //this will add the "Examining" component to whatever shares the same position as the reticule and sets the ui state to "examining entity"
                         Point::new(0, 0)
                     }
                     VirtualKeyCode::Return | VirtualKeyCode::NumpadEnter => {
-                        println!("This will print the entity description to the log!");
+                        let mut reticule_pos = Point::new(0, 0); //create a temp variable to store the reticule's position for logic reasons
+                        for (_, pos) in state.ecs.query::<With<&Point, &Reticule>>().iter() {
+                            //do a quick query to grab the reticule's position
+                            reticule_pos = *pos;
+                        }
+                        for (_, (pos, short_desc)) in
+                            state.ecs.query::<(&Point, &ShortDescription)>().iter()
+                        //go through all entities with a position and a short description
+                        {
+                            if *pos == reticule_pos {
+                                //if they're in the same place as the player's reticule
+                                commands.spawn((
+                                    //send a message to the log with the short description of the entity under the reticule!
+                                    (),
+                                    AddToLog {
+                                        body: short_desc.0.clone(),
+                                    },
+                                ))
+                            }
+                        }
                         Point::new(0, 0)
                     }
                     VirtualKeyCode::Escape => {
@@ -112,13 +145,6 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                     WantsToMove {
                         entity: player_entity,
                         destination,
-                    },
-                ));
-                commands.spawn((
-                    //and create a log message just for testing purposes, will remove later
-                    (),
-                    AddToLog {
-                        body: "You have moved!".to_string(),
                     },
                 ));
             }

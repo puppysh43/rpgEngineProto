@@ -15,11 +15,8 @@ pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
                 {
                     commands.insert_one(want_move.entity, fov.clone_dirty());
 
-                    if entry.entity() == player
-                    // (1)
-                    {
+                    if entry.entity() == player {
                         fov.visible_tiles.iter().for_each(|pos| {
-                            // (2)
                             state.map.revealed_tiles[map_idx(pos.x, pos.y)] = true;
                         });
                     }

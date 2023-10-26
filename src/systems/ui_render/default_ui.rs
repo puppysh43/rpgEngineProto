@@ -1,4 +1,8 @@
 //this is gonna be the default ui render for stuff like the log help etc
+const UI_XSTART: i32 = (MAP_WIDTH * 2) + 1;
+const UI_BORDER_X: i32 = MAP_WIDTH * 2;
+const LOG_YSTART: i32 = 11;
+
 use crate::prelude::*;
 pub fn default_ui(state: &mut State) {
     let mut draw_batch = DrawBatch::new();

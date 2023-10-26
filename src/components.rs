@@ -50,10 +50,24 @@ pub struct Health {
     pub current: i32,
     pub max: i32,
 }
-
+//description related components
 #[derive(Clone, PartialEq)]
+///Component used to give an entity a name that'll
 pub struct Name(pub String);
 
+#[derive(Clone, Debug, PartialEq)]
+///Component used to give an entity a short (sub 35 character) description
+///that will be printed to the log when they're examined
+pub struct ShortDescription(pub String);
+
+#[derive(Clone, Debug, PartialEq)]
+///Component used to give an entity a long description that will be displayed on its own screen.
+pub struct LongDescription(pub String);
+
+#[derive(Clone, Copy, Debug)]
+///Component used to tag an entity as being examined by the player so the appropriate information can
+///later be read and displayed by the UI
+pub struct Examining;
 #[derive(Clone, Copy, Debug, PartialEq)]
 ///Tagging component that marks something as a reticule for selecting stuff in game
 pub struct Reticule;

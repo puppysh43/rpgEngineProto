@@ -58,6 +58,7 @@ impl State {
         let map = build_devroom01();
         let log: Vec<String> = Vec::new();
         spawn_player(&mut ecs, Point::new(1, 1)); //needs to be updated
+        spawn_statue(&mut ecs, Point::new(8,8),"Abstract Statue".to_string() ,"A smooth statue with flowing curves".to_string() , "The statue is made out of a softly lavender stone polished down to a reflective finish that you can see a blurry mirror of your face in. Its form is undulating and surreal, looping back in on itself multiple times and sometimes splitting off into many fine strands that meld back into the main body.".to_string());
         Self {
             ecs,
             key: None,
