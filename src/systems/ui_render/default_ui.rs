@@ -1,14 +1,10 @@
-use crate::prelude::*;
+//this is gonna be the default ui render for stuff like the log help etc
 const UI_XSTART: i32 = (MAP_WIDTH * 2) + 1;
 const UI_BORDER_X: i32 = MAP_WIDTH * 2;
 const LOG_YSTART: i32 = 11;
-/*
-NOTES ON DRAWING UI
-* font is 12x24 width and height so the rows line up but you have twice as much room for text
-* might want to break individual sections into their own functions
-* you have space for 39 characters between the first border and the edge of the screen
-*/
-pub fn ui_render(state: &mut State) {
+
+use crate::prelude::*;
+pub fn default_ui(state: &mut State) {
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(UI_LAYER);
     //draw the border between the gameplay zone and the UI
@@ -25,6 +21,12 @@ pub fn ui_render(state: &mut State) {
         "Health 10/10",
         ColorPair::new(RED, GREEN),
     );
+
+    // match state.controlstate {
+    // ControlState::Default => todo!(),
+    // ControlState::Looking => todo!(),
+    // ControlState::ExaminingEntity => todo!(),
+    // }
 
     draw_batch.print_color(
         Point::new(UI_XSTART, 1),
@@ -55,4 +57,3 @@ pub fn ui_render(state: &mut State) {
 
     draw_batch.submit(5000).expect("Batch Error");
 }
-//this system is gonna first grab basic information about the character like health, fatigue points, etc, and then it'll process all the new log messages and add them to the full log for the session

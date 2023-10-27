@@ -58,6 +58,7 @@ impl State {
         let map = build_devroom01();
         let log: Vec<String> = Vec::new();
         spawn_player(&mut ecs, Point::new(1, 1)); //needs to be updated
+        spawn_statue(&mut ecs, Point::new(8,8),"Abstract Statue".to_string() ,"A smooth statue with flowing curves".to_string() , "The statue is made out of a softly lavender stone polished down to a reflective finish that you can see a blurry mirror of your face in. Its form is undulating and surreal, looping back in on itself multiple times and sometimes splitting off into many fine strands that meld back into the main body. At the base of the statue there appears to be inscriptions in faded text. You can tell from the writing structure it's a poem, but in a dialect you don't quite understand.".to_string());
         Self {
             ecs,
             key: None,
@@ -108,7 +109,6 @@ fn main() -> BError {
         .with_fitscreen(false)
         .with_fullscreen(false)
         .with_dimensions(SCREEN_WIDTH, SCREEN_HEIGHT)
-        // .with_dimensions(MAP_WIDTH, MAP_HEIGHT)
         .with_tile_dimensions(24, 24)
         .with_resource_path("resources/")
         .with_font("main_font.png", 24, 24)
@@ -120,7 +120,6 @@ fn main() -> BError {
         .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "tooltip_font.png") //console for text popups in game
         .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT, "ui_font.png") //console for text on the sidebar for the UI and logs
         .build()?;
-    //in the future both entities and map tiles will be on the same terminal, with one for UI elements, one 12x24 for the log/UI and the 8x8 for text popups
 
     main_loop(context, State::new())
 }
