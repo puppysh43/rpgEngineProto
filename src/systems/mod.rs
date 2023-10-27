@@ -2,6 +2,7 @@ use crate::prelude::*;
 
 mod chasing;
 mod combat;
+mod debugging;
 mod effects_render;
 mod end_turn;
 mod entity_render;
@@ -13,7 +14,6 @@ mod random_move;
 mod tooltips;
 mod ui_render;
 mod update_log;
-mod debugging;
 //TODO IMPLEMENT A FUCKING FLUSH SYSTEM AND PERSISTENT
 
 pub fn run_systems(state: &mut State) {
@@ -31,7 +31,6 @@ pub fn run_systems(state: &mut State) {
 ///All input related systems that happen before a player's turn is over such as looking,
 ///talking to NPCs, going through their inventory, etc.
 fn input_systems(state: &mut State) {
-    println!("Starting the Player Input Turn Phase"); //debug statement
     let mut commands = CommandBuffer::new();
     player_input::player_input(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
@@ -43,7 +42,9 @@ fn input_systems(state: &mut State) {
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)
     tooltips::tooltips(state); //WORKING (?) BUT NEEDS TWEAKS ON HOW TEXT IS DISPLAYED
-    ui_render::ui_render(state); //WORKING(?)
+    ui_render::ui_render(state, &mut commands); //WORKING(?)
+    commands.run_on(&mut state.ecs);
+    debugging::println_debugger(state);
 }
 ///All player related functions go here.
 fn pc_systems(state: &mut State) {
@@ -60,7 +61,9 @@ fn pc_systems(state: &mut State) {
     map_render::map_render(state); //WORKING(?)
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)
-    ui_render::ui_render(state); //WORKING(?)
+    ui_render::ui_render(state, &mut commands); //WORKING(?)
+    commands.run_on(&mut state.ecs);
+
     end_turn::end_turn(state); //WORKING(?)
 }
 ///All NPC related systems as well as worldsystems that progress once a turn such as
@@ -83,8 +86,10 @@ fn npc_systems(state: &mut State) {
     map_render::map_render(state); //WORKING(?)
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)
-    ui_render::ui_render(state); //WORKING(?)
-    debugging::println_debugger(state);
+    ui_render::ui_render(state, &mut commands); //WORKING(?)
+    commands.run_on(&mut state.ecs);
+
+    // debugging::println_debugger(state);
     end_turn::end_turn(state); //WORKING(?)
 }
 ///will play a screen telling the player they died, maybe show some stats, and then

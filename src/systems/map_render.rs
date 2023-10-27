@@ -3,8 +3,8 @@ use crate::prelude::*;
 pub fn map_render(state: &mut State) {
     let mut fov = state.ecs.query::<With<&FieldOfView, &Player>>();
     let mut draw_batch = DrawBatch::new();
+
     draw_batch.target(0);
-    println!("printing out the map");
 
     let player_fov = fov.iter().nth(0).unwrap().1; //extract the player's FOV
 
@@ -15,7 +15,6 @@ pub fn map_render(state: &mut State) {
             if state.map.in_bounds(pt)
                 && (player_fov.visible_tiles.contains(&pt) | state.map.revealed_tiles[idx])
             {
-                // (1)
                 let tint = if player_fov.visible_tiles.contains(&pt) {
                     // will need to switch this over to darkening various colours in the pallete.
                     WHITE

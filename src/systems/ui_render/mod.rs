@@ -15,13 +15,13 @@ NOTES ON DRAWING UI
 */
 //consider having it check the gamestate for various flags to see what ui state needs to be done so that
 //TODO Add command buffer access to ui render!
-pub fn ui_render(state: &mut State) {
+pub fn ui_render(state: &mut State, commands: &mut CommandBuffer) {
     let ui_state = state.uistate;
     match ui_state {
         UiState::Default => default_ui::default_ui(state),
         UiState::ViewingCarried => carried_ui::view_carried(state),
         UiState::ViewingEquipped => equipped_ui::view_equipped(state),
-        UiState::ExaminingEntity => examining_ui::examine_entity(state),
+        UiState::ExaminingEntity => examining_ui::examine_entity(state, commands),
         UiState::InDialogue => dialogue_ui::render_dialogue(state),
         UiState::ViewingJournal => journal_ui::view_journal(state),
         UiState::ViewingLog => log_ui::view_log(state),

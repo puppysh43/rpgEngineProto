@@ -14,7 +14,14 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
     if let Some(key) = key {
         match control_state {
             ControlState::Default => {
+                println!("Default control state.");
                 player_delta = match key {
+                    //simple arrow key movement for beginners or laptop users
+                    VirtualKeyCode::Left => Point::new(-1, 0),
+                    VirtualKeyCode::Right => Point::new(1, 0),
+                    VirtualKeyCode::Up => Point::new(0, -1),
+                    VirtualKeyCode::Down => Point::new(0, 1),
+
                     //more advanced movement w/ numpad including diagonals
                     VirtualKeyCode::Numpad4 => Point::new(-1, 0), //move west
                     VirtualKeyCode::Numpad6 => Point::new(1, 0),  //move east
@@ -100,8 +107,6 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                         Point::new(0, 0)
                     }
                     _ => Point::new(0, 0),
-                    //to figure out to move reticule investigate TurnBasedGames/turnbased/src/systems/player_input.rs
-                    //copy over
                 }
             }
             _ => {
@@ -152,12 +157,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
 
         //This checks the reticule_delta and moves it around the screen!
         if reticule_delta.x != 0 || reticule_delta.y != 0 {
-            for (reticule_id, reticule_pos) in
-                state.ecs.query::<With<&mut Point, &Reticule>>().iter()
-            {
-                let new_pos = *reticule_pos + reticule_delta;
-                commands.remove_one::<Point>(reticule_id);
-                commands.insert_one(reticule_id, new_pos);
+            for (reticule_id, reticule_pos) in state.ecs.query::<With<&Point, &Reticule>>().iter() {
+                let new_pos = *reticule_pos + reticule_delta; //calculate a new position for the reticule
+                commands.insert_one(reticule_id, new_pos); //you don't need to actually remove the original component - an entity can only have one component of each type so this will overwrite it no problem
             }
         }
 
