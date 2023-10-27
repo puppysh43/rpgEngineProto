@@ -9,5 +9,5 @@ pub fn println_debugger(state: &mut State) {
     // );
     // }
 
-    println!("Current UI State is: {:?}", state.uistate);
+    // println!("Current UI State is: {:?}", state.uistate);
 }

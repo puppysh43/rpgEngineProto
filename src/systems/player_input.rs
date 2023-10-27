@@ -14,7 +14,6 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
     if let Some(key) = key {
         match control_state {
             ControlState::Default => {
-                println!("Default control state.");
                 player_delta = match key {
                     //simple arrow key movement for beginners or laptop users
                     VirtualKeyCode::Left => Point::new(-1, 0),
@@ -32,6 +31,8 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                     VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
                     VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
                     VirtualKeyCode::V => {
+                        // let is_reticule
+                        // for (_, _) in state.ecs.query::<&Reticule>
                         spawn_reticule(commands, player_pos);
                         state.controlstate = ControlState::Looking;
                         Point::new(0, 0)
@@ -42,7 +43,6 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
 
             ControlState::Looking => {
                 //look at examples from earlier in the book on how to move an object w/out using message of intent
-                println!("Looking control state.");
                 //player will be able to move the reticule with the numpad, print a brief description to the log with v and view a full screen description with V
                 //escape will let the player exit looking mode and go back to default mode
                 reticule_delta = match key {
@@ -75,6 +75,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                                 //if they're in the same place as the reticule
                                 commands.insert_one(entity, Examining); //then add an "Examining" tagging component to it so the UI system can pick it up later and display it
                                 state.uistate = UiState::ExaminingEntity; //set the UI state to examining entity so it'll be displayed properly
+                                state.controlstate = ControlState::ExaminingEntity;
                             }
                         }
                         //this will add the "Examining" component to whatever shares the same position as the reticule and sets the ui state to "examining entity"
@@ -119,6 +120,12 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                 VirtualKeyCode::Escape => {
                     state.controlstate = ControlState::Default;
                     state.uistate = UiState::Default;
+                    for (entity, _) in state.ecs.query::<&Examining>().iter() {
+                        commands.remove_one::<Examining>(entity); //then remove the examining/being examined tag
+                    }
+                    for (entity, _) in state.ecs.query::<&Reticule>().iter() {
+                        commands.despawn(entity);
+                    }
                 }
                 _ => {
                     println!("you will not be able to leave until you press escape.");

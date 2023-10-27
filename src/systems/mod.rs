@@ -48,7 +48,6 @@ fn input_systems(state: &mut State) {
 }
 ///All player related functions go here.
 fn pc_systems(state: &mut State) {
-    println!("Starting the PC Turn Phase");
     let mut commands = CommandBuffer::new();
     combat::combat(state, &mut commands); //will need to tweak the combat system WORKING (?????) but oh my GOD does this need work
     commands.run_on(&mut state.ecs);
@@ -69,7 +68,6 @@ fn pc_systems(state: &mut State) {
 ///All NPC related systems as well as worldsystems that progress once a turn such as
 ///the spread of fire, growth of plants, etc.
 fn npc_systems(state: &mut State) {
-    println!("Starting the NPC Turn Phase");
     let mut commands = CommandBuffer::new();
     random_move::random_move(state, &mut commands); //WORKING (?)
     commands.run_on(&mut state.ecs);

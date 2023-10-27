@@ -22,6 +22,12 @@ pub fn default_ui(state: &mut State) {
         ColorPair::new(RED, GREEN),
     );
 
+    // match state.controlstate {
+    // ControlState::Default => todo!(),
+    // ControlState::Looking => todo!(),
+    // ControlState::ExaminingEntity => todo!(),
+    // }
+
     draw_batch.print_color(
         Point::new(UI_XSTART, 1),
         "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",

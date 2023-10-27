@@ -14,7 +14,6 @@ pub fn examine_entity(state: &mut State, commands: &mut CommandBuffer) {
         .iter()
     {
         description = long_desc.0.clone(); //grab the long description of any item tagged as being examined
-        commands.remove_one::<Examining>(entity); //then remove the examining/being examined tag
     }
 
     //will need to format the description string so that it can fit on the screen and be pretty
@@ -24,15 +23,17 @@ pub fn examine_entity(state: &mut State, commands: &mut CommandBuffer) {
         formatted_text.push(firsthalf.to_string());
         description = secondhalf.to_string();
     }
+    formatted_text.push(description);
 
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(MAIN_LAYER);
     draw_batch.cls();
     draw_batch.target(TOOLTIP_LAYER);
     draw_batch.cls();
-    draw_batch.target(TOOLTIP_LAYER);
+    draw_batch.target(UI_LAYER);
     draw_batch.cls();
     draw_batch.target(EFFECTS_LAYER);
+    draw_batch.cls();
 
     for line in formatted_text {
         draw_batch.print_color_centered(line_num, line, ColorPair::new(ORANGE, BLACK));
@@ -40,10 +41,4 @@ pub fn examine_entity(state: &mut State, commands: &mut CommandBuffer) {
     }
 
     draw_batch.submit(5000).expect("Batch Error");
-
-    //for loop through entire vec of strings that prints centered in color
-
-    //this section will just format the text and print it to the screen in a way that doesn't suck
-    //(this is the hard part)
-    //will need to send a null character to all layers to clear the screen and then send print to the "effects" screen which I'll probably use for general UI for now
 }
