@@ -28,6 +28,10 @@ pub fn examine_entity(state: &mut State, commands: &mut CommandBuffer) {
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(MAIN_LAYER);
     draw_batch.cls();
+    draw_batch.target(TOOLTIP_LAYER);
+    draw_batch.cls();
+    draw_batch.target(TOOLTIP_LAYER);
+    draw_batch.cls();
     draw_batch.target(EFFECTS_LAYER);
 
     for line in formatted_text {

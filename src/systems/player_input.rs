@@ -46,6 +46,12 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                 //player will be able to move the reticule with the numpad, print a brief description to the log with v and view a full screen description with V
                 //escape will let the player exit looking mode and go back to default mode
                 reticule_delta = match key {
+                    //simple arrow key movement for beginners or laptop users
+                    VirtualKeyCode::Left => Point::new(-1, 0),
+                    VirtualKeyCode::Right => Point::new(1, 0),
+                    VirtualKeyCode::Up => Point::new(0, -1),
+                    VirtualKeyCode::Down => Point::new(0, 1),
+                    //more complex numpad movement for hardcore gamers
                     VirtualKeyCode::Numpad4 => Point::new(-1, 0), //move west
                     VirtualKeyCode::Numpad6 => Point::new(1, 0),  //move east
                     VirtualKeyCode::Numpad8 => Point::new(0, -1), //move north
@@ -109,6 +115,15 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                     _ => Point::new(0, 0),
                 }
             }
+            ControlState::ExaminingEntity => match key {
+                VirtualKeyCode::Escape => {
+                    state.controlstate = ControlState::Default;
+                    state.uistate = UiState::Default;
+                }
+                _ => {
+                    println!("you will not be able to leave until you press escape.");
+                }
+            },
             _ => {
                 println!("This shouldn't happen!")
             }
@@ -166,7 +181,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
         //This match statement ensures the turn only continues if the player is done with inputs e.g targeting ranged attack, looking around, etc
         match control_state {
             ControlState::Default => state.turnstate = TurnState::PcTurn,
-            ControlState::Looking => state.turnstate = TurnState::AwaitingInput,
+            ControlState::Looking | ControlState::ExaminingEntity => {
+                state.turnstate = TurnState::AwaitingInput
+            }
         }
     }
 }

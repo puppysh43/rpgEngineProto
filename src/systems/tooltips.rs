@@ -15,9 +15,6 @@ pub fn tooltips(state: &mut State) {
     let player_fov = fov.iter().nth(0).unwrap().1;
     //this match statement decides what's displayed, whether it's an entity name, the chance to hit, etc.
     match control_state {
-        ControlState::Default => {
-            //filler comment b/c the tooltip isn't gonna do anything!
-        }
         ControlState::Looking => {
             positions
                 .iter()
@@ -30,6 +27,9 @@ pub fn tooltips(state: &mut State) {
 
                     draw_batch.print(screen_pos, &display); //THIS WILL NEED TO BE TWEAKED.
                 });
+        }
+        _ => {
+            //filler comment because we don't need to draw a tooltip!
         }
     }
 
