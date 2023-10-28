@@ -97,3 +97,6 @@ impl FieldOfView {
         }
     }
 }
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Location(pub MapID);

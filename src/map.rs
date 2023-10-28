@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
-#[derive(Copy, Clone, PartialEq, Debug)]
+#[derive(Copy, Clone, PartialEq, Debug, Eq, Hash)]
 pub enum MapID {
     DevRoom01,
     DevRoom02,

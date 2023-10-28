@@ -13,6 +13,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
             max: 10,
         },
         FieldOfView::new(12),
+        Location(MapID::DevRoom01),
     ));
 }
 
@@ -22,6 +23,7 @@ pub fn spawn_statue(
     name: String,
     short_desc: String,
     long_desc: String,
+    location: MapID,
 ) {
     ecs.spawn((
         pos,
@@ -32,6 +34,7 @@ pub fn spawn_statue(
         Name(name),
         ShortDescription(short_desc),
         LongDescription(long_desc),
+        Location(location),
     ));
 }
 

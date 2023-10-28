@@ -3,6 +3,14 @@ use crate::prelude::*;
 pub fn map_render(state: &mut State) {
     let mut fov = state.ecs.query::<With<&FieldOfView, &Player>>();
     let mut draw_batch = DrawBatch::new();
+    let mut map = Map::new();
+    for (player, raw_loc) in state.ecs.query::<With<&Location, &Player>>().iter() {
+        map = state
+            .localmaps
+            .get(&raw_loc.0)
+            .expect("Player's MapID is not valid.")
+            .clone();
+    }
 
     draw_batch.target(0);
 
@@ -13,8 +21,8 @@ pub fn map_render(state: &mut State) {
             for x in 0..MAP_WIDTH {
                 let pt = Point::new(x, y);
                 let idx = map_idx(x, y);
-                if state.map.in_bounds(pt)
-                    && (player_fov.visible_tiles.contains(&pt) | state.map.revealed_tiles[idx])
+                if map.in_bounds(pt)
+                    && (player_fov.visible_tiles.contains(&pt) | map.revealed_tiles[idx])
                 {
                     let tint = if player_fov.visible_tiles.contains(&pt) {
                         // will need to switch this over to darkening various colours in the pallete.
@@ -22,19 +30,15 @@ pub fn map_render(state: &mut State) {
                     } else {
                         DARK_GRAY
                     };
-                    match state.map.tiles[idx] {
+                    match map.tiles[idx] {
                         TileType::Floor => {
-                            draw_batch.set(
-                                pt,
-                                ColorPair::new(
-                                    tint, // (3)
-                                    BLACK,
-                                ),
-                                to_cp437('.'),
-                            );
+                            draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('.'));
                         }
                         TileType::Wall => {
                             draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('#'));
+                        }
+                        TileType::MapPortal(MapID) => {
+                            draw_batch.set(pt, ColorPair::new(PINK, BLACK), to_cp437('*'));
                         }
                     }
                 }

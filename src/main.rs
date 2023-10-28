@@ -12,6 +12,7 @@ mod ui_state;
 mod prelude {
     pub use bracket_lib::prelude::*;
     pub use hecs::*;
+    pub use std::collections::HashMap;
     //size of the full window including UI elements
     pub const SCREEN_WIDTH: i32 = 70;
     pub const SCREEN_HEIGHT: i32 = 35;
@@ -46,7 +47,7 @@ pub struct State {
     key: Option<VirtualKeyCode>,
     turnstate: TurnState,
     controlstate: ControlState,
-    map: Map,
+    localmaps: HashMap<MapID, Map>,
     log: Vec<String>,
     numberturns: u32, //each turn represents 1 second
     uistate: UiState,
@@ -55,22 +56,26 @@ pub struct State {
 impl State {
     fn new() -> Self {
         let mut ecs = World::new();
-        let map = build_devroom01();
+        let devroom01 = build_devroom01();
+        let mut localmaps: HashMap<MapID, Map> = HashMap::new();
+        localmaps.insert(MapID::DevRoom01, devroom01);
         let log: Vec<String> = Vec::new();
         spawn_player(&mut ecs, Point::new(1, 1)); //needs to be updated
-        spawn_statue(&mut ecs, Point::new(8,8),"Abstract Statue".to_string() ,"A smooth statue with flowing curves".to_string() , "The statue is made out of a softly lavender stone polished down to a reflective finish that you can see a blurry mirror of your face in. Its form is undulating and surreal, looping back in on itself multiple times and sometimes splitting off into many fine strands that meld back into the main body. At the base of the statue there appears to be inscriptions in faded text. You can tell from the writing structure it's a poem, but in a dialect you don't quite understand.".to_string());
+        spawn_statue(&mut ecs, Point::new(8,8),"Abstract Statue".to_string() ,"A smooth statue with flowing curves".to_string() , "The statue is made out of a softly lavender stone polished down to a reflective finish that you can see a blurry mirror of your face in. Its form is undulating and surreal, looping back in on itself multiple times and sometimes splitting off into many fine strands that meld back into the main body. At the base of the statue there appears to be inscriptions in faded text. You can tell from the writing structure it's a poem, but in a dialect you don't quite understand.".to_string(), MapID::DevRoom01);
         Self {
             ecs,
             key: None,
             turnstate: TurnState::AwaitingInput,
             controlstate: ControlState::Default,
-            map,
+            localmaps,
+            // map,
             log,
             numberturns: 0,
             uistate: UiState::Default,
         }
     }
-
+    /*
+    temporarily disabled
     fn reset_game_state(&mut self) {
         self.ecs = World::default();
         self.key = None;
@@ -83,7 +88,7 @@ impl State {
         self.uistate = UiState::Default;
         spawn_player(&mut self.ecs, Point::new(1, 1)); //placeholder position the spawn player function will be handled by the
                                                        //then I'll need to reset all the entity spawns lmao
-    }
+    }*/
 }
 
 impl GameState for State {

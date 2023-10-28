@@ -1,6 +1,7 @@
 use crate::prelude::*;
 
 pub fn tooltips(state: &mut State) {
+    //TODO will need to filter the positions query to include only things sharing the same location as the player
     let control_state = state.controlstate; //control state to decide what kind of tooltip is displayed
     if state.uistate == UiState::Default {
         let mut positions = state.ecs.query::<(&Point, &Name)>();
