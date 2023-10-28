@@ -1,11 +1,18 @@
 use crate::prelude::*;
 
 const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
-
-#[derive(Copy, Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq, Debug)]
+pub enum MapID {
+    DevRoom01,
+    DevRoom02,
+    DevRoom03,
+    DevRoom04,
+}
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub enum TileType {
     Wall,
     Floor,
+    MapPortal(MapID),
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {
@@ -41,7 +48,7 @@ impl Map {
         }
     }
 
-pub fn blank_canvas(tile: TileType) -> Self {
+    pub fn blank_canvas(tile: TileType) -> Self {
         Self {
             tiles: vec![tile; NUM_TILES],
             revealed_tiles: vec![false; NUM_TILES],
