@@ -63,7 +63,8 @@ fn pc_systems(state: &mut State) {
     effects_render::effects_render(state); //WORKING(?)
     ui_render::ui_render(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
-    //level_transition system that switches player location if they enter a tile
+    map_transition::map_transitions(state, &mut commands);
+    commands.run_on(&mut state.ecs);
     end_turn::end_turn(state); //WORKING(?)
 }
 ///All NPC related systems as well as worldsystems that progress once a turn such as
