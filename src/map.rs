@@ -12,7 +12,7 @@ pub enum MapID {
 pub enum TileType {
     Wall,
     Floor,
-    MapPortal(MapID),
+    MapPortal { destination: MapID },
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {

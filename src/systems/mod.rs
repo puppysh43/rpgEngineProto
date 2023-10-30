@@ -8,6 +8,7 @@ mod end_turn;
 mod entity_render;
 mod fov;
 mod map_render;
+mod map_transition;
 mod movement;
 mod player_input;
 mod random_move;
@@ -32,7 +33,7 @@ pub fn run_systems(state: &mut State) {
 ///talking to NPCs, going through their inventory, etc.
 fn input_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
-    player_input::player_input(state, &mut commands); //WORKING(?)
+    player_input::player_input(state, &mut commands); //need to update this to work w/ the new map system
     commands.run_on(&mut state.ecs);
     fov::fov(state, &mut commands); //done I think? Will need to doublecheck
     commands.run_on(&mut state.ecs);
@@ -41,7 +42,7 @@ fn input_systems(state: &mut State) {
     map_render::map_render(state); //WORKING(?)
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)
-    tooltips::tooltips(state); //WORKING (?) BUT NEEDS TWEAKS ON HOW TEXT IS DISPLAYED
+    tooltips::tooltips(state); //needs to be updated to work w/ multiple locations plus tweak text
     ui_render::ui_render(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
     debugging::println_debugger(state);
@@ -49,7 +50,7 @@ fn input_systems(state: &mut State) {
 ///All player related functions go here.
 fn pc_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
-    combat::combat(state, &mut commands); //will need to tweak the combat system WORKING (?????) but oh my GOD does this need work
+    combat::combat(state, &mut commands); //
     commands.run_on(&mut state.ecs);
     movement::movement(state, &mut commands); // WORKING (????)
     commands.run_on(&mut state.ecs);
@@ -62,7 +63,7 @@ fn pc_systems(state: &mut State) {
     effects_render::effects_render(state); //WORKING(?)
     ui_render::ui_render(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
-
+    //level_transition system that switches player location if they enter a tile
     end_turn::end_turn(state); //WORKING(?)
 }
 ///All NPC related systems as well as worldsystems that progress once a turn such as
