@@ -44,7 +44,7 @@ pub fn build_devroom01() -> Map {
     let mut devroom01 = Map::from_string(map_pattern);
     let portal_pos = map_idx(5, 5);
     devroom01.tiles[portal_pos] = TileType::MapPortal {
-        destination: (MapID::DevRoom02, Point::new(8, 8)),
+        destination: (MapID::DevRoom02, Point::new(9, 8)),
     };
     devroom01
 }
@@ -52,7 +52,7 @@ pub fn build_devroom02() -> Map {
     let mut devroom02 = Map::blank_canvas(TileType::Floor);
     let portal_pos = map_idx(8, 8);
     devroom02.tiles[portal_pos] = TileType::MapPortal {
-        destination: (MapID::DevRoom01, Point::new(5, 5)),
+        destination: (MapID::DevRoom01, Point::new(6, 5)),
     };
     devroom02
 }
