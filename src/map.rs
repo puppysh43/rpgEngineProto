@@ -12,7 +12,7 @@ pub enum MapID {
 pub enum TileType {
     Wall,
     Floor,
-    MapPortal { destination: MapID },
+    MapPortal { destination: (MapID, Point) },
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {
@@ -55,7 +55,7 @@ impl Map {
         }
     }
 
-    pub fn new_from_string(raw_string: String) -> Self {
+    pub fn from_string(raw_string: String) -> Self {
         //this will take in a string and convert it into a map, or return a blank map of only floors if it's not the right size or otherwise not fit for purpose
         let mut map: Vec<TileType> = Vec::new();
         //need to trim the string and make sure it's exactly NUM_TILES long
@@ -96,7 +96,9 @@ impl Map {
     }
 
     pub fn can_enter_tile(&self, point: Point) -> bool {
-        self.in_bounds(point) && self.tiles[map_idx(point.x, point.y)] == TileType::Floor
+        // self.in_bounds(point) && self.tiles[map_idx(point.x, point.y)] == TileType::Floor
+
+        self.in_bounds(point) && self.tiles[map_idx(point.x, point.y)] != TileType::Wall
     }
 
     fn valid_exit(&self, loc: Point, delta: Point) -> Option<usize> {

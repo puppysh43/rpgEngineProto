@@ -43,24 +43,32 @@ mod prelude {
 use prelude::*;
 
 pub struct State {
-    ecs: World,
-    key: Option<VirtualKeyCode>,
-    turnstate: TurnState,
-    controlstate: ControlState,
-    localmaps: HashMap<MapID, Map>,
+    ecs: World,                  //our entity component system
+    key: Option<VirtualKeyCode>, //the current key detected as being press
+    //will later need to add things such as if shift and control is being pressed
+    //or even mouse information
+    turnstate: TurnState,       //this controls the flow of our turn-based game
+    controlstate: ControlState, //keeps track of what the player is doing to decide what keys do what
+    localmaps: HashMap<MapID, Map>, //all of the localmaps used to store world data
+    player: Entity,
+    player_location: MapID,
     log: Vec<String>,
     numberturns: u32, //each turn represents 1 second
-    uistate: UiState,
+    uistate: UiState, //used to track what menu the player is in
 }
 
 impl State {
     fn new() -> Self {
         let mut ecs = World::new();
         let devroom01 = build_devroom01();
+        let devroom02 = build_devroom02();
         let mut localmaps: HashMap<MapID, Map> = HashMap::new();
         localmaps.insert(MapID::DevRoom01, devroom01);
+        localmaps.insert(MapID::DevRoom02, devroom02);
         let log: Vec<String> = Vec::new();
+        let spawn = MapID::DevRoom01;
         spawn_player(&mut ecs, Point::new(1, 1)); //needs to be updated
+        let player = ecs.query::<&Player>().iter().nth(0).unwrap().0;
         spawn_statue(&mut ecs, Point::new(8,8),"Abstract Statue".to_string() ,"A smooth statue with flowing curves".to_string() , "The statue is made out of a softly lavender stone polished down to a reflective finish that you can see a blurry mirror of your face in. Its form is undulating and surreal, looping back in on itself multiple times and sometimes splitting off into many fine strands that meld back into the main body. At the base of the statue there appears to be inscriptions in faded text. You can tell from the writing structure it's a poem, but in a dialect you don't quite understand.".to_string(), MapID::DevRoom01);
         Self {
             ecs,
@@ -68,7 +76,8 @@ impl State {
             turnstate: TurnState::AwaitingInput,
             controlstate: ControlState::Default,
             localmaps,
-            // map,
+            player,
+            player_location: spawn,
             log,
             numberturns: 0,
             uistate: UiState::Default,

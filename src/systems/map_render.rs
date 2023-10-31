@@ -2,15 +2,13 @@ use crate::prelude::*;
 
 pub fn map_render(state: &mut State) {
     let mut fov = state.ecs.query::<With<&FieldOfView, &Player>>();
+    let player_location = state.player_location.clone();
     let mut draw_batch = DrawBatch::new();
-    let mut map = Map::new();
-    for (player, raw_loc) in state.ecs.query::<With<&Location, &Player>>().iter() {
-        map = state
-            .localmaps
-            .get(&raw_loc.0)
-            .expect("Player's MapID is not valid.")
-            .clone();
-    }
+    let map = state
+        .localmaps
+        .get(&player_location)
+        .expect("Player's MapID is not valid.")
+        .clone();
 
     draw_batch.target(0);
 
@@ -37,7 +35,7 @@ pub fn map_render(state: &mut State) {
                         TileType::Wall => {
                             draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('#'));
                         }
-                        TileType::MapPortal(MapID) => {
+                        TileType::MapPortal { destination: MapID } => {
                             draw_batch.set(pt, ColorPair::new(PINK, BLACK), to_cp437('*'));
                         }
                     }

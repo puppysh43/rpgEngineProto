@@ -7,6 +7,7 @@ mod effects_render;
 mod end_turn;
 mod entity_render;
 mod fov;
+mod get_player_location;
 mod map_render;
 mod map_transition;
 mod movement;
@@ -33,6 +34,7 @@ pub fn run_systems(state: &mut State) {
 ///talking to NPCs, going through their inventory, etc.
 fn input_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
+    get_player_location::get_player_location(state);
     player_input::player_input(state, &mut commands); //need to update this to work w/ the new map system
     commands.run_on(&mut state.ecs);
     fov::fov(state, &mut commands); //done I think? Will need to doublecheck
@@ -45,11 +47,14 @@ fn input_systems(state: &mut State) {
     tooltips::tooltips(state); //needs to be updated to work w/ multiple locations plus tweak text
     ui_render::ui_render(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
+    // map_transition::map_transitions(state, &mut commands);
+    // commands.run_on(&mut state.ecs);
     debugging::println_debugger(state);
 }
 ///All player related functions go here.
 fn pc_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
+    // get_player_location::get_player_location(state);
     combat::combat(state, &mut commands); //
     commands.run_on(&mut state.ecs);
     movement::movement(state, &mut commands); // WORKING (????)
@@ -71,6 +76,7 @@ fn pc_systems(state: &mut State) {
 ///the spread of fire, growth of plants, etc.
 fn npc_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
+    get_player_location::get_player_location(state);
     random_move::random_move(state, &mut commands); //WORKING (?)
     commands.run_on(&mut state.ecs);
     chasing::chasing(state, &mut commands); //WORKING (?)

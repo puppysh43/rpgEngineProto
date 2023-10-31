@@ -1,9 +1,16 @@
 use crate::prelude::*;
 
 pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
-    let player = state.ecs.query::<&Player>().iter().nth(0).unwrap().0;
+    let player = state.player.clone();
+    let player_location = state.player_location.clone();
+    let mut map = state
+        .localmaps
+        .get(&player_location)
+        .expect("failed to extract player's current location from localmaps hashmap.")
+        .clone();
+
     for (entity, want_move) in state.ecs.query::<&WantsToMove>().iter() {
-        if state.map.can_enter_tile(want_move.destination) {
+        if map.can_enter_tile(want_move.destination) {
             commands.insert_one(want_move.entity, want_move.destination);
 
             if let Ok(entry) = state.ecs.entity(want_move.entity) {
@@ -17,7 +24,7 @@ pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
 
                     if entry.entity() == player {
                         fov.visible_tiles.iter().for_each(|pos| {
-                            state.map.revealed_tiles[map_idx(pos.x, pos.y)] = true;
+                            map.revealed_tiles[map_idx(pos.x, pos.y)] = true;
                         });
                     }
                 }
@@ -25,4 +32,5 @@ pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
         }
         commands.despawn(entity);
     }
+    state.localmaps.insert(player_location, map);
 }

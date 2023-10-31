@@ -5,7 +5,7 @@ use crate::prelude::*;
 pub fn combat(state: &mut State, commands: &mut CommandBuffer) {
     let mut attackers = state.ecs.query::<&WantsToAttack>();
 
-    let player_entity = state.ecs.query::<&Player>().iter().nth(0).unwrap().0; //player entity to check if the victim of an attack is the player
+    let player_entity = state.player.clone(); //player entity to check if the victim of an attack is the player
 
     let victims: Vec<(Entity, Entity)> = attackers
         .iter()
