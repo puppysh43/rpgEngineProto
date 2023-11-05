@@ -19,7 +19,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
     match player_tile {
         TileType::MapPortal { destination } => {
             commands.insert_one(player_entity, Location(destination.0));
-            commands.insert_one(player_entityity, destination.1);
+            commands.insert_one(player_entity, destination.1);
             state.player_location = destination.0;
             println!("the player is on top of a map portal!");
         }

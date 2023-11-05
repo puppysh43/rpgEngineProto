@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-mod chasing;
+mod ai;
 mod combat;
 mod debugging;
 mod effects_render;
@@ -12,7 +12,6 @@ mod map_render;
 mod map_transition;
 mod movement;
 mod player_input;
-mod random_move;
 mod tooltips;
 mod ui_render;
 mod update_log;
@@ -77,10 +76,7 @@ fn pc_systems(state: &mut State) {
 fn npc_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
     get_player_location::get_player_location(state);
-    random_move::random_move(state, &mut commands); //WORKING (?)
-    commands.run_on(&mut state.ecs);
-    chasing::chasing(state, &mut commands); //WORKING (?)
-    commands.run_on(&mut state.ecs);
+    ai::ai_systems(state, &mut commands);
     combat::combat(state, &mut commands); //WORKING (????)
     commands.run_on(&mut state.ecs);
     movement::movement(state, &mut commands); //WORKING (????)
