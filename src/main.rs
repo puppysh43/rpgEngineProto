@@ -34,6 +34,7 @@ mod prelude {
     pub use crate::control_state::*;
     pub use crate::map::*;
     pub use crate::map_builder::*;
+    pub use crate::overworld::*;
     pub use crate::spawner::*;
     pub use crate::systems::*;
     pub use crate::turn_state::*;
@@ -51,6 +52,7 @@ pub struct State {
     turnstate: TurnState,       //this controls the flow of our turn-based game
     controlstate: ControlState, //keeps track of what the player is doing to decide what keys do what
     localmaps: HashMap<MapID, Map>, //all of the localmaps used to store world data
+    worldmap: WorldMap,
     player: Entity,
     player_location: MapID,
     log: Vec<String>,
@@ -61,6 +63,7 @@ pub struct State {
 impl State {
     fn new() -> Self {
         let mut ecs = World::new();
+        let worldmap = WorldMap::new();
         let devroom01 = build_devroom01();
         let devroom02 = build_devroom02();
         let mut localmaps: HashMap<MapID, Map> = HashMap::new();
@@ -77,6 +80,7 @@ impl State {
             turnstate: TurnState::AwaitingInput,
             controlstate: ControlState::Default,
             localmaps,
+            worldmap,
             player,
             player_location: spawn,
             log,
