@@ -1,0 +1,31 @@
+minimum viable product to test the engine
+basic skills list (6 or so)
+attributes
+one town area
+one "dungeon"
+2 different town factions
+quest involving dungeon that lets you pick one faction or the other w/ option to double or triple cross
+item interactions(?)
+functional overworld
+NPCs that can be talked to (some with dialogue trees others with just barks)
+items you can interact with
+quests can be solved either with combat, stealth, speech, or tech skills
+stealth system
+inventory and items
+ranged and melee combat
+ammo and reloading
+melee weapons will be dex or strength
+skills: ranged
+melee [weapons skills will effect chance to hit]
+speech
+tech
+sneak
+steal
+
+attributes:
+STR
+IQ
+DEX
+HT/CON
+PER
+WILL
