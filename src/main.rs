@@ -4,6 +4,7 @@ mod components;
 mod control_state;
 mod map;
 mod map_builder;
+mod overworld;
 mod spawner;
 mod systems;
 mod turn_state;

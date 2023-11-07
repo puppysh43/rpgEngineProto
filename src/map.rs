@@ -7,6 +7,14 @@ pub enum MapID {
     DevRoom02,
     DevRoom03,
     DevRoom04,
+    FirstTownCenter,
+    FirstTownNorth,
+    FirstTownEast,
+    FirstTownSouth,
+    FirstTownWest,
+    FirstDungeonLevel1,
+    FirstDungeonLevel2,
+    FirstDungeonLevel3,
 }
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub enum TileType {
