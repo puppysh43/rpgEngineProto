@@ -58,6 +58,7 @@ pub struct State {
     log: Vec<String>,
     numberturns: u32, //each turn represents 1 second
     uistate: UiState, //used to track what menu the player is in
+    is_in_overworld: bool,
 }
 
 impl State {
@@ -86,6 +87,7 @@ impl State {
             log,
             numberturns: 0,
             uistate: UiState::Default,
+            is_in_overworld: false,
         }
     }
     /*
