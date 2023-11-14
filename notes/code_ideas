@@ -1,30 +1,131 @@
-#[derive(Copy, Clone, PartialEq)]
-///Represents different kind of tiles in local dungeon maps.
-pub enum TileType {
-    Wall,
-    Floor,
-    Exit,
+#[derive(Debug, Clone, Copy, Eq, PartialEq, Component)]
+pub enum Location {
+    Overworld,
+    Map(MapId),
 }
 
-#[derive(Copy, Clone, PartialEq)]
-pub enum WorldTileType {
-    //enum that will correspond to the different kinds of tiles on the worldmap.
-    ProceduralDesert,
-    Town(MapID),
-    Dungeon,
-    SaltMarsh,
+Straying a bit from the main question then, I'd strongly recommend using an array, not a HashMap (nor even a Vec) for storing your local maps, and using the MapId enum to index into it, something like this:
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+pub enum MapId {
+    Village,
+    Town,
+    City,
+    MinesOfMoria,
+    // etc
 }
 
-#[derive(Copy, Clone, PartialEq)]
-pub enum MapID {
-    StartingTown,
-}
-///gets the actual vec usize for interacting w/ the map given an x and y coordinates
-pub fn map_idx(x: i32, y: i32) -> usize {
-    ((y * MAP_WIDTH) + x) as usize
+// elsewhere, defining your maps:
+let mut maps = [Map::default(); NUMBER_OF_MAPS];
+// then to access a specific map:
+let village_map = maps[MapId::Village as usize];
+
+Straying a bit from the main question then, I'd strongly recommend using an array, not a HashMap (nor even a Vec) for storing your local maps, and using the MapId enum to index into it, something like this:
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+pub enum MapId {
+    Village,
+    Town,
+    City,
+    MinesOfMoria,
+    // etc
 }
 
-pub struct Map {
-    pub tiles: Vec<TileType>,
-    pub revealed_tiles: Vec<bool>,
+// elsewhere, defining your maps:
+let mut maps = [Map::default(); NUMBER_OF_MAPS];
+// then to access a specific map:
+let village_map = maps[MapId::Village as usize];
+Obviously this wouldn't be the actual structure of your code, this is just for demonstration purposes
+Reason being that HashMap has considerable overhead involved, and is way overkill for a fixed number of maps - but it would be great if you didn't know ahead of time how many local maps you'd need to build (e.g. dungeons with variable depth levels, random encounter maps scattered throughout the overworld). Even in that case, I'd consider a structure that could define a monotonically increasing numerical ID, and making MapId a newtype around it, and storing the maps themselves in a Vec indexed by that internal numeric ID
+
+
+You could (maybe even should?) newtype your maps array, and provide an accessor method that abstracts that usize cast away for you:
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+pub struct Maps([Map; NUMBER_OF_MAPS])
+
+impl Maps {
+    pub fn get(&self, map_id: MapId) -> &Map {
+        &self.0[map_id as usize]
+    }
+
+    pub fn get_mut(&mut self, map_id: MapId) -> &mut Map {
+        &mut self.0[map_id as usize]
+    }
+}
+
+
+
+
+Yeah I should clarify: There's nothing wrong with using the HashMap, it's just "better" to use an array for a static-sized list of data like this
+Quinnoa — 11/10/2023 5:13 PM
+Understandable
+The thing is I am considering procedural stuff at some point?
+Like generating wilderness or random encounters or what have you
+But that's definitely a "maybe" feature plan rn is just have a bunch of prefab maps that get rolled through for random encounters
+Kromey — 11/10/2023 5:15 PM
+You could make those one-off maps that are never stored anywhere, and just generate a new one from scratch for each such encounter. Or, like I mentioned before, make MapId a newtype around a usize that you increment for each new map you add
+Something like this:
+pub struct MapId(usize); // Note the internal value is private!
+
+pub struct Maps {
+    maps: Vec<Map>
+}
+
+impl Maps {
+    pub fn add_map(&mut self, map: Map) -> MapId {
+        self.maps.push(map);
+        MapId(self.0.len() - 1)
+    }
+
+    pub fn get(&self, map_id: MapId) -> &Map {
+        &self.maps[map_id.0]
+    }
+}
+ 
+By keeping MapId's wrapped usize private, this is very safe: You can only access a map via a MapId, and you can only get a MapId by adding a map - it's therefore impossible to ever have an invalid MapId (provided, of course, that maps are purely additive, that is you never remove a map)
+Quinnoa — 11/10/2023 5:20 PM
+Ooh, thank you
+Kromey — 11/10/2023 5:20 PM
+Any time 🙂
+I use something like this to store "rooms" in another project of mine, although mine's much more complex because rooms can be removed (usually happens when you combine two rooms by removing a wall or a door), in which case I push the now-invalid RoomId onto a separate stack, and then any time I'm creating a new room I first check if there's one on the stack I can re-use before creating a brand new one
+/// Resource to store and reference [`Room`]s
+#[derive(Debug, Default, Resource)]
+pub struct Rooms {
+    /// List of [`Room`]s that exist in the world
+    rooms: Vec<Room>,
+    /// List of indexes in `rooms` for [`Room`]s that have been deleted
+    deleted_rooms: Vec<usize>,
+}
+
+impl Rooms {
+    /// Get a new [`RoomId`] for a new [`Room`]
+    pub fn new_room_id(&mut self) -> RoomId {
+        if let Some(id) = self.deleted_rooms.pop() {
+            RoomId(id)
+        } else {
+            self.rooms.push(Room::default());
+            RoomId(self.rooms.len() - 1)
+        }
+    }
+
+    /// Create a new [`Room`] and populate it immediately
+    pub fn new_room(&mut self, tiles: &[MapPoint]) -> RoomId {
+        let id = self.new_room_id();
+        self.set_room(id, tiles);
+
+        id
+    }
+    /// Delete a [`Room`]
+    ///
+    /// Returns an iterator over the [`Tile`] [`MapPoint`] positions in the [`Room`].
+    ///
+    /// # Panics
+    ///
+    /// If the supplied [`RoomId`] is invalid this method will panic.
+    ///
+    /// [`Tile`]: super::Tile
+    pub fn delete_room(&mut self, RoomId(id): RoomId) -> impl Iterator<Item = MapPoint> + '_ {
+        roomid_assert!(self, id);
+
+        self.deleted_rooms.push(id);
+        self.rooms[id].0.drain(..)
+    }
 }
