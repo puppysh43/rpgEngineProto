@@ -15,4 +15,5 @@ pub enum ControlState {
     // SelectingItem,
     // TargetingItem,
     ExaminingEntity,
+    InOverworld,
 }
