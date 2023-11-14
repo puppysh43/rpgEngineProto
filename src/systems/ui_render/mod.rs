@@ -14,7 +14,6 @@ NOTES ON DRAWING UI
 * you have space for 39 characters between the first border and the edge of the screen
 */
 //consider having it check the gamestate for various flags to see what ui state needs to be done so that
-//TODO Add command buffer access to ui render!
 pub fn ui_render(state: &mut State, commands: &mut CommandBuffer) {
     let ui_state = state.uistate;
     match ui_state {

@@ -11,6 +11,7 @@ mod get_player_location;
 mod map_render;
 mod map_transition;
 mod movement;
+mod overworld_render;
 mod player_input;
 mod tooltips;
 mod ui_render;
@@ -40,6 +41,7 @@ fn input_systems(state: &mut State) {
     commands.run_on(&mut state.ecs);
     update_log::update_log(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
+    overworld_render::overworld_render(state);
     map_render::map_render(state); //WORKING(?)
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)
@@ -62,6 +64,8 @@ fn pc_systems(state: &mut State) {
     commands.run_on(&mut state.ecs);
     update_log::update_log(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
+
+    overworld_render::overworld_render(state);
     map_render::map_render(state); //WORKING(?)
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)
@@ -85,6 +89,8 @@ fn npc_systems(state: &mut State) {
     commands.run_on(&mut state.ecs);
     update_log::update_log(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
+
+    overworld_render::overworld_render(state);
     map_render::map_render(state); //WORKING(?)
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)

@@ -26,4 +26,7 @@ impl WorldMap {
             revealed_tiles: vec![false; NUM_TILES],
         }
     }
+    pub fn in_bounds(&self, point: Point) -> bool {
+        point.x >= 0 && point.x < MAP_WIDTH && point.y >= 0 && point.y < MAP_HEIGHT
+    }
 }

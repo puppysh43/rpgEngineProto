@@ -11,6 +11,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
 
     let mut player_delta = Point::new(0, 0);
     let mut reticule_delta = Point::new(0, 0);
+    let mut overworld_delta = Point::new(0, 0);
     if let Some(key) = key {
         match control_state {
             ControlState::Default => {
@@ -35,6 +36,12 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                         // for (_, _) in state.ecs.query::<&Reticule>
                         spawn_reticule(commands, player_pos);
                         state.controlstate = ControlState::Looking;
+                        Point::new(0, 0)
+                    }
+                    VirtualKeyCode::NumpadSubtract => {
+                        //will have a better way of doing this later
+                        state.is_in_overworld = true;
+                        state.controlstate = ControlState::InOverworld;
                         Point::new(0, 0)
                     }
                     _ => Point::new(0, 0),
@@ -131,6 +138,28 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                     println!("you will not be able to leave until you press escape.");
                 }
             },
+            ControlState::InOverworld => {
+                overworld_delta = match key {
+                    //simple arrow key movement for beginners or laptop users
+                    VirtualKeyCode::Left => Point::new(-1, 0),
+                    VirtualKeyCode::Right => Point::new(1, 0),
+                    VirtualKeyCode::Up => Point::new(0, -1),
+                    VirtualKeyCode::Down => Point::new(0, 1),
+                    //more complex numpad movement for hardcore gamers
+                    VirtualKeyCode::Numpad4 => Point::new(-1, 0), //move west
+                    VirtualKeyCode::Numpad6 => Point::new(1, 0),  //move east
+                    VirtualKeyCode::Numpad8 => Point::new(0, -1), //move north
+                    VirtualKeyCode::Numpad2 => Point::new(0, 1),  //move south
+                    VirtualKeyCode::Numpad7 => Point::new(-1, -1), //move northwest
+                    VirtualKeyCode::Numpad9 => Point::new(1, -1), //move northeast
+                    VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
+                    VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
+                    _ => {
+                        println!("whatever man.");
+                        Point::new(0, 0)
+                    }
+                }
+            }
             _ => {
                 println!("This shouldn't happen!")
             }
@@ -188,7 +217,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
         //This match statement ensures the turn only continues if the player is done with inputs e.g targeting ranged attack, looking around, etc
         match control_state {
             ControlState::Default => state.turnstate = TurnState::PcTurn,
-            ControlState::Looking | ControlState::ExaminingEntity => {
+            ControlState::Looking | ControlState::ExaminingEntity | ControlState::InOverworld => {
                 state.turnstate = TurnState::AwaitingInput
             }
         }
