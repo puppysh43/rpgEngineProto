@@ -11,6 +11,9 @@ pub struct Render {
 pub struct Player;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub struct OverworldPlayerToken;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Enemy;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -43,7 +46,21 @@ pub struct WantsToAttack {
 pub struct AddToLog {
     pub body: String,
 }
-//Messages of Intent END
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct WantsToGoUp {
+    pub pos: Point,
+    pub entity: Entity,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct WantsToGoDown {
+    pub pos: Point,
+    pub entity: Entity,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct WantsToLeaveMap; //considered having this have information on what entity is doing the moving
+                            //but nothing other than the player will ever leave the map!
+                            //Messages of Intent END
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Health {
@@ -99,4 +116,4 @@ impl FieldOfView {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct Location(pub MapID);
+pub struct CurrentLocation(pub LocationID);

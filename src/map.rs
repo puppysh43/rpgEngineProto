@@ -1,26 +1,11 @@
 use crate::prelude::*;
 
 const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
-#[derive(Copy, Clone, PartialEq, Debug, Eq, Hash)]
-pub enum MapID {
-    DevRoom01,
-    DevRoom02,
-    DevRoom03,
-    DevRoom04,
-    FirstTownCenter,
-    FirstTownNorth,
-    FirstTownEast,
-    FirstTownSouth,
-    FirstTownWest,
-    FirstDungeonLevel1,
-    FirstDungeonLevel2,
-    FirstDungeonLevel3,
-}
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub enum TileType {
     Wall,
     Floor,
-    MapPortal { destination: (MapID, Point) },
+    // MapPortal { destination: (MapID, Point) },
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {

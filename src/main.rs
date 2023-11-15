@@ -2,6 +2,7 @@
 //I'm gonna switch this over to HECS!!
 mod components;
 mod control_state;
+mod location;
 mod map;
 mod map_builder;
 mod overworld;
@@ -32,6 +33,7 @@ mod prelude {
 
     pub use crate::components::*;
     pub use crate::control_state::*;
+    pub use crate::location::*;
     pub use crate::map::*;
     pub use crate::map_builder::*;
     pub use crate::overworld::*;
@@ -51,10 +53,11 @@ pub struct State {
     //or even mouse information
     turnstate: TurnState,       //this controls the flow of our turn-based game
     controlstate: ControlState, //keeps track of what the player is doing to decide what keys do what
-    localmaps: HashMap<MapID, Map>, //all of the localmaps used to store world data
+    locations: HashMap<LocationID, Location>, //all of the localmaps used to store world data
     worldmap: WorldMap,
     player: Entity,
-    player_location: MapID,
+    // player_location: MapID,
+    player_location: LocationID,
     log: Vec<String>,
     numberturns: u32, //each turn represents 1 second
     uistate: UiState, //used to track what menu the player is in
@@ -65,6 +68,8 @@ impl State {
     fn new() -> Self {
         let mut ecs = World::new();
         let worldmap = WorldMap::new();
+        //call worldmap generation function
+        //call location generating function
         let devroom01 = build_devroom01();
         let devroom02 = build_devroom02();
         let mut localmaps: HashMap<MapID, Map> = HashMap::new();
