@@ -5,7 +5,13 @@ const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
 pub enum TileType {
     Wall,
     Floor,
-    // MapPortal { destination: (MapID, Point) },
+    // StairUp,
+    // StairDown,
+    // Elevator,
+    // MapTransitionNorth,
+    // MapTransitionEast,
+    // MapTransitionSouth,
+    // MapTransitionWest,
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {

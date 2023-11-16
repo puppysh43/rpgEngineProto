@@ -39,7 +39,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                         Point::new(0, 0)
                     }
                     VirtualKeyCode::NumpadSubtract => {
-                        //will have a better way of doing this later
+                        //will send some kind of message of intent, either having a separate one for each direction or with one including
                         state.is_in_overworld = true;
                         state.controlstate = ControlState::InOverworld;
                         Point::new(0, 0)
@@ -154,6 +154,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                     VirtualKeyCode::Numpad9 => Point::new(1, -1), //move northeast
                     VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
                     VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
+                    //TODO add stuff like examine or the ability to access menus like character screen inventory etc
+                    //
+                    VirtualKeyCode::NumpadAdd => 
                     _ => {
                         println!("whatever man.");
                         Point::new(0, 0)

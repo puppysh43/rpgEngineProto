@@ -2,14 +2,14 @@
 //I'm gonna switch this over to HECS!!
 mod components;
 mod control_state;
+mod init_world;
 mod location;
 mod map;
-mod map_builder;
 mod overworld;
-mod spawner;
 mod systems;
 mod turn_state;
 mod ui_state;
+mod worldgen;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
@@ -35,17 +35,17 @@ mod prelude {
     pub use crate::control_state::*;
     pub use crate::location::*;
     pub use crate::map::*;
-    pub use crate::map_builder::*;
     pub use crate::overworld::*;
-    pub use crate::spawner::*;
     pub use crate::systems::*;
     pub use crate::turn_state::*;
     pub use crate::ui_state::*;
     pub use crate::State;
 }
 
+// use init_world;
 use prelude::*;
-
+use worldgen::gen_locations;
+use worldgen::gen_overworld;
 pub struct State {
     ecs: World,                  //our entity component system
     key: Option<VirtualKeyCode>, //the current key detected as being press
@@ -56,7 +56,6 @@ pub struct State {
     locations: HashMap<LocationID, Location>, //all of the localmaps used to store world data
     worldmap: WorldMap,
     player: Entity,
-    // player_location: MapID,
     player_location: LocationID,
     log: Vec<String>,
     numberturns: u32, //each turn represents 1 second
@@ -67,32 +66,26 @@ pub struct State {
 impl State {
     fn new() -> Self {
         let mut ecs = World::new();
-        let worldmap = WorldMap::new();
-        //call worldmap generation function
-        //call location generating function
-        let devroom01 = build_devroom01();
-        let devroom02 = build_devroom02();
-        let mut localmaps: HashMap<MapID, Map> = HashMap::new();
-        localmaps.insert(MapID::DevRoom01, devroom01);
-        localmaps.insert(MapID::DevRoom02, devroom02);
-        let log: Vec<String> = Vec::new();
-        let spawn = MapID::DevRoom01;
-        spawn_player(&mut ecs, Point::new(1, 1)); //needs to be updated
+        let worldmap = gen_overworld::generate_overworld(); //generate the worldmap
+        let locations = gen_locations::generate_locations(); //generate the game's locations
+        let log: Vec<String> = Vec::new(); //generate a blank log
+        let spawn = LocationID::FirstTown; //spawn location. may or may not be necessary lmao
+        init_world::init_world(&mut ecs); //pass the ecs to this and it will spawn all the entities needed in the gameworld.
+
         let player = ecs.query::<&Player>().iter().nth(0).unwrap().0;
-        spawn_statue(&mut ecs, Point::new(8,8),"Abstract Statue".to_string() ,"A smooth statue with flowing curves".to_string() , "The statue is made out of a softly lavender stone polished down to a reflective finish that you can see a blurry mirror of your face in. Its form is undulating and surreal, looping back in on itself multiple times and sometimes splitting off into many fine strands that meld back into the main body. At the base of the statue there appears to be inscriptions in faded text. You can tell from the writing structure it's a poem, but in a dialect you don't quite understand.".to_string(), MapID::DevRoom01);
         Self {
             ecs,
             key: None,
             turnstate: TurnState::AwaitingInput,
             controlstate: ControlState::Default,
-            localmaps,
+            locations,
             worldmap,
             player,
             player_location: spawn,
             log,
             numberturns: 0,
             uistate: UiState::Default,
-            is_in_overworld: false,
+            is_in_overworld: true, //temporary for now probably best if players start in a town or something first
         }
     }
     /*
@@ -123,6 +116,7 @@ impl GameState for State {
         ctx.set_active_console(UI_LAYER);
         ctx.cls();
         self.key = ctx.key;
+        //will maybe need to add line to get whether or not the player is pressing shift or control to allow for more nuanced controls
         systems::run_systems(self);
         render_draw_buffer(ctx).expect("Render error");
     }

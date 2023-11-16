@@ -12,7 +12,7 @@ pub fn overworld_render(state: &mut State) {
                 if worldmap.in_bounds(pt) {
                     match worldmap.tiles[idx] {
                         WorldTileType::Town(_) => {
-                            draw_batch.set(pt, ColorPair::new(PURPLE, BLACK), to_cp437('⌂'));
+                            draw_batch.set(pt, ColorPair::new(YELLOW, BLACK), to_cp437('⌂'));
                         }
                         WorldTileType::Dungeon(_) => {
                             draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('‼'));
@@ -24,6 +24,6 @@ pub fn overworld_render(state: &mut State) {
                 }
             }
         }
-        //render the player
+        //TODO render the player token
     }
 }

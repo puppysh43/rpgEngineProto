@@ -46,21 +46,19 @@ pub struct WantsToAttack {
 pub struct AddToLog {
     pub body: String,
 }
-
+///message of intent for when something on the overworld wants to enter a location
 #[derive(Clone, Debug, PartialEq)]
-pub struct WantsToGoUp {
+pub struct WantsToEnterLocation {
     pub pos: Point,
     pub entity: Entity,
 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct WantsToGoDown {
+pub struct WantsToChangeMap {
     pub pos: Point,
     pub entity: Entity,
+    pub cardinal_direction: CardinalDirection,
 }
-#[derive(Clone, Debug, PartialEq)]
-pub struct WantsToLeaveMap; //considered having this have information on what entity is doing the moving
-                            //but nothing other than the player will ever leave the map!
-                            //Messages of Intent END
+//Messages of Intent END
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Health {

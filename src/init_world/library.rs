@@ -13,9 +13,14 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
             max: 10,
         },
         FieldOfView::new(12),
-        Location(MapID::DevRoom01),
+        // Location(MapID::DevRoom01),
     ));
 }
+/*
+example statue spawning
+
+spawn_statue(&mut ecs, Point::new(8,8),"Abstract Statue".to_string() ,"A smooth statue with flowing curves".to_string() , "The statue is made out of a softly lavender stone polished down to a reflective finish that you can see a blurry mirror of your face in. Its form is undulating and surreal, looping back in on itself multiple times and sometimes splitting off into many fine strands that meld back into the main body. At the base of the statue there appears to be inscriptions in faded text. You can tell from the writing structure it's a poem, but in a dialect you don't quite understand.".to_string(), MapID::DevRoom01);
+*/
 
 pub fn spawn_statue(
     ecs: &mut World,
@@ -23,7 +28,8 @@ pub fn spawn_statue(
     name: String,
     short_desc: String,
     long_desc: String,
-    location: MapID,
+    location: LocationID,
+    map: Point3D,
 ) {
     ecs.spawn((
         pos,
@@ -34,7 +40,8 @@ pub fn spawn_statue(
         Name(name),
         ShortDescription(short_desc),
         LongDescription(long_desc),
-        Location(location),
+        CurrentLocation(location),
+        map,
     ));
 }
 

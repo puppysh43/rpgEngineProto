@@ -1,2 +1,11 @@
 use crate::prelude::*;
-//this will be a big function that generates all the locations in the game. will sooner than later turn into its own subdirectory w/ each location having its own module
+mod first_town;
+use first_town::*;
+///This function generates all of the locations in the game that the player can visit
+///both static locations as well as things like random encounters. Edit this when building
+///your game out of this engine!
+pub fn generate_locations() -> HashMap<LocationID, Location> {
+    let mut locations: HashMap<LocationID, Location> = HashMap::new();
+    locations.insert(LocationID::FirstTown, first_town());
+    locations
+}
