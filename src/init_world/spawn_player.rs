@@ -24,10 +24,10 @@ pub fn spawn_player(ecs: &mut World) {
     let player_overworld_spawnpos = Point::new(0, 0);
     ecs.spawn((
         OverworldPlayerToken,
-        Render {
-            color: ColorPair::new(PURPLE, BLACK),
-            glyph: to_cp437('@'),
-        },
+        // Render {
+        // color: ColorPair::new(PURPLE, BLACK),
+        // glyph: to_cp437('@'),
+        // },
         player_overworld_spawnpos,
     ));
 }

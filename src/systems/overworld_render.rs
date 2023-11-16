@@ -24,6 +24,15 @@ pub fn overworld_render(state: &mut State) {
                 }
             }
         }
-        //TODO render the player token
+        //render the player token
+        let mut player_token_pos = Point::new(0, 0);
+        for (_, pos) in state.ecs.query_mut::<With<&Point, &OverworldPlayerToken>>() {
+            player_token_pos = *pos;
+        }
+        draw_batch.set(
+            player_token_pos,
+            ColorPair::new(WHITE, BLACK),
+            to_cp437('@'),
+        );
     }
 }

@@ -6,6 +6,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
         //query for the player's position and assign it to the player_pos var
         player_pos = *pos;
     }
+    let player_entity = state.player.clone();
     let key = state.key;
     let control_state = state.controlstate;
 
@@ -40,8 +41,25 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                     }
                     VirtualKeyCode::NumpadSubtract => {
                         //will send some kind of message of intent, either having a separate one for each direction or with one including
-                        state.is_in_overworld = true;
-                        state.controlstate = ControlState::InOverworld;
+                        commands.spawn((
+                            (),
+                            WantsToChangeMap {
+                                pos: player_pos,
+                                entity: player_entity,
+                                cardinal_direction: CardinalDirection::Up,
+                            },
+                        ));
+                        Point::new(0, 0)
+                    }
+                    VirtualKeyCode::NumpadAdd => {
+                        commands.spawn((
+                            (),
+                            WantsToChangeMap {
+                                pos: player_pos,
+                                entity: player_entity,
+                                cardinal_direction: CardinalDirection::Down,
+                            },
+                        ));
                         Point::new(0, 0)
                     }
                     _ => Point::new(0, 0),
@@ -156,7 +174,24 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                     VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
                     //TODO add stuff like examine or the ability to access menus like character screen inventory etc
                     //
-                    VirtualKeyCode::NumpadAdd => 
+                    VirtualKeyCode::NumpadAdd => {
+                        let mut player_token_pos = Point::new(0, 0);
+                        for (_, token_pos) in state
+                            .ecs
+                            .query::<With<&Point, &OverworldPlayerToken>>()
+                            .iter()
+                        {
+                            player_token_pos = *token_pos;
+                        }
+                        commands.spawn((
+                            (),
+                            WantsToEnterLocation {
+                                pos: player_token_pos,
+                                entity: state.player.clone(),
+                            },
+                        ));
+                        Point::new(0, 0)
+                    }
                     _ => {
                         println!("whatever man.");
                         Point::new(0, 0)

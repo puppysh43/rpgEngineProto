@@ -4,12 +4,24 @@ pub fn map_render(state: &mut State) {
     if !state.is_in_overworld {
         //don't do this unless the player isn't in the overworld
         let mut fov = state.ecs.query::<With<&FieldOfView, &Player>>();
-        let player_location = state.player_location.clone();
         let mut draw_batch = DrawBatch::new();
+
+        let mut player_location = LocationID::FirstTown; //temp variable to be overwritten
+        let mut player_coords = Point3D::new(0, 0, 0);
+        for (_, (current_location, coords)) in state
+            .ecs
+            .query::<With<(&CurrentLocation, &Point3D), &Player>>()
+            .iter()
+        {
+            player_location = current_location.0;
+            player_coords = *coords;
+        }
+
         let map = state
-            .localmaps
+            .locations
             .get(&player_location)
             .expect("Player's MapID is not valid.")
+            .get_map(player_coords)
             .clone();
 
         draw_batch.target(0);
@@ -36,9 +48,6 @@ pub fn map_render(state: &mut State) {
                             }
                             TileType::Wall => {
                                 draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('#'));
-                            }
-                            TileType::MapPortal { destination: MapID } => {
-                                draw_batch.set(pt, ColorPair::new(PINK, BLACK), to_cp437('*'));
                             }
                         }
                     }
