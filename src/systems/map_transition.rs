@@ -1,30 +1,28 @@
 use crate::prelude::*;
 
 pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
-    if !state.is_in_overworld {
-        let player_location = state.player_location.clone(); //temp variable to be overwritten
-        let player_entity = state.player.clone();
-
-        let current_map = state.localmaps.get(&player_location).unwrap(); //use it to grab the current map
-        let mut player_pos = Point::new(0, 0);
-        for (_, pos) in state.ecs.query::<With<&Point, &Player>>().iter() {
-            player_pos = *pos; //get the player's current position
-        }
-        let player_idx = map_idx(player_pos.x, player_pos.y); //get the index of the player from their extracted point component
-        let player_tile = current_map.tiles[player_idx]; //so you can grab the tile the player currently occupies
-                                                         //and run it through a match statement!
-
-        //I'll need to check for an "intent to use exit" for portals, stairs, etc
-        //but maybe have something resembling
-
-        match player_tile {
-            TileType::MapPortal { destination } => {
-                commands.insert_one(player_entity, Location(destination.0));
-                commands.insert_one(player_entity, destination.1);
-                state.player_location = destination.0;
-                println!("the player is on top of a map portal!");
+    match state.is_in_overworld {
+        true => {
+            //this will iterate through all of the "wants to enter location" message of intent
+            //entities
+            for (_, moi) in state.ecs.query_mut::<&WantsToEnterLocation>() {
+                let entity = moi.entity;
+                let pos_idx = map_idx(moi.pos.x, moi.pos.y);
+                let location = LocationID::FirstTown; //filler location b/c I'm too silly with it to learn how to use options
+                                                      //this location will NOT be used unless there's a valid location detected in the player's current position.
+                let tile = state.worldmap.tiles[pos_idx];
+                //need to see if the tile contains a locationID and then push that locationID onto
+                //the entity from the message of intent + set their 3D point component to 0,0,0
             }
-            _ => { //do nothing},
+        }
+        false => {
+            //instead of doing all this horseshit this function will just iterate through all the map transition
+            //messages of intent and process them.
+            for (_, moi) in state.ecs.query_mut::<&WantsToChangeMap>() {
+                //get the position of the player, the entity changing map, and the cardinal direction
+                //they're going in.
+                //then do some math to see if they're trying to exit a location, if they're near the
+                //in the same tile as an elevator or stairs that would let that entity move up.
             }
         }
     }
