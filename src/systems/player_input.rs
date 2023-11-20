@@ -16,6 +16,16 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
     if let Some(key) = key {
         match control_state {
             ControlState::Default => {
+                let mut map_pos = Point3D::new(0, 0, 0);
+                let mut current_location = LocationID::FirstTown;
+                for (_, (pos3d, location)) in state
+                    .ecs
+                    .query_mut::<With<(&Point3D, &CurrentLocation), &Player>>()
+                {
+                    map_pos = *pos3d;
+                    current_location = location.0;
+                }
+
                 player_delta = match key {
                     //simple arrow key movement for beginners or laptop users
                     VirtualKeyCode::Left => Point::new(-1, 0),
@@ -47,6 +57,8 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                                 pos: player_pos,
                                 entity: player_entity,
                                 cardinal_direction: CardinalDirection::Up,
+                                map_pos,
+                                current_location,
                             },
                         ));
                         Point::new(0, 0)
@@ -58,6 +70,8 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                                 pos: player_pos,
                                 entity: player_entity,
                                 cardinal_direction: CardinalDirection::Down,
+                                map_pos,
+                                current_location,
                             },
                         ));
                         Point::new(0, 0)
@@ -183,6 +197,10 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
                         {
                             player_token_pos = *token_pos;
                         }
+                        println!(
+                            "player_token_pos is: x:{}, y:{}",
+                            player_token_pos.x, player_token_pos.y
+                        );
                         commands.spawn((
                             (),
                             WantsToEnterLocation {
@@ -205,7 +223,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
 
         let mut players = state.ecs.query::<With<&Point, &Player>>(); //query of all the player entities and their point component
         let mut enemies = state.ecs.query::<With<&Point, &Enemy>>(); //query of all the enemy entities and their point component
-        let (player_entity, _) = players.iter().next().unwrap();
+        let player_entity = state.player;
         let destination = player_pos + player_delta;
 
         let mut did_something = false;
@@ -249,6 +267,18 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             for (reticule_id, reticule_pos) in state.ecs.query::<With<&Point, &Reticule>>().iter() {
                 let new_pos = *reticule_pos + reticule_delta; //calculate a new position for the reticule
                 commands.insert_one(reticule_id, new_pos); //you don't need to actually remove the original component - an entity can only have one component of each type so this will overwrite it no problem
+            }
+        }
+
+        //this checks the player token delta and moves it around the screen
+        if overworld_delta.x != 0 || overworld_delta.y != 0 {
+            for (overworldtoken_id, overworldtoken_pos) in state
+                .ecs
+                .query::<With<&Point, &OverworldPlayerToken>>()
+                .iter()
+            {
+                let new_pos = *overworldtoken_pos + overworld_delta;
+                commands.insert_one(overworldtoken_id, new_pos);
             }
         }
 

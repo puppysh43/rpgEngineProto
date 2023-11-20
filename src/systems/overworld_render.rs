@@ -29,10 +29,7 @@ pub fn overworld_render(state: &mut State) {
         for (_, pos) in state.ecs.query_mut::<With<&Point, &OverworldPlayerToken>>() {
             player_token_pos = *pos;
         }
-        draw_batch.set(
-            player_token_pos,
-            ColorPair::new(WHITE, BLACK),
-            to_cp437('@'),
-        );
+        draw_batch.set(player_token_pos, ColorPair::new(CYAN, BLACK), to_cp437('@'));
+        draw_batch.submit(5000).expect("Batch error");
     }
 }

@@ -77,7 +77,7 @@ impl State {
             ecs,
             key: None,
             turnstate: TurnState::AwaitingInput,
-            controlstate: ControlState::Default,
+            controlstate: ControlState::InOverworld,
             locations,
             worldmap,
             player,

@@ -2,7 +2,7 @@ use crate::prelude::*;
 ///Function that generates the overworld map. This is what you will be fiddling with to
 ///customize the overworld for your game!
 pub fn generate_overworld() -> WorldMap {
-    let overworld = WorldMap::new();
+    let mut overworld = WorldMap::new();
     let first_town_pos = Point::new(3, 4);
     let first_dungeon = Point::new(10, 10);
 

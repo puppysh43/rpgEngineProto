@@ -33,7 +33,7 @@ impl Structure {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Map {
     pub tiles: Vec<TileType>,
     pub revealed_tiles: Vec<bool>,

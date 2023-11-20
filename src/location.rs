@@ -30,6 +30,8 @@ pub enum LocationID {
     FirstTown,
     FirstDungeon,
 }
+
+#[derive(Clone, Debug)]
 ///This is the unit that represents each discrete location on the worldmap that the player can go down and interact with
 pub struct Location {
     maps: HashMap<Point3D, Map>, //all the different map screens in the location
@@ -46,7 +48,7 @@ impl Location {
     }
     ///Method for adding a new map to the location that ensures it will always be adjacent to another map in any of the 6
     ///3D cardinal directions.
-    pub fn add_map(&self, map: Map, origin: Point3D, direction: CardinalDirection) {
+    pub fn add_map(&mut self, map: Map, origin: Point3D, direction: CardinalDirection) {
         self.maps
             .get(&origin)
             .expect("There is not a valid map at the given origin location when adding a map.");
@@ -66,12 +68,21 @@ impl Location {
         let map = self
             .maps
             .get(&pos)
-            .expect("could not get map, provided incorrect 3D coordinates.");
-        *map
+            .expect("could not get map, provided incorrect 3D coordinates.")
+            .clone();
+        map
     }
     ///method for checking if there's a valid map at the given 3D point
     pub fn check_map(&self, pos: Point3D) -> bool {
         let is_map = self.maps.get(&pos).is_some();
         is_map
+    }
+    ///method that returns the spawnpoint
+    pub fn get_spawnpos(&self) -> Point {
+        self.spawn_pos
+    }
+    ///only used when a map needs to be updated
+    pub fn update_map(&mut self, pos_3d: Point3D, map: Map) {
+        self.maps.insert(pos_3d, map);
     }
 }

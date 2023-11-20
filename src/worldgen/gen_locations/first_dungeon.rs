@@ -5,7 +5,7 @@ use crate::prelude::*;
 
 pub fn first_dungeon() -> Location {
     //will need to change this later
-    let first_pattern = "
+    let mut first_pattern = "
         #######################...########################
         #..........############...########..........######
         #..........############...########..........######
@@ -43,8 +43,8 @@ pub fn first_dungeon() -> Location {
         #######################...########################
     "
     .to_string();
-    first_patter.retain(|c| !c.is_whitespace());
-    let spawn_pos = Point::new(24, 14);
+    first_pattern.retain(|c| !c.is_whitespace());
+    let spawn_pos = Point::new(2, 2);
     let first_map = Map::from_string(first_pattern);
     let mut first_dungeon = Location::new(first_map, spawn_pos);
 

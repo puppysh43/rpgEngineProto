@@ -2,7 +2,7 @@ use crate::prelude::*;
 
 //TODO will definitely need to take a look at this later but I can't be asked rn
 pub fn random_move(state: &mut State, commands: &mut CommandBuffer) {
-    if !state.is_in_overworld {
+    /*    if !state.is_in_overworld {
         let player = state.ecs.query::<&Player>().iter().nth(0).unwrap().0; //player entity to check if the victim of an attack is the player
 
         let player_location = state.player_location.clone();
@@ -46,5 +46,5 @@ pub fn random_move(state: &mut State, commands: &mut CommandBuffer) {
                 ));
             }
         });
-    }
+    }*/
 }

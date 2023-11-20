@@ -57,6 +57,8 @@ pub struct WantsToChangeMap {
     pub pos: Point,
     pub entity: Entity,
     pub cardinal_direction: CardinalDirection,
+    pub map_pos: Point3D,
+    pub current_location: LocationID,
 }
 //Messages of Intent END
 

@@ -16,6 +16,7 @@ mod player_input;
 mod tooltips;
 mod ui_render;
 mod update_log;
+mod worldmap_systems;
 
 pub fn run_systems(state: &mut State) {
     let current_turn = state.turnstate;
@@ -40,6 +41,8 @@ fn input_systems(state: &mut State) {
     commands.run_on(&mut state.ecs);
     //localmap only system
     fov::fov(state, &mut commands); //done I think? Will need to doublecheck
+    commands.run_on(&mut state.ecs);
+    worldmap_systems::worldmap_systems(state, &mut commands);
     commands.run_on(&mut state.ecs);
     //localmap and worldmap system
     update_log::update_log(state, &mut commands); //WORKING(?)

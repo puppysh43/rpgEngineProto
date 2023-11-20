@@ -3,7 +3,7 @@ use crate::prelude::*;
 pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
     //instead of doing all this horseshit this function will just iterate through all the map transition
     //messages of intent and process them.
-    for (_, moi) in state.ecs.query_mut::<&WantsToChangeMap>() {
+    for (moi_id, moi) in state.ecs.query_mut::<&WantsToChangeMap>() {
         //get the position of the player, the entity changing map, and the cardinal direction
         //they're going in.
         //then do some math to see if they're trying to exit a location, if they're near the
@@ -11,12 +11,9 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
         let entity = moi.entity;
         let entity_pos = moi.pos;
         let direction = moi.cardinal_direction;
-        let start_3dpos = state.ecs.query_one_mut::<&Point3D>(entity).unwrap();
-        let location_id = state
-            .ecs
-            .query_one_mut::<&CurrentLocation>(entity)
-            .unwrap()
-            .0;
+        let start_3dpos = moi.map_pos;
+        let location_id = moi.current_location;
+        //TODO make it so all the necessary information is included in the moi instead of being queried
         match direction {
             //TODO optimize - move any repeated code between all cases to outside the match statement
             CardinalDirection::North
@@ -47,7 +44,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                 //AND if the player is on a tiletype that allows for vertical movement such as stairs or an elevator, you do NOT want players to be able
                 //to magically phase through ceilings and floors at the touch of a button!!
                 let location = state.locations.get(&location_id).expect("failed to find location matching locationID of entity trying to move between maps");
-                let current_map = location.get_map(*start_3dpos);
+                let current_map = location.get_map(start_3dpos);
                 let delta_3d = delta_from_direction(direction);
                 let new_3dpos = Point3D::new(
                     start_3dpos.x + delta_3d.x,
@@ -78,11 +75,13 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                         commands.remove_one::<&CurrentLocation>(entity);
                         commands.remove_one::<&Point3D>(entity);
                         commands.remove_one::<&Point>(entity);
-                        state.is_in_overworld == true;
+                        state.is_in_overworld = true;
+                        state.controlstate = ControlState::InOverworld;
                     }
                 }
             }
         }
+        commands.despawn(moi_id);
     }
 }
 
