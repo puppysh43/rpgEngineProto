@@ -49,6 +49,12 @@ pub fn map_render(state: &mut State) {
                             TileType::Wall => {
                                 draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('#'));
                             }
+                            TileType::StairUp => {
+                                draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('<'));
+                            }
+                            TileType::StairDown => {
+                                draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('>'));
+                            }
                         }
                     }
                 }

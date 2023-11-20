@@ -16,7 +16,6 @@ mod player_input;
 mod tooltips;
 mod ui_render;
 mod update_log;
-//TODO IMPLEMENT A FUCKING FLUSH SYSTEM AND PERSISTENT
 
 pub fn run_systems(state: &mut State) {
     let current_turn = state.turnstate;
@@ -29,48 +28,60 @@ pub fn run_systems(state: &mut State) {
         TurnState::EndingSlides => ending_slides(state),
     }
 }
+//TODO organize separation between worldmap and local systems to occur in the broader sys-func grouping
+//functions instead of within each system itself.
 
 ///All input related systems that happen before a player's turn is over such as looking,
 ///talking to NPCs, going through their inventory, etc.
 fn input_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
+    //system run in both worldmap and localmap
     player_input::player_input(state, &mut commands); //need to update this to work w/ the new map system
     commands.run_on(&mut state.ecs);
+    //localmap only system
     fov::fov(state, &mut commands); //done I think? Will need to doublecheck
     commands.run_on(&mut state.ecs);
+    //localmap and worldmap system
     update_log::update_log(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
+
+    //worldmap only system
     overworld_render::overworld_render(state);
+    //localmap only system
     map_render::map_render(state); //WORKING(?)
+                                   //localmap only system
     entity_render::entity_render(state); //WORKING(?)
+                                         //possibly localmap and worldmap?
     effects_render::effects_render(state); //WORKING(?)
+                                           //localmap and worldmap
     tooltips::tooltips(state); //needs to be updated to work w/ multiple locations plus tweak text
+                               //localmap and worldmap system
     ui_render::ui_render(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
-    // map_transition::map_transitions(state, &mut commands);
-    // commands.run_on(&mut state.ecs);
     debugging::println_debugger(state);
 }
 ///All player related functions go here.
 fn pc_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
-    // get_player_location::get_player_location(state);
-    combat::combat(state, &mut commands); //
+    //localmap only system
+    combat::combat(state, &mut commands);
     commands.run_on(&mut state.ecs);
-    movement::movement(state, &mut commands); // WORKING (????)
+    //localmap only system will maybe need worldmap movement system
+    movement::movement(state, &mut commands);
     commands.run_on(&mut state.ecs);
-    fov::fov(state, &mut commands); //WORKING(?)
+    //localmap only system
+    fov::fov(state, &mut commands);
     commands.run_on(&mut state.ecs);
-    update_log::update_log(state, &mut commands); //WORKING(?)
+    update_log::update_log(state, &mut commands);
+    commands.run_on(&mut state.ecs);
+    map_transition::map_transitions(state, &mut commands);
     commands.run_on(&mut state.ecs);
 
     overworld_render::overworld_render(state);
-    map_render::map_render(state); //WORKING(?)
-    entity_render::entity_render(state); //WORKING(?)
-    effects_render::effects_render(state); //WORKING(?)
-    ui_render::ui_render(state, &mut commands); //WORKING(?)
-    commands.run_on(&mut state.ecs);
-    map_transition::map_transitions(state, &mut commands);
+    map_render::map_render(state);
+    entity_render::entity_render(state);
+    effects_render::effects_render(state);
+    ui_render::ui_render(state, &mut commands);
     commands.run_on(&mut state.ecs);
     end_turn::end_turn(state); //WORKING(?)
 }
@@ -86,6 +97,8 @@ fn npc_systems(state: &mut State) {
     fov::fov(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
     update_log::update_log(state, &mut commands); //WORKING(?)
+    commands.run_on(&mut state.ecs);
+    map_transition::map_transitions(state, &mut commands);
     commands.run_on(&mut state.ecs);
 
     overworld_render::overworld_render(state);

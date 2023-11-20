@@ -69,4 +69,9 @@ impl Location {
             .expect("could not get map, provided incorrect 3D coordinates.");
         *map
     }
+    ///method for checking if there's a valid map at the given 3D point
+    pub fn check_map(&self, pos: Point3D) -> bool {
+        let is_map = self.maps.get(&pos).is_some();
+        is_map
+    }
 }

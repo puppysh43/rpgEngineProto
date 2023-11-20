@@ -5,8 +5,8 @@ const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
 pub enum TileType {
     Wall,
     Floor,
-    // StairUp,
-    // StairDown,
+    StairUp,
+    StairDown,
     // Elevator,
     // MapTransitionNorth,
     // MapTransitionEast,
