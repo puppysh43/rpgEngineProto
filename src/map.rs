@@ -83,32 +83,6 @@ impl Map {
         }
     }
 
-    /*
-        pub fn from_txt_file(file_path: String) -> Self {
-            //this will take in a string and convert it into a map, or return a blank map of only floors if it's not the right size or otherwise not fit for purpose
-            let raw_txt = fs::read_to_string(file_path).expect("failed to read map blueprint txt file");
-            let mut map: Vec<TileType> = Vec::new();
-            //need to trim the string and make sure it's exactly NUM_TILES long
-            for i in raw_txt.chars() {
-                match i {
-                    '#' => map.push(TileType::Wall),
-                    '.' => map.push(TileType::Floor),
-                    _ => map.push(TileType::Floor),
-                }
-            }
-            if map.len() == NUM_TILES {
-                return Self {
-                    tiles: map,
-                    revealed_tiles: vec![false; NUM_TILES],
-                };
-            } else {
-                return Self {
-                    tiles: vec![TileType::Floor; NUM_TILES],
-                    revealed_tiles: vec![false; NUM_TILES],
-                };
-            }
-        }
-    */
     ///will insert tiles into a map, replacing them with the structure passed in given a point representing the location of the top left tile of the structure
     pub fn add(&mut self, structure: Structure, spawn_pos: Point) {
         //will need to add a function that somehow inserts the string into the vec at the right point.

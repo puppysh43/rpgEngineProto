@@ -36,6 +36,8 @@ pub enum LocationID {
 pub struct Location {
     maps: HashMap<Point3D, Map>, //all the different map screens in the location
     spawn_pos: Point,            //where the player is spawned when the first enter the location
+                                 // has_been_entered: bool, //used to keep track of if it's been entered by the player before. maybe
+                                 // description: String, //description of the location printed to the log every time it's entered.
 }
 
 impl Location {
