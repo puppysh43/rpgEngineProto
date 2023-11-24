@@ -21,6 +21,7 @@ mod prelude {
     //size of the ingame map and play area, the rest is reserved for UI, menus, log, etc
     pub const MAP_WIDTH: i32 = 50;
     pub const MAP_HEIGHT: i32 = 35;
+    pub const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
 
     ///virtual terminal where the main game is displayed - map, entities, etc    
     pub const MAIN_LAYER: usize = 0;

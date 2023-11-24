@@ -1,7 +1,5 @@
 use crate::prelude::*;
-use std::fs;
 
-const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub enum TileType {
     Wall,
@@ -9,29 +7,14 @@ pub enum TileType {
     StairUp,
     StairDown,
     // Elevator,
-    // MapTransitionNorth,
-    // MapTransitionEast,
-    // MapTransitionSouth,
-    // MapTransitionWest,
+    MapTransitionNorth,
+    MapTransitionEast,
+    MapTransitionSouth,
+    MapTransitionWest,
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {
     ((y * MAP_WIDTH) + x) as usize
-}
-
-pub struct Structure {
-    pub body: String,
-    pub height: i32,
-    pub width: i32,
-}
-impl Structure {
-    pub fn new(bdy: String, hght: i32, wdth: i32) -> Self {
-        Self {
-            body: bdy,
-            height: hght,
-            width: wdth,
-        }
-    }
 }
 
 #[derive(Clone, Debug)]
@@ -81,11 +64,6 @@ impl Map {
                 revealed_tiles: vec![false; NUM_TILES],
             };
         }
-    }
-
-    ///will insert tiles into a map, replacing them with the structure passed in given a point representing the location of the top left tile of the structure
-    pub fn add(&mut self, structure: Structure, spawn_pos: Point) {
-        //will need to add a function that somehow inserts the string into the vec at the right point.
     }
 
     pub fn in_bounds(&self, point: Point) -> bool {

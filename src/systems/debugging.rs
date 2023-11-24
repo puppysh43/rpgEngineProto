@@ -23,7 +23,7 @@ pub fn println_debugger(state: &mut State) {
     for (_, location) in state.ecs.query_mut::<With<&CurrentLocation, &Player>>() {
         println!("The current location of the player is {:?}", location.0);
     }*/
-
+    /*
     for (_, (pos, pos_3d, location)) in state
         .ecs
         .query_mut::<With<(&Point, &Point3D, &CurrentLocation), &Player>>()
@@ -33,6 +33,6 @@ pub fn println_debugger(state: &mut State) {
             LocationID::FirstTown => println!("Player's current location is the first town."),
             LocationID::FirstDungeon => println!("Player's current location is the first dungeon."),
         }
-    }
+    }*/
     // println!("Current UI State is: {:?}", state.uistate);
 }

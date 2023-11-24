@@ -13,6 +13,7 @@ mod map_transition;
 mod movement;
 mod overworld_render;
 mod player_input;
+mod tile_triggers;
 mod tooltips;
 mod ui_render;
 mod update_log;
@@ -75,6 +76,10 @@ fn pc_systems(state: &mut State) {
     //localmap only system
     fov::fov(state, &mut commands);
     commands.run_on(&mut state.ecs);
+    //localmap only system
+    tile_triggers::tile_triggers(state, &mut commands);
+    commands.run_on(&mut state.ecs);
+
     update_log::update_log(state, &mut commands);
     commands.run_on(&mut state.ecs);
     map_transition::map_transitions(state, &mut commands);

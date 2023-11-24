@@ -30,8 +30,26 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                     start_3dpos.y + delta_3d.y,
                     start_3dpos.z + delta_3d.z,
                 );
+                //if there's a valid map in that direction
                 if location.check_map(new_3dpos) {
-                    commands.insert_one(entity, new_3dpos);
+                    commands.insert_one(entity, new_3dpos); //update the player's 3d map position in the location
+                                                            //depending on what direction they're doing they need to have one of their point coordinates shifted to the opposite edge
+                                                            //remember to put them 1 tile out so they don't get stuck
+                    match direction {
+                        CardinalDirection::North => {
+                            commands.insert_one(entity, Point::new(entity_pos.x, MAP_HEIGHT - 2));
+                        }
+                        CardinalDirection::East => {
+                            commands.insert_one(entity, Point::new(1, entity_pos.y));
+                        }
+                        CardinalDirection::South => {
+                            commands.insert_one(entity, Point::new(entity_pos.x, 1));
+                        }
+                        CardinalDirection::West => {
+                            commands.insert_one(entity, Point::new(MAP_WIDTH - 2, entity_pos.y));
+                        }
+                        _ => {}
+                    }
                     //TODO will also need to change their position according to which direction they moved
                     //this will probably be a separate function within this system
                 }

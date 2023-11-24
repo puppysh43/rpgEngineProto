@@ -55,6 +55,18 @@ pub fn map_render(state: &mut State) {
                             TileType::StairDown => {
                                 draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('>'));
                             }
+                            TileType::MapTransitionNorth => {
+                                draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('↑'));
+                            }
+                            TileType::MapTransitionEast => {
+                                draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('→'));
+                            }
+                            TileType::MapTransitionSouth => {
+                                draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('↓'));
+                            }
+                            TileType::MapTransitionWest => {
+                                draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('←'));
+                            }
                         }
                     }
                 }

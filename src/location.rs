@@ -38,6 +38,7 @@ pub struct Location {
     spawn_pos: Point,            //where the player is spawned when the first enter the location
                                  // has_been_entered: bool, //used to keep track of if it's been entered by the player before. maybe
                                  // description: String, //description of the location printed to the log every time it's entered.
+                                 //pallete variable that controls what the color of stuff like the walls and floor.
 }
 
 impl Location {
@@ -86,5 +87,65 @@ impl Location {
     ///only used when a map needs to be updated
     pub fn update_map(&mut self, pos_3d: Point3D, map: Map) {
         self.maps.insert(pos_3d, map);
+    }
+    ///This function looks at all the maps in the location and places map transition blocks at the edges
+    ///where appropriate. Run after inserting all the maps into the location.
+    pub fn connect_maps(&mut self) {
+        let maps_ref = self.clone(); //this will be used to check for adjacency and stuff while iterating through the actual maps and editing them.
+        for (pos_3d, map) in self.maps.iter_mut() {
+            //iterate through the entire location
+            //define 3D points adjacent to the current map in the iterator
+            let adjacent_north = Point3D::new(pos_3d.x, pos_3d.y + 1, pos_3d.z);
+            let adjacent_east = Point3D::new(pos_3d.x + 1, pos_3d.y, pos_3d.z);
+            let adjacent_south = Point3D::new(pos_3d.x, pos_3d.y - 1, pos_3d.z);
+            let adjacent_west = Point3D::new(pos_3d.x - 1, pos_3d.y, pos_3d.z);
+            //all of the following code checks for adjacent maps if there are adjacent maps runs through
+            //the current map and the adjacent map checking for tiles where there's floor tiles "next"
+            //to each other on the virtual edges and changing those to a map transition tile
+            if maps_ref.check_map(adjacent_north) {
+                let adj_map = maps_ref.get_map(adjacent_north);
+
+                for x in 0..MAP_WIDTH {
+                    if map.tiles[map_idx(x, 0)] != TileType::Wall
+                        && adj_map.tiles[map_idx(x, MAP_HEIGHT - 1)] != TileType::Wall
+                    {
+                        map.tiles[map_idx(x, 0)] = TileType::MapTransitionNorth;
+                    }
+                }
+            }
+            if maps_ref.check_map(adjacent_east) {
+                let adj_map = maps_ref.get_map(adjacent_east);
+
+                for y in 0..MAP_HEIGHT {
+                    if map.tiles[map_idx(MAP_WIDTH - 1, y)] != TileType::Wall
+                        && adj_map.tiles[map_idx(0, y)] != TileType::Wall
+                    {
+                        map.tiles[map_idx(MAP_WIDTH - 1, y)] = TileType::MapTransitionEast;
+                    }
+                }
+            }
+            if maps_ref.check_map(adjacent_south) {
+                let adj_map = maps_ref.get_map(adjacent_south);
+
+                for x in 0..MAP_WIDTH {
+                    if map.tiles[map_idx(x, MAP_HEIGHT - 1)] != TileType::Wall
+                        && adj_map.tiles[map_idx(x, 0)] != TileType::Wall
+                    {
+                        map.tiles[map_idx(x, MAP_HEIGHT - 1)] = TileType::MapTransitionSouth;
+                    }
+                }
+            }
+            if maps_ref.check_map(adjacent_west) {
+                let adj_map = maps_ref.get_map(adjacent_west);
+
+                for y in 0..MAP_HEIGHT {
+                    if map.tiles[map_idx(0, y)] != TileType::Wall
+                        && adj_map.tiles[map_idx(MAP_WIDTH - 1, y)] != TileType::Wall
+                    {
+                        map.tiles[map_idx(0, y)] = TileType::MapTransitionWest;
+                    }
+                }
+            }
+        }
     }
 }
