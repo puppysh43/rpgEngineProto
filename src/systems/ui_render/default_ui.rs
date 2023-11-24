@@ -1,9 +1,8 @@
-//this is gonna be the default ui render for stuff like the log help etc
-const UI_XSTART: i32 = (MAP_WIDTH * 2) + 1;
-const UI_BORDER_X: i32 = MAP_WIDTH * 2;
-const LOG_YSTART: i32 = 11;
+//this is gonna be the default ui render for stuff like the log help et
 
 use crate::prelude::*;
+use crate::systems::ui_render::library::*;
+
 pub fn default_ui(state: &mut State) {
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(UI_LAYER);
@@ -45,13 +44,15 @@ pub fn default_ui(state: &mut State) {
     let mut free_log_space = LOG_YSTART;
 
     state.log.iter().rev().for_each(|message| {
-        if free_log_space < MAP_HEIGHT && message.len() < 39 {
-            draw_batch.print_color(
-                Point::new(UI_XSTART, free_log_space),
-                message,
-                ColorPair::new(LIGHTGRAY, BLACK),
-            );
-            free_log_space += 1;
+        if free_log_space < MAP_HEIGHT {
+            for line in greedy_word_wrap(message.clone(), 38) {
+                draw_batch.print_color(
+                    Point::new(UI_XSTART, free_log_space),
+                    line,
+                    ColorPair::new(LIGHTGRAY, BLACK),
+                );
+                free_log_space += 1;
+            }
         }
     });
 

@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 //word wrap function
-fn greedy_word_wrap(raw: String, width: i32) -> Vec<String> {
+pub fn greedy_word_wrap(raw: String, width: i32) -> Vec<String> {
     let raw_split = raw.as_str().split_ascii_whitespace();
     let mut fmt_string: Vec<String> = Vec::new();
     let mut temp_string = String::new();

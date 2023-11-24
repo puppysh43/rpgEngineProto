@@ -4,6 +4,7 @@ mod dialogue_ui;
 mod equipped_ui;
 mod examining_ui;
 mod journal_ui;
+mod library;
 mod log_ui;
 
 use crate::prelude::*;

@@ -22,6 +22,11 @@ mod prelude {
     pub const MAP_WIDTH: i32 = 50;
     pub const MAP_HEIGHT: i32 = 35;
     pub const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
+    //UI sizing information
+
+    pub const UI_XSTART: i32 = (MAP_WIDTH * 2) + 1;
+    pub const UI_BORDER_X: i32 = MAP_WIDTH * 2;
+    pub const LOG_YSTART: i32 = 11;
 
     ///virtual terminal where the main game is displayed - map, entities, etc    
     pub const MAIN_LAYER: usize = 0;

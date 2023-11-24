@@ -1,7 +1,28 @@
 TODO List
-High Priority
 
-Medium Priority
+HIGH PRIORITY
 
-Low Priority
+	- cluster all render systems in the systems/mod
+	- refactor player input into its own systems module
+	- refactor components
+	- add support for shift and control to enable more advanced controls (maybe combine them into a tuple? or a struct)
+	- need to be able to use <> for level navigation
+	- turn the maps into a fixed array instead of a vector
 
+MEDIUM PRIORITY
+
+	- develop a better way of tracking the overworld/localworld split (maybe have everything just reference the controlstate?? use less state trackers)
+	- rewrite ai systems to be functional (and hopefully to be better)
+	- add a UI state for traveling the overworld that will have relevant information on the side.
+
+LOW PRIORITY
+
+	- throw some basic enemies in the dungeon
+	- add skills
+	- add ranged combat
+	- add functionality for reading spawns from a text file
+	- add water management element that drains when you travel/according to amount of turns (it'll be once every 24 hours)
+	- condsider changing examining component name to "BeingExamined"
+	- implement a pallete system for locations so that a core palette of a tiles can represent a variety of environments
+
+COMPLETED TASKS
