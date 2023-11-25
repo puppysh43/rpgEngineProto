@@ -14,6 +14,7 @@ mod worldgen;
 mod prelude {
     pub use bracket_lib::prelude::*;
     pub use hecs::*;
+    pub use std::collections::BTreeMap;
     pub use std::collections::HashMap;
     //size of the full window including UI elements
     pub const SCREEN_WIDTH: i32 = 70;
