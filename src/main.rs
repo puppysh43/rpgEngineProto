@@ -57,6 +57,9 @@ use worldgen::gen_overworld;
 pub struct State {
     ecs: World,                  //our entity component system
     key: Option<VirtualKeyCode>, //the current key detected as being press
+    shift: bool,
+    control: bool,
+    alt: bool,
     //will later need to add things such as if shift and control is being pressed
     //or even mouse information
     turnstate: TurnState,       //this controls the flow of our turn-based game
@@ -64,7 +67,6 @@ pub struct State {
     locations: HashMap<LocationID, Location>, //all of the localmaps used to store world data
     worldmap: WorldMap,
     player: Entity,
-    player_location: LocationID,
     log: Vec<String>,
     numberturns: u32, //each turn represents 1 second
     uistate: UiState, //used to track what menu the player is in
@@ -77,19 +79,20 @@ impl State {
         let worldmap = gen_overworld::generate_overworld(); //generate the worldmap
         let locations = gen_locations::generate_locations(); //generate the game's locations
         let log: Vec<String> = Vec::new(); //generate a blank log
-        let spawn = LocationID::FirstTown; //spawn location. may or may not be necessary lmao
         init_world::init_world(&mut ecs); //pass the ecs to this and it will spawn all the entities needed in the gameworld.
 
         let player = ecs.query::<&Player>().iter().nth(0).unwrap().0;
         Self {
             ecs,
             key: None,
+            shift: false,
+            control: false,
+            alt: false,
             turnstate: TurnState::AwaitingInput,
             controlstate: ControlState::InOverworld,
             locations,
             worldmap,
             player,
-            player_location: spawn,
             log,
             numberturns: 0,
             uistate: UiState::Default,
@@ -124,6 +127,9 @@ impl GameState for State {
         ctx.set_active_console(UI_LAYER);
         ctx.cls();
         self.key = ctx.key;
+        self.shift = ctx.shift;
+        self.control = ctx.control;
+        self.alt = ctx.alt;
         //will maybe need to add line to get whether or not the player is pressing shift or control to allow for more nuanced controls
         systems::run_systems(self);
         render_draw_buffer(ctx).expect("Render error");
