@@ -19,8 +19,7 @@ pub fn map_render(state: &mut State) {
 
         let map = state
             .locations
-            .get(&player_location)
-            .expect("Player's MapID is not valid.")
+            .get(player_location)
             .get_map(player_coords)
             .clone();
 

@@ -14,11 +14,7 @@ pub fn fov(state: &mut State, commands: &mut CommandBuffer) {
             player_location = current_location.0;
             player_coords = *coords;
         }
-        let map = state
-            .locations
-            .get(&player_location)
-            .expect("failed to extract player's current location from location hashmap.")
-            .get_map(player_coords);
+        let map = state.locations.get(player_location).get_map(player_coords);
         //will need to provide this system the current map the player is in
 
         views //this needs to be commented better I'm still not sure how exactly this shit works

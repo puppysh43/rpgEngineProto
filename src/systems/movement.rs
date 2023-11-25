@@ -14,8 +14,7 @@ pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
         }
         let mut map = state
             .locations
-            .get(&player_location)
-            .expect("failed to extract player's current location from localmaps hashmap.")
+            .get(player_location)
             .get_map(player_pos3D)
             .clone();
 
@@ -42,10 +41,10 @@ pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
             }
             commands.despawn(entity);
         }
-        let mut temp_location = state.locations.get(&player_location).unwrap().clone();
+        let mut temp_location = state.locations.get(player_location).clone();
         temp_location.update_map(player_pos3D, map);
         state
             .locations
-            .insert(player_location, temp_location.clone());
+            .update(player_location, temp_location.clone());
     }
 }

@@ -4,14 +4,14 @@ HIGH PRIORITY
 
 	- cluster all render systems in the systems/mod
 	- need to be able to use <> for level navigation
-	- turn the maps into a fixed array instead of a vector
-	- switch locations from hashmaps to binary tree maps
-	- turn list of locations to array accessed by the locationID enum cast as a usize
+	- RESEARCH THIS: switch locations from hashmaps to binary tree maps
+	- rename overworld to worldmap, location to localmap, locations to localmaps, and map(s) to mapscreen(s)
 MEDIUM PRIORITY
 
 	- develop a better way of tracking the overworld/localworld split (maybe have everything just reference the controlstate?? use less state trackers)
 	- rewrite ai systems to be functional (and hopefully to be better)
 	- add a UI state for traveling the overworld that will have relevant information on the side.
+	- Look at UI Rendering in general
 
 LOW PRIORITY
 
@@ -27,3 +27,5 @@ COMPLETED TASKS
 	- refactor components [remember to keep doing this as the amount of components grow and grow]
 	- add support for shift and control to enable more advanced controls [ended up not combining these into a tuple cuz that's stupid]
 	- refactor player input into its own systems module
+	- turn the maps into a fixed array instead of a vector
+	- turn list of locations to array accessed by the locationID enum cast as a usize

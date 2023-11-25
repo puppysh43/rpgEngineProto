@@ -16,10 +16,7 @@ fn check_map_transitions(state: &mut State, commands: &mut CommandBuffer) {
         .query_mut::<(&Point, &Point3D, &CurrentLocation)>()
     {
         //use queried information to reference the appropriate map to check for map.
-        let location = state
-            .locations
-            .get(&current_loc.0)
-            .expect("failed to get location.");
+        let location = state.locations.get(current_loc.0);
         let map = location.get_map(*map_pos);
         // for tile in map.tiles {
         let tile = map.tiles[map_idx(pos.x, pos.y)];

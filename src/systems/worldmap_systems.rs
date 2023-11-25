@@ -17,7 +17,7 @@ pub fn worldmap_systems(state: &mut State, commands: &mut CommandBuffer) {
                 //then will set the current location of the entity to the location contained in the tile
                 //the 3d point component to 0,0,0
                 //and the 2d point component will be set to the spawn point
-                let spawn_pos = state.locations.get(&location_id).unwrap().get_spawnpos();
+                let spawn_pos = state.locations.get(location_id).get_spawnpos();
                 commands.insert_one(entity, CurrentLocation(location_id));
                 commands.insert_one(entity, Point3D::new(0, 0, 0));
                 commands.insert_one(entity, spawn_pos);
@@ -26,7 +26,7 @@ pub fn worldmap_systems(state: &mut State, commands: &mut CommandBuffer) {
                 println!("is_in_overworld {}: ", state.is_in_overworld);
             }
             WorldTileType::Dungeon(location_id) => {
-                let spawn_pos = state.locations.get(&location_id).unwrap().get_spawnpos();
+                let spawn_pos = state.locations.get(location_id).get_spawnpos();
                 commands.insert_one(entity, CurrentLocation(location_id));
                 commands.insert_one(entity, Point3D::new(0, 0, 0));
                 commands.insert_one(entity, spawn_pos);

@@ -12,6 +12,7 @@ mod ui_state;
 mod worldgen;
 
 mod prelude {
+    //libraries used
     pub use bracket_lib::prelude::*;
     pub use hecs::*;
     pub use std::collections::BTreeMap;
@@ -48,6 +49,7 @@ mod prelude {
     pub use crate::systems::*;
     pub use crate::turn_state::*;
     pub use crate::ui_state::*;
+    pub use crate::worldgen::gen_locations::NUM_LOCATIONS;
     pub use crate::State;
 }
 
@@ -65,7 +67,7 @@ pub struct State {
     //or even mouse information
     turnstate: TurnState,       //this controls the flow of our turn-based game
     controlstate: ControlState, //keeps track of what the player is doing to decide what keys do what
-    locations: HashMap<LocationID, Location>, //all of the localmaps used to store world data
+    locations: Locations,       //all of the localmaps used to store world data
     worldmap: WorldMap,
     player: Entity,
     log: Vec<String>,

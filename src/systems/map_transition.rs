@@ -22,7 +22,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
             | CardinalDirection::West => {
                 //entities can only get a want to change map moi from entering transition tiles so only the most basic of sanity checking is necessary.
                 //just make sure there's a map file in the location hashmap with the corresponding new 3D point
-                let location = state.locations.get(&location_id).expect("failed to find location matching locationID of entity trying to move between maps");
+                let location = state.locations.get(location_id);
                 // let new_3dpos = *start_3dpos + delta_from_direction(direction);//I want to be able to do this, find out a way to do this
                 let delta_3d = delta_from_direction(direction);
                 let new_3dpos = Point3D::new(
@@ -61,7 +61,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                 //2) ignoring the possibility of leaving the current location you will need to check both if there's an appropriate map in that direction
                 //AND if the player is on a tiletype that allows for vertical movement such as stairs or an elevator, you do NOT want players to be able
                 //to magically phase through ceilings and floors at the touch of a button!!
-                let location = state.locations.get(&location_id).expect("failed to find location matching locationID of entity trying to move between maps");
+                let location = state.locations.get(location_id);
                 let current_map = location.get_map(start_3dpos);
                 let delta_3d = delta_from_direction(direction);
                 let new_3dpos = Point3D::new(

@@ -149,3 +149,21 @@ impl Location {
         }
     }
 }
+
+pub struct Locations([Location; NUM_LOCATIONS]);
+
+impl Locations {
+    pub fn new(contents: [Location; NUM_LOCATIONS]) -> Self {
+        Self(contents)
+    }
+    pub fn get(&self, location_id: LocationID) -> &Location {
+        &self.0[location_id as usize]
+    }
+
+    pub fn get_mut(&mut self, location_id: LocationID) -> &mut Location {
+        &mut self.0[location_id as usize]
+    }
+    pub fn update(&mut self, location_id: LocationID, location: Location) {
+        self.0[location_id as usize] = location;
+    }
+}

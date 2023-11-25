@@ -19,49 +19,52 @@ pub fn map_idx(x: i32, y: i32) -> usize {
 
 #[derive(Clone, Debug)]
 pub struct Map {
-    pub tiles: Vec<TileType>,
-    pub revealed_tiles: Vec<bool>,
+    pub tiles: [TileType; NUM_TILES],
+    pub revealed_tiles: [bool; NUM_TILES],
 }
 
 impl Map {
     pub fn new() -> Self {
         Self {
-            tiles: vec![TileType::Floor; NUM_TILES],
-            revealed_tiles: vec![false; NUM_TILES],
+            tiles: [TileType::Floor; NUM_TILES],
+            revealed_tiles: [false; NUM_TILES],
         }
     }
 
     pub fn blank_canvas(tile: TileType) -> Self {
         Self {
-            tiles: vec![tile; NUM_TILES],
-            revealed_tiles: vec![false; NUM_TILES],
+            tiles: [tile; NUM_TILES],
+            revealed_tiles: [false; NUM_TILES],
         }
     }
-
+    ///create a new map file from a given string
     pub fn from_string(mut raw_string: String) -> Self {
         //this will take in a string and convert it into a map, or return a blank map of only floors if it's not the right size or otherwise not fit for purpose
-        let mut map: Vec<TileType> = Vec::new();
+        let mut map: [TileType; NUM_TILES] = [TileType::Floor; NUM_TILES];
 
         raw_string.retain(|c| !c.is_whitespace());
         //need to trim the string and make sure it's exactly NUM_TILES long
-        for i in raw_string.chars() {
-            match i {
-                '#' => map.push(TileType::Wall),
-                '.' => map.push(TileType::Floor),
-                '<' => map.push(TileType::StairUp),
-                '>' => map.push(TileType::StairDown),
-                _ => map.push(TileType::Floor),
+        if raw_string.len() == NUM_TILES {
+            let mut i: usize = 0;
+            for char in raw_string.chars() {
+                match char {
+                    '#' => map[i] = TileType::Wall,
+                    '.' => map[i] = TileType::Floor,
+                    '<' => map[i] = TileType::StairUp,
+                    '>' => map[i] = TileType::StairDown,
+                    _ => map[i] = TileType::Floor,
+                }
+                i += 1;
             }
-        }
-        if map.len() == NUM_TILES {
+
             return Self {
                 tiles: map,
-                revealed_tiles: vec![false; NUM_TILES],
+                revealed_tiles: [false; NUM_TILES],
             };
         } else {
             return Self {
-                tiles: vec![TileType::Floor; NUM_TILES],
-                revealed_tiles: vec![false; NUM_TILES],
+                tiles: [TileType::Floor; NUM_TILES],
+                revealed_tiles: [false; NUM_TILES],
             };
         }
     }
