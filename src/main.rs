@@ -37,6 +37,8 @@ mod prelude {
     ///virtual terminal used for the text bar on the side of the screen w/ the log, stats, etc
     pub const UI_LAYER: usize = 3;
 
+    pub use crate::components::ai_components::*;
+    pub use crate::components::messages_of_intent::*;
     pub use crate::components::*;
     pub use crate::control_state::*;
     pub use crate::location::*;
