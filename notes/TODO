@@ -3,7 +3,6 @@ TODO List
 HIGH PRIORITY
 
 	- cluster all render systems in the systems/mod
-	- refactor player input into its own systems module
 	- need to be able to use <> for level navigation
 	- turn the maps into a fixed array instead of a vector
 
@@ -26,3 +25,4 @@ LOW PRIORITY
 COMPLETED TASKS
 	- refactor components [remember to keep doing this as the amount of components grow and grow]
 	- add support for shift and control to enable more advanced controls [ended up not combining these into a tuple cuz that's stupid]
+		- refactor player input into its own systems module
