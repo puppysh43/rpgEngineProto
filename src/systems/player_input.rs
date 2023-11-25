@@ -8,6 +8,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
     }
     let player_entity = state.player.clone();
     let key = state.key;
+    let shift = state.shift;
+    let control = state.control;
+    let alt = state.alt;
     let control_state = state.controlstate;
 
     let mut player_delta = Point::new(0, 0);
