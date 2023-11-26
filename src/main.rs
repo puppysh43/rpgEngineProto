@@ -41,6 +41,7 @@ mod prelude {
 
     pub use crate::components::ai_components::*;
     pub use crate::components::messages_of_intent::*;
+    pub use crate::components::rpg_systems::*;
     pub use crate::components::*;
     pub use crate::control_state::*;
     pub use crate::location::*;

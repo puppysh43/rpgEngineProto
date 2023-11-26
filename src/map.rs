@@ -86,10 +86,11 @@ impl Map {
 
         self.in_bounds(point) && self.tiles[map_idx(point.x, point.y)] != TileType::Wall
     }
-
+    ///function used to see if a position on the map is a valid location
     fn valid_exit(&self, loc: Point, delta: Point) -> Option<usize> {
         let destination = loc + delta;
         if self.in_bounds(destination) {
+            //make sure the destination is even in the map array to avoid crashes
             if self.can_enter_tile(destination) {
                 let idx = self.point2d_to_index(destination);
                 Some(idx)
@@ -116,11 +117,13 @@ impl BaseMap for Map {
     fn is_opaque(&self, idx: usize) -> bool {
         self.tiles[idx as usize] != TileType::Floor
     }
-
+    ///calculates the weight of varying tiles given certain conditions. Tweak this to change the pathfinding
+    ///algorithm's preference (ex. to avoid traps, how often they move diagonally, or to stick to roads)
     fn get_available_exits(&self, idx: usize) -> SmallVec<[(usize, f32); 10]> {
-        let mut exits = SmallVec::new();
-        let location = self.index_to_point2d(idx);
+        let mut exits = SmallVec::new(); //uses a smallvec for optimization b/c there will only ever be a small amount of
+        let location = self.index_to_point2d(idx); //the location the moving entity wants to go to
 
+        //this logic controls the weights of various possible exits
         if let Some(idx) = self.valid_exit(location, Point::new(-1, 0)) {
             exits.push((idx, 1.0))
         }

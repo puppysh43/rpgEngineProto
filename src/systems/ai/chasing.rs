@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 pub fn chasing(state: &mut State, commands: &mut CommandBuffer) {
-    /* if !state.is_in_overworld {
+    if !state.is_in_overworld {
         let mut movers = state.ecs.query::<(&Point, &ChasingPlayer, &FieldOfView)>();
         let mut positions = state.ecs.query::<(&Point, &Health, &Location)>();
         let mut player = state.ecs.query::<(&Point, &Player)>();
@@ -62,5 +62,5 @@ pub fn chasing(state: &mut State, commands: &mut CommandBuffer) {
                 }
             }
         });
-    }*/
+    }
 }

@@ -1,5 +1,6 @@
 pub mod ai_components;
 pub mod messages_of_intent;
+pub mod rpg_systems;
 
 use crate::prelude::*;
 use std::collections::HashSet;

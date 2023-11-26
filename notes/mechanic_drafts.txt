@@ -1,0 +1,103 @@
+character consists of
+truth(?)
+Composure/Morale(?)
+Superficial Health
+Penetrative Health
+Investigation Points/fate points? (meter that fills up that a character can spend to automatically)
+Skills
+Traits
+Inventory
+
+
+Skills
+	- skills will be sorted into broad categories and each category will have primary and secondary skills
+		primary and secondary skills don't differ mechanically but they're used to mark to the player
+		which skills are used to solve core gameplay encounters and which ones are useful but not critical
+		(ex. it helps to have outdoorsman, medicine, or athletics, but it's not gonna help you deal w/ enemies)
+	- skills can go from -5 to 5
+	- make failure of a skill check sometimes more punishing than choosing the non-skillcheck option
+	- maybe add a cap on how much variance you can have/how high you can go at first for balance reasons (probably yes to maximum of 3 at first with)
+Skill List
+
+Combat
+	Ranged Weapons
+	Melee Weapons
+Physical
+	Athletics
+	Reflexes
+	Senses
+	Stealth
+Knowledge Skills
+	Technology
+	Medicine
+	Nature/Outdoorsman
+	Analysis/Detective work
+Social
+	Threaten
+	Manipulate
+	Charm
+	Social cues
+
+Skill checks will be rolls of 2d6 + the skill level
+The result can be either a success, a partial success, or a failure
+Full Success - 10, 11, 12 (16.67% chance)
+Partial Success - 7, 8, 9 (41.67% chance)
+Failure - 2, 3, 4, 5, 6 (41.67% chance)
+
+Modifier and success rates
+-5
+	Full Success:[0%]
+	Partial Success: [3%]
+	Failure: [97%]
+-4
+	Full Success:[0%]
+	Partial Success: [8%]
+	Failure: [92%]
+-3
+	Full Success:[0%]
+	Partial Success: [17%]
+	Failure: [83%]
+-2
+	Full Success:[3%]
+	Partial Success:[25%]
+	Failure: [72%]
+-1
+	Full Success:[8%]
+	Partial Success: [33%]
+	Failure: [59%]
+0
+	Full Success:[17%]
+	Partial Success: [42%]
+	Failure: [41%]
++1
+	Full Success:[30%]
+	Partial Success: [44%]
+	Failure: [26%]
++2
+	Full Success:[42%]
+	Partial Success:[42%]
+	Failure: [16%]
++3
+	Full Success:[59%]
+	Partial Success: [33%]
+	Failure: [8%]
++4
+	Full Success:[72%]
+	Partial Success: [25%]
+	Failure: [3%]
++5
+	Full Success:[83%]
+	Partial Success: [17%]
+	Failure: [0%]
+
+use color of skill checks to communicate difficulty based on the most likely result
+o
+
+
+
+
+
+alternate 3d6
+Success: 14 15 16 17 18 [16%]
+partial success: 10 11 12 13 [54%]
+failure: 3 4 5 6 7 8 9 [38%]
