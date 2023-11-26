@@ -8,16 +8,16 @@ pub enum WorldTileType {
 }
 
 pub struct WorldMap {
-    pub tiles: Vec<WorldTileType>,
-    pub revealed_tiles: Vec<bool>,
+    pub tiles: [WorldTileType; NUM_TILES],
+    pub revealed_tiles: [bool; NUM_TILES],
 }
 
 impl WorldMap {
     pub fn new() -> Self {
-        let mut tiles: Vec<WorldTileType> = vec![WorldTileType::Desert; NUM_TILES];
+        let mut tiles: [WorldTileType; NUM_TILES] = [WorldTileType::Desert; NUM_TILES];
         Self {
             tiles,
-            revealed_tiles: vec![false; NUM_TILES],
+            revealed_tiles: [false; NUM_TILES],
         }
     }
     pub fn in_bounds(&self, point: Point) -> bool {
