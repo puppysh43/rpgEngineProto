@@ -1,6 +1,7 @@
 use crate::prelude::*;
 
 mod chasing;
+mod heat_seeking;
 mod random_move;
 ///This function contains all the AI systems used by various NPCs
 pub fn ai_systems(state: &mut State, commands: &mut CommandBuffer) {
