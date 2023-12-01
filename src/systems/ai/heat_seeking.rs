@@ -39,7 +39,7 @@ pub fn heat_seeking(state: &mut State, commands: &mut CommandBuffer) {
         &current_mapscreen,
         1024.0,
     );
-    for (_, (location, pos_3d, pos)) in heat_seekers {
+    for (heat_seeker, (location, pos_3d, pos)) in heat_seekers {
         let index = map_idx(pos.x, pos.y);
         if let Some(destination) =
             DijkstraMap::find_lowest_exit(&dijkstra_map, index, &current_mapscreen)
@@ -52,6 +52,12 @@ pub fn heat_seeking(state: &mut State, commands: &mut CommandBuffer) {
                 player_pos
             };
             let mut attacked = false;//bool to keep track of if the entity has attacked anything
+            all_entities.filter(|(_, (_, _, pos, _))| **pos == destination);
+            for (target_entity, (_, _, _, _)) in all_entities {
+                //check if the target entity is the player and if so send an attack MOI with the npc as the attacker and the player as the victim
+                //then set attacked to true
+                //if the player isn't attacked make a normal wants to move moi for the heat seeking npc
+            }
         }
     }
 }
