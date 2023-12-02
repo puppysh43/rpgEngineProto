@@ -9,4 +9,6 @@ pub fn ai_systems(state: &mut State, commands: &mut CommandBuffer) {
     commands.run_on(&mut state.ecs);
     chasing::chasing(state, commands); //WORKING (?)
     commands.run_on(&mut state.ecs);
+    heat_seeking::heat_seeking(state, commands);
+    commands.run_on(&mut state.ecs);
 }
