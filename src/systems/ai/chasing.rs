@@ -1,66 +1,79 @@
 use crate::prelude::*;
+use crate::systems::library::*;
 
 pub fn chasing(state: &mut State, commands: &mut CommandBuffer) {
-    /* if !state.is_in_overworld {
-        let mut movers = state.ecs.query::<(&Point, &ChasingPlayer, &FieldOfView)>();
-        let mut positions = state.ecs.query::<(&Point, &Health, &Location)>();
-        let mut player = state.ecs.query::<(&Point, &Player)>();
+    let (player_location, player_pos3d, player_pos, current_mapscreen) =
+        get_player_info_and_map(state, commands);
+    let player_index = map_idx(player_pos.x, player_pos.y);
+    let player_entity = state.player;
 
-        let player_location = state.player_location.clone();
-        let map = state
-            .localmaps
-            .get(&player_location)
-            .expect("failed to get map for the chasing AI.");
+    let mut chasers = state
+        .ecs
+        .query::<With<(&CurrentLocation, &Point3D, &Point, &FieldOfView), &ChasingPlayer>>();
+    let mut all_entities = state
+        .ecs
+        .query::<(&CurrentLocation, &Point3D, &Point, &Health)>();
 
-        let player_entity = state.ecs.query::<&Player>().iter().nth(0).unwrap().0; //player entity to check if the victim of an attack is the player
-        let player_pos = player.iter().nth(0).unwrap().1 .0;
-        let player_idx = map_idx(player_pos.x, player_pos.y);
+    let search_targets = vec![player_index];
+    let dijkstra_map = DijkstraMap::new(
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+        &search_targets,
+        &current_mapscreen,
+        1024.0,
+    );
 
-        let search_targets = vec![player_idx];
-        let dijkstra_map =
-            DijkstraMap::new(SCREEN_WIDTH, SCREEN_HEIGHT, &search_targets, map, 1024.0);
+    for (chaser, (_, _, pos, fov)) in chasers
+        .iter()
+        .filter(|(_, (loc, pos_3d, _, _))| loc.0 == player_location && **pos_3d == player_pos3d)
+    {
+        //optimize this function by breaking if the player's position isn't in the npc's fov
+        if !fov.visible_tiles.contains(&player_pos) {
+            return;
+        }
+        let index = map_idx(pos.x, pos.y);
+        if let Some(destination) =
+            DijkstraMap::find_lowest_exit(&dijkstra_map, index, &current_mapscreen)
+        {
+            let distance = DistanceAlg::Pythagoras.distance2d(*pos, player_pos);
+            let destination = if distance > 1.2 {
+                current_mapscreen.index_to_point2d(destination)
+            } else {
+                player_pos
+            };
+            let mut attacked = false;
 
-        movers.iter().for_each(|(entity, (pos, _, fov))| {
-            if !fov.visible_tiles.contains(&player_pos) {
-                return;
-            }
-            let idx = map_idx(pos.x, pos.y);
-            if let Some(destination) = DijkstraMap::find_lowest_exit(&dijkstra_map, idx, map) {
-                let distance = DistanceAlg::Pythagoras.distance2d(*pos, *player_pos);
-                let destination = if distance > 1.2 {
-                    map.index_to_point2d(destination)
-                } else {
-                    *player_pos
-                };
-
-                let mut attacked = false;
-                positions
-                    .iter()
-                    .filter(|(_, (_, _, location))| location.0 == player_location) //filter out any entities that don't share the player's location
-                    .filter(|(_entity, (target_pos, _, _))| **target_pos == destination)
-                    .for_each(|(victim, (_, _, _))| {
-                        if victim == player_entity {
-                            commands.spawn((
-                                (),
-                                WantsToAttack {
-                                    attacker: entity,
-                                    victim,
-                                },
-                            ));
-                        }
-                        attacked = true;
-                    });
-
-                if !attacked {
+            for (target_entity, (_, _, _, _)) in all_entities
+                .iter()
+                .filter(|(_, (loc, pos_3d, _, _))| {
+                    loc.0 == player_location && **pos_3d == player_pos3d
+                })
+                .filter(|(_, (_, _, pos, _))| **pos == destination)
+            //if the position of the entity is where the npc is moving check for if they should attack or not
+            {
+                //if the target of the destination is the player do an attack
+                if target_entity == player_entity {
+                    //make an attack MOI if the targeted entity is the player
                     commands.spawn((
                         (),
-                        WantsToMove {
-                            entity,
-                            destination,
+                        WantsToAttack {
+                            attacker: chaser,
+                            victim: target_entity,
                         },
                     ));
+                    attacked = true;
                 }
             }
-        });
-    }*/
+            //if the chasing npc doesn't attack then it just moves
+            if !attacked {
+                commands.spawn((
+                    (),
+                    WantsToMove {
+                        entity: chaser,
+                        destination,
+                    },
+                ));
+            }
+        }
+    }
 }
