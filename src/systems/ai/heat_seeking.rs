@@ -54,6 +54,23 @@ pub fn heat_seeking(state: &mut State, commands: &mut CommandBuffer) {
             let mut attacked = false;//bool to keep track of if the entity has attacked anything
             all_entities.filter(|(_, (_, _, pos, _))| **pos == destination);
             for (target_entity, (_, _, _, _)) in all_entities {
+                if state.ecs.query_one::<&Player>(target_entity).is_ok() {
+                    commands.spawn((
+                        (),
+                        WantsToAttack{
+                            attacker: heat_seeker,
+                            victim: target_entity,
+                        }
+                    ));
+                    attacked = true;
+                }
+                if !attacked {
+                    commands.spawn((
+                        (), WantsToMove{
+                            entity: heat_seeker, destination
+                        }
+                    ));
+                }
                 //check if the target entity is the player and if so send an attack MOI with the npc as the attacker and the player as the victim
                 //then set attacked to true
                 //if the player isn't attacked make a normal wants to move moi for the heat seeking npc
@@ -61,42 +78,3 @@ pub fn heat_seeking(state: &mut State, commands: &mut CommandBuffer) {
         }
     }
 }
-
-/*
-
-    movers.iter(ecs).for_each(| (entity, pos, _) | {// (5)
-        let idx = map_idx(pos.x, pos.y);
-        if let Some(destination) = DijkstraMap::find_lowest_exit(&dijkstra_map,
-            idx, map)
-        {// (6)
-            let distance = DistanceAlg::Pythagoras.distance2d(*pos, *player_pos);// (7)
-            let destination = if distance > 1.2 {// (8)
-                map.index_to_point2d(destination)
-            } else {
-                *player_pos
-            };
-
-            let mut attacked = false;
-            positions
-                .iter(ecs)
-                .filter(|(_, target_pos, _)| **target_pos == destination)
-                .for_each(|(victim, _, _)| {
-                    if ecs.entry_ref(*victim).unwrap().get_component::<Player>().is_ok() {
-                        commands
-                            .push(((), WantsToAttack{
-                                attacker: *entity,
-                                victim: *victim
-                            }));
-                    }
-                    attacked = true;
-                });
-
-            if !attacked {
-                commands
-                    .push(((), WantsToMove{ entity: *entity, destination }));
-            }
-        }
-    });
-}
-
-*/
