@@ -1,50 +1,62 @@
 use crate::prelude::*;
+use crate::systems::library::*;
 
 //TODO will definitely need to take a look at this later but I can't be asked rn
 pub fn random_move(state: &mut State, commands: &mut CommandBuffer) {
-    /*    if !state.is_in_overworld {
-        let player = state.ecs.query::<&Player>().iter().nth(0).unwrap().0; //player entity to check if the victim of an attack is the player
+    let (player_location, player_pos3d, player_pos, current_mapscreen) =
+        get_player_info_and_map(state, commands);
+    // println!("running the random movement ai system.");
+    // let player_index = map_idx(player_pos.x, player_pos.y);
+    let player_entity = state.player;
+    let mut random_movers = state
+        .ecs
+        .query::<With<(&CurrentLocation, &Point3D, &Point), &MovingRandomly>>(); //maybe switch this to a query with b/c afaik you never actually need the moving randomly component??
+    let mut all_entities = state
+        .ecs
+        .query::<(&CurrentLocation, &Point3D, &Point, &Health)>();
 
-        let player_location = state.player_location.clone();
+    for (random_mover, (_, _, pos)) in random_movers
+        .iter()
+        .filter(|(_, (loc, pos_3d, _))| loc.0 == player_location && **pos_3d == player_pos3d)
+    {
+        println!("there is a random mover!");
+        let mut rng = RandomNumberGenerator::new();
+        let destination = match rng.range(0, 4) {
+            0 => Point::new(-1, 0),
+            1 => Point::new(1, 0),
+            2 => Point::new(0, -1),
+            _ => Point::new(0, 1),
+        } + *pos;
 
-        let mut movers = state.ecs.query::<(&Point, &MovingRandomly)>(); //maybe switch this to a query with b/c afaik you never actually need the moving randomly component??
-        let mut positions = state.ecs.query::<(&Point, &Health, &Location)>();
-        movers.iter().for_each(|(entity, (pos, _))| {
-            let mut rng = RandomNumberGenerator::new();
-            let destination = match rng.range(0, 4) {
-                0 => Point::new(-1, 0),
-                1 => Point::new(1, 0),
-                2 => Point::new(0, -1),
-                _ => Point::new(0, 1),
-            } + *pos;
+        let mut attacked = false;
 
-            let mut attacked = false;
-            positions
-                .iter()
-                .filter(|(_, (_, _, location))| location.0 == player_location) //filter out any entities that don't share the player's location
-                .filter(|(_, (target_pos, _, _))| **target_pos == destination)
-                .for_each(|(victim, (_, _, _))| {
-                    if victim == player {
-                        commands.spawn((
-                            (),
-                            WantsToAttack {
-                                attacker: entity,
-                                victim,
-                            },
-                        ));
-                    }
-                    attacked = true;
-                });
-
-            if !attacked {
+        for (target_entity, (_, _, _, _)) in all_entities
+            .iter()
+            .filter(|(_, (loc, pos_3d, _, _))| loc.0 == player_location && **pos_3d == player_pos3d)
+            .filter(|(_, (_, _, pos, _))| **pos == destination)
+        //for some reason rn this only moves if it's disabled.
+        {
+            if target_entity == player_entity {
                 commands.spawn((
                     (),
-                    WantsToMove {
-                        entity,
-                        destination,
+                    WantsToAttack {
+                        attacker: random_mover,
+                        victim: target_entity,
                     },
                 ));
+                println!("A message of intent to attack was created by a random mover.");
+                attacked = true;
             }
-        });
-    }*/
+        }
+        if !attacked {
+            commands.spawn((
+                (),
+                WantsToMove {
+                    entity: random_mover,
+                    destination,
+                },
+            ));
+            println!("A message of intent to move was created by a random mover.");
+        }
+    }
 }

@@ -8,6 +8,7 @@ mod end_turn;
 mod entity_render;
 mod fov;
 mod get_player_location;
+mod library;
 mod map_render;
 mod map_transition;
 mod movement;
@@ -37,31 +38,33 @@ pub fn run_systems(state: &mut State) {
 ///talking to NPCs, going through their inventory, etc.
 fn input_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
-    //system run in both worldmap and localmap
+
     player_input::player_input(state, &mut commands); //need to update this to work w/ the new map system
     commands.run_on(&mut state.ecs);
-    //localmap only system
-    fov::fov(state, &mut commands); //done I think? Will need to doublecheck
-    commands.run_on(&mut state.ecs);
-    worldmap_systems::worldmap_systems(state, &mut commands);
-    commands.run_on(&mut state.ecs);
-    //localmap and worldmap system
+
     update_log::update_log(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
 
     //worldmap only system
-    overworld_render::overworld_render(state);
-    //localmap only system
-    map_render::map_render(state); //WORKING(?)
-                                   //localmap only system
-    entity_render::entity_render(state); //WORKING(?)
-                                         //possibly localmap and worldmap?
-    effects_render::effects_render(state); //WORKING(?)
-                                           //localmap and worldmap
+    match state.map_state {
+        MapState::LocalMap => {
+            fov::fov(state, &mut commands);
+            commands.run_on(&mut state.ecs);
+            map_render::map_render(state);
+            entity_render::entity_render(state);
+        }
+        MapState::WorldMap => {
+            worldmap_systems::worldmap_systems(state, &mut commands);
+            commands.run_on(&mut state.ecs);
+            overworld_render::overworld_render(state);
+        }
+    }
+
+    effects_render::effects_render(state);
     tooltips::tooltips(state); //needs to be updated to work w/ multiple locations plus tweak text
-                               //localmap and worldmap system
     ui_render::ui_render(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
+
     debugging::println_debugger(state);
 }
 ///All player related functions go here.
@@ -91,7 +94,7 @@ fn pc_systems(state: &mut State) {
     effects_render::effects_render(state);
     ui_render::ui_render(state, &mut commands);
     commands.run_on(&mut state.ecs);
-    end_turn::end_turn(state); //WORKING(?)
+    end_turn::end_turn(state);
 }
 ///All NPC related systems as well as worldsystems that progress once a turn such as
 ///the spread of fire, growth of plants, etc.

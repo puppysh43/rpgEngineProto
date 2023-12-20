@@ -45,7 +45,13 @@ pub fn spawn_statue(
     ));
 }
 
-pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
+pub fn spawn_monster(
+    ecs: &mut World,
+    rng: &mut RandomNumberGenerator,
+    location: LocationID,
+    pos_3d: Point3D,
+    pos: Point,
+) {
     let (hp, name, glyph) = match rng.roll_dice(1, 10) {
         1..=8 => goblin(),
         _ => orc(),
@@ -53,7 +59,9 @@ pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Poin
 
     ecs.spawn((
         Enemy,
+        CurrentLocation(location),
         pos,
+        pos_3d,
         Render {
             color: ColorPair::new(YELLOW, BLACK),
             glyph,
@@ -74,4 +82,26 @@ fn goblin() -> (i32, String, FontCharType) {
 
 fn orc() -> (i32, String, FontCharType) {
     (2, "Orc".to_string(), to_cp437('o'))
+}
+
+pub fn spawn_zombie(ecs: &mut World, location: LocationID, pos_3d: Point3D, pos: Point) {
+    ecs.spawn((
+        Enemy,
+        Render {
+            color: ColorPair::new(GREEN, BLACK),
+            glyph: to_cp437('z'),
+        },
+        MovingRandomly{},
+        Health {
+            current: 5,
+            max: 5,
+        },
+        Name("Zombie".to_string()),
+        ShortDescription("A diseased human left to shamble the earth.".to_string()),
+        LongDescription("Infected with some sort of unknown blight, what used to be a person has had their mind and body hollowed away. Somehow barely alive, they stumble blindly, reacting with instinctual aggression.".to_string()),
+        CurrentLocation(location),
+        pos_3d,
+        pos,
+        FieldOfView::new(4),
+    ));
 }

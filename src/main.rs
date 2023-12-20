@@ -5,6 +5,7 @@ mod control_state;
 mod init_world;
 mod location;
 mod map;
+mod mapstate;
 mod overworld;
 mod systems;
 mod turn_state;
@@ -46,6 +47,7 @@ mod prelude {
     pub use crate::control_state::*;
     pub use crate::location::*;
     pub use crate::map::*;
+    pub use crate::mapstate::*;
     pub use crate::overworld::*;
     pub use crate::systems::*;
     pub use crate::turn_state::*;
@@ -74,7 +76,7 @@ pub struct State {
     log: Vec<String>,
     numberturns: u32, //each turn represents 1 second
     uistate: UiState, //used to track what menu the player is in
-    is_in_overworld: bool,
+    map_state: MapState,
 }
 
 impl State {
@@ -100,7 +102,7 @@ impl State {
             log,
             numberturns: 0,
             uistate: UiState::Default,
-            is_in_overworld: true, //temporary for now probably best if players start in a town or something first
+            map_state: MapState::WorldMap, //temporary for now probably best if players start in a town or something first
         }
     }
     /*

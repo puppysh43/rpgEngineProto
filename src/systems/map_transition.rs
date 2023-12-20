@@ -93,7 +93,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                         commands.remove_one::<&CurrentLocation>(entity);
                         commands.remove_one::<&Point3D>(entity);
                         commands.remove_one::<&Point>(entity);
-                        state.is_in_overworld = true;
+                        state.map_state = MapState::WorldMap;
                         state.controlstate = ControlState::InOverworld;
                     }
                 }

@@ -6,11 +6,10 @@ pub fn looking(state: &mut State, commands: &mut CommandBuffer) {
     //escape will let the player exit looking mode and go back to default mode
 
     let key = state.key.expect("this should never happen");
-    let shift = state.shift;
-    let control = state.control;
-    let alt = state.alt;
-    let mut reticule_delta = Point::new(0, 0);
-    reticule_delta = match key {
+    let _shift = state.shift;
+    let _control = state.control;
+    let _alt = state.alt;
+    let reticule_delta = match key {
         //simple arrow key movement for beginners or laptop users
         VirtualKeyCode::Left => Point::new(-1, 0),
         VirtualKeyCode::Right => Point::new(1, 0),
@@ -82,7 +81,9 @@ pub fn looking(state: &mut State, commands: &mut CommandBuffer) {
     if reticule_delta.x != 0 || reticule_delta.y != 0 {
         for (reticule_id, reticule_pos) in state.ecs.query::<With<&Point, &Reticule>>().iter() {
             let new_pos = *reticule_pos + reticule_delta; //calculate a new position for the reticule
-            commands.insert_one(reticule_id, new_pos); //you don't need to actually remove the original component - an entity can only have one component of each type so this will overwrite it no problem
+            if new_pos.x < MAP_WIDTH && new_pos.y < MAP_HEIGHT && new_pos.x >= 0 && new_pos.y >= 0 {
+                commands.insert_one(reticule_id, new_pos); //you don't need to actually remove the original component - an entity can only have one component of each type so this will overwrite it no problem
+            }
         }
     }
 }

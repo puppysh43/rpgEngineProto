@@ -21,18 +21,16 @@ pub fn worldmap_systems(state: &mut State, commands: &mut CommandBuffer) {
                 commands.insert_one(entity, CurrentLocation(location_id));
                 commands.insert_one(entity, Point3D::new(0, 0, 0));
                 commands.insert_one(entity, spawn_pos);
-                state.is_in_overworld = false;
+                state.map_state = MapState::LocalMap;
                 state.controlstate = ControlState::Default;
-                println!("is_in_overworld {}: ", state.is_in_overworld);
             }
             WorldTileType::Dungeon(location_id) => {
                 let spawn_pos = state.locations.get(location_id).get_spawnpos();
                 commands.insert_one(entity, CurrentLocation(location_id));
                 commands.insert_one(entity, Point3D::new(0, 0, 0));
                 commands.insert_one(entity, spawn_pos);
-                state.is_in_overworld = false;
+                state.map_state = MapState::LocalMap;
                 state.controlstate = ControlState::Default;
-                println!("is_in_overworld {}: ", state.is_in_overworld);
             }
             _ => {
                 //do nothing b/c there's no locationID in the filetypes

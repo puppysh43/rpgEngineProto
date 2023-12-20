@@ -1,0 +1,103 @@
+reflex roll for taking cover after round end?
+consider having guns w/out clip or magazine only partially reload?
+introduce overpenetration
+
+first need to summarize how eureka ranged combat works
+
+rolling to hit is a firearms skill check w/ a full success needed for a hit
+
+Firearms/Reflex roll needed for reloads?
+
+firearm basics
+when firing a gun a firearms roll is made for each individual shot
+
+a full success hits the target, a partial success or failure misses the target
+
+all guns deal 4 penetrative damage per shot
+
+a firearms roll is made to reload (maybe change this to a reflex roll?)
+
+a full success allows for a reload and then an action
+partial success allows for a reload that takes a full turn
+failure is two turns spent reloading
+
+shots at extremely close range against targets not resisting
+shots at long range against still or slow moving targets is +3
+
+
+advanced firearms rolls
+all gun characteristics like ammo capacity etc should be based on real
+characteristics
+
+Stabilization
+roll to keep yr aim steady while quickly firing multiple shots
+rolled the first time a character fires multiple shots in one round
+make a firearms or athletics roll (whichever is higher)
+
+on a full success there is no penalty to rolls to hit
+on a partial success all shots for the round have a -1 penalty
+on a failure all shots for the round have a -2 penalty
+
+Woo Roll
+Bullets always hit something!
+if a shot is not a full success roll 1d6
+on a 3 or higher it will hit something that somehow benefits the shooter
+on 2 or lower it'll hit something that doesn't benefit the shooter like
+
+If a shot is a partial success rol the woo roll normally
+if it was a failure subtract -2
+or do coin flip/d2/odds or evens to determine good or bad
+
+affect obvious things in the room first
+
+full success still needed to hit elements of the environment intentionally
+
+Woo Roll Tables
+Used for when there aren't obvious objects in the environment that could be hit
+
+Positive Woo Roll Table
+2: Hits the target as if it's a full success
+3. hits target's weapons and disarms them without destroying the weapon
+4. hits and destroys the target weapon
+5. hits the targets headgear and knocks it off/damages it. removes armor provided by a helmet
+6.Bullet strikes ground near target's foot -1 morale or gunfight composure roll
+7. Hits target's body armor and causes 2 superficial damage if they have armor if not
+deal 4 superficial damage from a limb shot
+8. bullet hits or destroys ammo on the targets body -1 morale or gunfight composure (consider replacing with limbshot roll instead)
+9. bullet hits and destroys magazine or ammo in targets but leaves weapon intact -1 morale or gunfight composure
+(consider replacing with limbshit roll from 7)
+10. same as 8
+11. bullet richocets and hits an enemy the shooter wasn't aiming at for 1/2 dmg
+12. bullet ricochets and hits the target for half damage
+
+Negative Woo Roll Table
+2. bullet ricochets and hits shooter for half damage
+3. Bullet richochets and hits ally for half damage
+4. shooter's gun explosively malfunctions causing shooter 2 penetrative damage
+5. shooter's gun jams or otherwise malfunctions
+6. the shooter's grip slips and they lose their grip on the gun dropping it
+7. the shooter's grip slips causing them to have a -1 penalty next time they shoot (entire turn)
+8. smoke and powder residue blows back in shooter's face causing them a -2 penalty next time they shoot
+9. gun doesn't actually fire
+10. shooter's gun malfunctions so poorly that proper repair will be required before it functions next (consider more rare)
+11. shooter's gun explosively malfunctions causing 4 penetrative damage (consider making more rare)
+12. runaway firing (see later)
+
+Firing Options
+single bullet: make a firearms roll. on full success the shot hits the intended target
+	on a partial sucess make a woo roll. on a failure make a woo roll with a -2 modifier
+two round burst: any semiautomatic gun can do this. if a firearm in use does not have a stock first make a stabilization roll
+	then make two separate firearms rolls as single bullet
+
+three round burst: any semiautomatic gun can do this. make a stabilization roll if the firearm
+	doesn't have a stock. Attack can be made on up to 3 targets (consider making this perk only)
+	make three separate firearms rolls.
+
+Fully automatic fire: usable by full auto capable weapons. Make a stabilization roll even if the firearm has a stock
+	then make 4-12 firearms rolls potentially against multiple targets with a perk. when firing more than 3 at once
+	firearms checks are made with d12's instead of 2d6's. on a d12 1 represents a failure and a 12
+	represents a full success regardless of modifiers
+	
+
+Effective Range
+	when 
