@@ -45,7 +45,13 @@ pub fn spawn_statue(
     ));
 }
 
-pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
+pub fn spawn_monster(
+    ecs: &mut World,
+    rng: &mut RandomNumberGenerator,
+    location: LocationID,
+    pos_3d: Point3D,
+    pos: Point,
+) {
     let (hp, name, glyph) = match rng.roll_dice(1, 10) {
         1..=8 => goblin(),
         _ => orc(),
@@ -53,7 +59,9 @@ pub fn spawn_monster(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Poin
 
     ecs.spawn((
         Enemy,
+        CurrentLocation(location),
         pos,
+        pos_3d,
         Render {
             color: ColorPair::new(YELLOW, BLACK),
             glyph,
@@ -94,5 +102,6 @@ pub fn spawn_zombie(ecs: &mut World, location: LocationID, pos_3d: Point3D, pos:
         CurrentLocation(location),
         pos_3d,
         pos,
+        FieldOfView::new(4),
     ));
 }
