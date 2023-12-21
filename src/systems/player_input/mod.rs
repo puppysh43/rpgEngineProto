@@ -1,4 +1,5 @@
 use crate::prelude::*;
+mod aiming_ranged;
 mod default;
 mod examining_entity;
 mod in_overworld;
@@ -24,6 +25,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             ControlState::InOverworld => {
                 in_overworld::in_overworld(state, commands);
             }
+            ControlState::AimingRanged => {
+                aiming_ranged::aiming_ranged(state, commands);
+            }
             _ => {
                 println!("This shouldn't happen!")
             }
@@ -32,9 +36,10 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
         //This match statement ensures the turn only continues if the player is done with inputs e.g targeting ranged attack, looking around, etc
         match control_state {
             ControlState::Default => state.turnstate = TurnState::PcTurn,
-            ControlState::Looking | ControlState::ExaminingEntity | ControlState::InOverworld => {
-                state.turnstate = TurnState::AwaitingInput
-            }
+            ControlState::Looking
+            | ControlState::ExaminingEntity
+            | ControlState::InOverworld
+            | ControlState::AimingRanged => state.turnstate = TurnState::AwaitingInput,
         }
     }
 }

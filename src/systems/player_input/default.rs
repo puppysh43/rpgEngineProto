@@ -45,6 +45,11 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
             state.controlstate = ControlState::Looking;
             Point::new(0, 0)
         }
+        VirtualKeyCode::F => {
+            spawn_reticule(commands, player_pos);
+            state.controlstate = ControlState::AimingRanged;
+            Point::new(0, 0)
+        }
         VirtualKeyCode::NumpadSubtract => {
             //will send some kind of message of intent, either having a separate one for each direction or with one including
             commands.spawn((
