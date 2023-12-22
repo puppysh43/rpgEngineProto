@@ -39,13 +39,13 @@ pub fn run_systems(state: &mut State) {
 fn input_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
 
-    player_input::player_input(state, &mut commands); //need to update this to work w/ the new map system
+    player_input::player_input(state, &mut commands);
     commands.run_on(&mut state.ecs);
 
-    update_log::update_log(state, &mut commands); //WORKING(?)
+    update_log::update_log(state, &mut commands);
     commands.run_on(&mut state.ecs);
 
-    //worldmap only system
+    //based on mapstate run the necessary render systems
     match state.map_state {
         MapState::LocalMap => {
             fov::fov(state, &mut commands);

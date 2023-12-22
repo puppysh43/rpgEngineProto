@@ -2,9 +2,6 @@ use crate::prelude::*;
 use crate::systems::library::*;
 
 pub fn chasing(state: &mut State, commands: &mut CommandBuffer) {
-    let mut movers = state.ecs.query::<(&Point, &ChasingPlayer, &FieldOfView)>();
-    let mut positions = state.ecs.query::<(&Point, &Health, &Location)>();
-    let mut player = state.ecs.query::<(&Point, &Player)>();
     let (player_location, player_pos3d, player_pos, current_mapscreen) =
         get_player_info_and_map(state, commands);
     let player_index = map_idx(player_pos.x, player_pos.y);

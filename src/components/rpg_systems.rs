@@ -42,7 +42,7 @@ pub struct Skills {
     social_cues: i32,
 }
 impl Skills {
-    pub fn new() -> Self {}
+    // pub fn new() -> Self {}
     pub fn get_skill(&self, skill: SkillType) -> i32 {
         match skill {
             SkillType::RangedWeapons => self.ranged_weapons,

@@ -24,6 +24,15 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
         VirtualKeyCode::Numpad9 => Point::new(1, -1), //move northeast
         VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
         VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
+        VirtualKeyCode::Escape => {
+            //this exits the looking turnstate and also deletes the reticule entity.
+            for (reticule, _) in state.ecs.query_mut::<With<&Point, &Reticule>>() {
+                commands.despawn(reticule);
+            }
+
+            state.controlstate = ControlState::Default;
+            Point::new(0, 0)
+        }
 
         _ => Point::new(0, 0),
     };

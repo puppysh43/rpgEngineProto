@@ -15,7 +15,7 @@ pub struct Render {
 pub struct Player;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct OverworldPlayerToken;
+pub struct OverworldPlayerToken; //rename to player worldmap token
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Enemy;

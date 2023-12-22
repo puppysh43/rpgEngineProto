@@ -8,15 +8,14 @@ pub struct WantsToMove {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct MovingRandomly;
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct ChasingPlayer;
-
-#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WantsToAttack {
     pub attacker: Entity,
     pub victim: Entity,
+}
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct WantsToRangedAttack {
+    pub shooter: Entity,
+    pub target: Entity,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -29,6 +28,7 @@ pub struct WantsToEnterLocation {
     pub pos: Point,
     pub entity: Entity,
 }
+///
 #[derive(Clone, Debug, PartialEq)]
 pub struct WantsToChangeMap {
     pub pos: Point,
@@ -37,4 +37,3 @@ pub struct WantsToChangeMap {
     pub map_pos: Point3D,
     pub current_location: LocationID,
 }
-//Messages of Intent END

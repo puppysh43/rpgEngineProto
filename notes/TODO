@@ -4,18 +4,16 @@ HIGH PRIORITY
 
 	- cluster all render systems in the systems/mod
 	- need to be able to use <> for level navigation
-	- RESEARCH THIS: switch locations from hashmaps to binary tree maps
 	- rename overworld to worldmap, location to localmap, locations to localmaps, and map(s) to mapscreen(s)
+	- finalize layout for ranged combat system after going through eureka rules and doing pseudocode
 MEDIUM PRIORITY
 
 	- develop a better way of tracking the overworld/localworld split (maybe have everything just reference the controlstate?? use less state trackers)
-	- rewrite ai systems to be functional (and hopefully to be better)
 	- add a UI state for traveling the overworld that will have relevant information on the side.
 	- Look at UI Rendering in general
 
 LOW PRIORITY
 
-	- throw some basic enemies in the dungeon
 	- add skills
 	- add ranged combat
 	- add functionality for reading spawns from a text file
@@ -29,3 +27,5 @@ COMPLETED TASKS
 	- refactor player input into its own systems module
 	- turn the maps into a fixed array instead of a vector
 	- turn list of locations to array accessed by the locationID enum cast as a usize
+	- rewrite ai systems to be functional (and hopefully to be better) [all original AI systems are working as they did before]
+	- throw some basic enemies in the dungeon [added random spawns in level 2 of the first dungeon]
