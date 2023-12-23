@@ -13,20 +13,20 @@ pub fn worldmap_systems(state: &mut State, commands: &mut CommandBuffer) {
 
         //TODO figure out a better solution so I don't need to keep updating this every time I add a new tiletype that can have a location
         match current_tile {
-            WorldTileType::Town(location_id) => {
+            WorldTileType::Town(localmap_id) => {
                 //then will set the current location of the entity to the location contained in the tile
                 //the 3d point component to 0,0,0
                 //and the 2d point component will be set to the spawn point
-                let spawn_pos = state.locations.get(location_id).get_spawnpos();
-                commands.insert_one(entity, CurrentLocation(location_id));
+                let spawn_pos = state.localmaps.get(localmap_id).get_spawnpos();
+                commands.insert_one(entity, CurrentLocalMap(localmap_id));
                 commands.insert_one(entity, Point3D::new(0, 0, 0));
                 commands.insert_one(entity, spawn_pos);
                 state.map_state = MapState::LocalMap;
                 state.controlstate = ControlState::Default;
             }
-            WorldTileType::Dungeon(location_id) => {
-                let spawn_pos = state.locations.get(location_id).get_spawnpos();
-                commands.insert_one(entity, CurrentLocation(location_id));
+            WorldTileType::Dungeon(localmap_id) => {
+                let spawn_pos = state.localmaps.get(localmap_id).get_spawnpos();
+                commands.insert_one(entity, CurrentLocalMap(localmap_id));
                 commands.insert_one(entity, Point3D::new(0, 0, 0));
                 commands.insert_one(entity, spawn_pos);
                 state.map_state = MapState::LocalMap;

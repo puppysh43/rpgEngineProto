@@ -3,17 +3,20 @@ use crate::prelude::*;
 pub fn fov(state: &mut State, commands: &mut CommandBuffer) {
     let mut views = state.ecs.query::<(&Point, &mut FieldOfView)>();
 
-    let mut player_location = LocationID::FirstTown; //temp variable to be overwritten
-    let mut player_coords = Point3D::new(0, 0, 0);
-    for (_, (current_location, coords)) in state
+    let mut player_localmap = LocalMapID::FirstTown; //temp variable to be overwritten
+    let mut player_mapscreen = Point3D::new(0, 0, 0);
+    for (_, (current_localmap, mapscreen)) in state
         .ecs
-        .query::<With<(&CurrentLocation, &Point3D), &Player>>()
+        .query::<With<(&CurrentLocalMap, &Point3D), &Player>>()
         .iter()
     {
-        player_location = current_location.0;
-        player_coords = *coords;
+        player_localmap = current_localmap.0;
+        player_mapscreen = *mapscreen;
     }
-    let map = state.locations.get(player_location).get_map(player_coords);
+    let map = state
+        .localmaps
+        .get(player_localmap)
+        .get_mapscreen(player_mapscreen);
     //will need to provide this system the current map the player is in
 
     views //this needs to be commented better I'm still not sure how exactly this shit works

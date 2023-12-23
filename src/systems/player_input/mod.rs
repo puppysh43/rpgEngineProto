@@ -22,7 +22,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             ControlState::ExaminingEntity => {
                 examining_entity::examining_entity(state, commands);
             }
-            ControlState::InOverworld => {
+            ControlState::InWorldMap => {
                 in_overworld::in_overworld(state, commands);
             }
             ControlState::AimingRanged => {
@@ -38,7 +38,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             ControlState::Default => state.turnstate = TurnState::PcTurn,
             ControlState::Looking
             | ControlState::ExaminingEntity
-            | ControlState::InOverworld
+            | ControlState::InWorldMap
             | ControlState::AimingRanged => state.turnstate = TurnState::AwaitingInput,
         }
     }

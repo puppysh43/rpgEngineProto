@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use crate::systems::library::*;
 use crate::systems::player_input::library::*;
 
 pub fn default(state: &mut State, commands: &mut CommandBuffer) {
@@ -14,15 +15,7 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
     let alt = state.alt;
     let control_state = state.controlstate;
     let player_entity = state.player.clone();
-    let mut map_pos = Point3D::new(0, 0, 0);
-    let mut current_location = LocationID::FirstTown;
-    for (_, (pos3d, location)) in state
-        .ecs
-        .query_mut::<With<(&Point3D, &CurrentLocation), &Player>>()
-    {
-        map_pos = *pos3d;
-        current_location = location.0;
-    }
+    let (player_localmap, player_mapscreen, player_pos, _) = get_player_info_and_map(state);
 
     player_delta = match key {
         //simple arrow key movement for beginners or laptop users
@@ -58,8 +51,8 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
                     pos: player_pos,
                     entity: player_entity,
                     cardinal_direction: CardinalDirection::Up,
-                    map_pos,
-                    current_location,
+                    map_pos: player_mapscreen,
+                    current_localmap: player_localmap,
                 },
             ));
             Point::new(0, 0)
@@ -71,8 +64,8 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
                     pos: player_pos,
                     entity: player_entity,
                     cardinal_direction: CardinalDirection::Down,
-                    map_pos,
-                    current_location,
+                    map_pos: player_mapscreen,
+                    current_localmap: player_localmap,
                 },
             ));
             Point::new(0, 0)

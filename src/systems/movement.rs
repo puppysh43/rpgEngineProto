@@ -1,21 +1,12 @@
 use crate::prelude::*;
+use crate::systems::library::*;
 
 pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
     let player = state.player.clone();
-    let mut player_location = LocationID::FirstTown; //filler to be overwritten later
-    let mut player_pos3D = Point3D::new(0, 0, 0);
-    for (id, (location_id, pos_3d)) in state
-        .ecs
-        .query_mut::<With<(&CurrentLocation, &Point3D), &Player>>()
-    {
-        player_location = location_id.0;
-        player_pos3D = *pos_3d;
-    }
-    let mut map = state
-        .locations
-        .get(player_location)
-        .get_map(player_pos3D)
-        .clone();
+
+    let (player_localmap, player_mapscreen, player_pos, mapscreen_data) =
+        get_player_info_and_map(state);
+    let mut map = mapscreen_data.clone();
 
     for (entity, want_move) in state.ecs.query::<&WantsToMove>().iter() {
         if map.can_enter_tile(want_move.destination) {
@@ -40,9 +31,9 @@ pub fn movement(state: &mut State, commands: &mut CommandBuffer) {
         }
         commands.despawn(entity);
     }
-    let mut temp_location = state.locations.get(player_location).clone();
-    temp_location.update_map(player_pos3D, map);
+    let mut temp_localmap = state.localmaps.get(player_localmap).clone();
+    temp_localmap.update_mapscreen(player_mapscreen, map);
     state
-        .locations
-        .update(player_location, temp_location.clone());
+        .localmaps
+        .update(player_localmap, temp_localmap.clone());
 }

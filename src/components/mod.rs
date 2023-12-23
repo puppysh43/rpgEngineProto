@@ -81,4 +81,4 @@ impl FieldOfView {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct CurrentLocation(pub LocationID);
+pub struct CurrentLocalMap(pub LocalMapID);

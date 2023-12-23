@@ -13,7 +13,7 @@ MEDIUM PRIORITY
 	- Look at UI Rendering in general
 
 LOW PRIORITY
-
+	- make it so NPCs/entities will move around the worldmap too and move between locations
 	- add skills
 	- add ranged combat
 	- add functionality for reading spawns from a text file

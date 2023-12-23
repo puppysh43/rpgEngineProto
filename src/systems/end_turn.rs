@@ -20,7 +20,7 @@ pub fn end_turn(state: &mut State) {
     if current_state == TurnState::NpcTurn {
         state.numberturns += 1;
         let numberturns = state.numberturns;
-        println!("Turn Number: {}", numberturns);
+        // println!("Turn Number: {}", numberturns);
         //temporarily prints out the number of turns. in the future this will be only used internally for stuff like the passage of time
     }
 

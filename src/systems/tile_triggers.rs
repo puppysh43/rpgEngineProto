@@ -13,11 +13,11 @@ fn check_map_transitions(state: &mut State, commands: &mut CommandBuffer) {
     //I can just go through literally anything with a position at first lmao
     for (entity_id, (pos, map_pos, current_loc)) in state
         .ecs
-        .query_mut::<(&Point, &Point3D, &CurrentLocation)>()
+        .query_mut::<(&Point, &Point3D, &CurrentLocalMap)>()
     {
         //use queried information to reference the appropriate map to check for map.
-        let location = state.locations.get(current_loc.0);
-        let map = location.get_map(*map_pos);
+        let localmap = state.localmaps.get(current_loc.0);
+        let map = localmap.get_mapscreen(*map_pos);
         // for tile in map.tiles {
         let tile = map.tiles[map_idx(pos.x, pos.y)];
         match tile {
@@ -28,7 +28,7 @@ fn check_map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                     entity: entity_id,
                     cardinal_direction: CardinalDirection::North,
                     map_pos: *map_pos,
-                    current_location: current_loc.0,
+                    current_localmap: current_loc.0,
                 },
             )),
             TileType::MapTransitionEast => commands.spawn((
@@ -38,7 +38,7 @@ fn check_map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                     entity: entity_id,
                     cardinal_direction: CardinalDirection::East,
                     map_pos: *map_pos,
-                    current_location: current_loc.0,
+                    current_localmap: current_loc.0,
                 },
             )),
             TileType::MapTransitionSouth => commands.spawn((
@@ -48,7 +48,7 @@ fn check_map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                     entity: entity_id,
                     cardinal_direction: CardinalDirection::South,
                     map_pos: *map_pos,
-                    current_location: current_loc.0,
+                    current_localmap: current_loc.0,
                 },
             )),
             TileType::MapTransitionWest => commands.spawn((
@@ -58,7 +58,7 @@ fn check_map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                     entity: entity_id,
                     cardinal_direction: CardinalDirection::West,
                     map_pos: *map_pos,
-                    current_location: current_loc.0,
+                    current_localmap: current_loc.0,
                 },
             )),
             _ => {} //do nothing,

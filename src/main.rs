@@ -59,14 +59,14 @@ mod prelude {
 use prelude::*;
 use worldgen::gen_localmaps;
 use worldgen::gen_worldmap;
+///This struct is just a giant singleton that holds all relevant gamestate info - our ECS, non-ECS gamedata,
+///as well as input information about what keys are being pressed.
 pub struct State {
     ecs: World,                  //our entity component system
     key: Option<VirtualKeyCode>, //the current key detected as being press
     shift: bool,
     control: bool,
     alt: bool,
-    //will later need to add things such as if shift and control is being pressed
-    //or even mouse information
     turnstate: TurnState,       //this controls the flow of our turn-based game
     controlstate: ControlState, //keeps track of what the player is doing to decide what keys do what
     localmaps: LocalMaps,       //all of the localmaps used to store world data
@@ -94,7 +94,7 @@ impl State {
             control: false,
             alt: false,
             turnstate: TurnState::AwaitingInput,
-            controlstate: ControlState::InOverworld,
+            controlstate: ControlState::InWorldMap,
             localmaps,
             worldmap,
             player,

@@ -12,7 +12,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
         let entity_pos = moi.pos;
         let direction = moi.cardinal_direction;
         let start_3dpos = moi.map_pos;
-        let location_id = moi.current_location;
+        let localmap_id = moi.current_localmap;
         //TODO make it so all the necessary information is included in the moi instead of being queried
         match direction {
             //TODO optimize - move any repeated code between all cases to outside the match statement
@@ -22,7 +22,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
             | CardinalDirection::West => {
                 //entities can only get a want to change map moi from entering transition tiles so only the most basic of sanity checking is necessary.
                 //just make sure there's a map file in the location hashmap with the corresponding new 3D point
-                let location = state.locations.get(location_id);
+                let localmap = state.localmaps.get(localmap_id);
                 // let new_3dpos = *start_3dpos + delta_from_direction(direction);//I want to be able to do this, find out a way to do this
                 let delta_3d = delta_from_direction(direction);
                 let new_3dpos = Point3D::new(
@@ -31,7 +31,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                     start_3dpos.z + delta_3d.z,
                 );
                 //if there's a valid map in that direction
-                if location.check_map(new_3dpos) {
+                if localmap.check_mapscreen(new_3dpos) {
                     commands.insert_one(entity, new_3dpos); //update the player's 3d map position in the location
                                                             //depending on what direction they're doing they need to have one of their point coordinates shifted to the opposite edge
                                                             //remember to put them 1 tile out so they don't get stuck
@@ -61,8 +61,8 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                 //2) ignoring the possibility of leaving the current location you will need to check both if there's an appropriate map in that direction
                 //AND if the player is on a tiletype that allows for vertical movement such as stairs or an elevator, you do NOT want players to be able
                 //to magically phase through ceilings and floors at the touch of a button!!
-                let location = state.locations.get(location_id);
-                let current_map = location.get_map(start_3dpos);
+                let location = state.localmaps.get(localmap_id);
+                let current_mapscreen = location.get_mapscreen(start_3dpos);
                 let delta_3d = delta_from_direction(direction);
                 let new_3dpos = Point3D::new(
                     start_3dpos.x + delta_3d.x,
@@ -72,8 +72,8 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                 let entity_index = map_idx(entity_pos.x, entity_pos.y);
                 if direction == CardinalDirection::Down {
                     //if the direction is down you just need to check that there's a map below the player and that their position matches up with a downstair
-                    if location.check_map(new_3dpos)
-                        && current_map.tiles[entity_index] == TileType::StairDown
+                    if location.check_mapscreen(new_3dpos)
+                        && current_mapscreen.tiles[entity_index] == TileType::StairDown
                     {
                         commands.insert_one(entity, new_3dpos);
                         //overwrite the old 3d position to move them down w/in the location!
@@ -81,8 +81,8 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                     }
                 } else if direction == CardinalDirection::Up {
                     //check if there's a map above them and they're on an up stair if so do the same as above
-                    if location.check_map(new_3dpos)
-                        && current_map.tiles[entity_index] == TileType::StairUp
+                    if location.check_mapscreen(new_3dpos)
+                        && current_mapscreen.tiles[entity_index] == TileType::StairUp
                     {
                         commands.insert_one(entity, new_3dpos);
                     } else if start_3dpos.z == 0 {
@@ -90,11 +90,11 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                         //and they wanna move up, then take them to the overworld
                         //to do this we need to remove the entity's 2d position, their 3D position, and their currentlocation component
                         //and set the player to being in the overworld manually TODO figure out a better solution
-                        commands.remove_one::<&CurrentLocation>(entity);
+                        commands.remove_one::<&CurrentLocalMap>(entity);
                         commands.remove_one::<&Point3D>(entity);
                         commands.remove_one::<&Point>(entity);
                         state.map_state = MapState::WorldMap;
-                        state.controlstate = ControlState::InOverworld;
+                        state.controlstate = ControlState::InWorldMap;
                     }
                 }
             }

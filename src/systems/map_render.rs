@@ -1,26 +1,11 @@
 use crate::prelude::*;
+use crate::systems::library::*;
 
 pub fn map_render(state: &mut State) {
+    let (_, _, _, mapscreen) = get_player_info_and_map(state);
     //don't do this unless the player isn't in the overworld
     let mut fov = state.ecs.query::<With<&FieldOfView, &Player>>();
     let mut draw_batch = DrawBatch::new();
-
-    let mut player_location = LocationID::FirstTown; //temp variable to be overwritten
-    let mut player_coords = Point3D::new(0, 0, 0);
-    for (_, (current_location, coords)) in state
-        .ecs
-        .query::<With<(&CurrentLocation, &Point3D), &Player>>()
-        .iter()
-    {
-        player_location = current_location.0;
-        player_coords = *coords;
-    }
-
-    let map = state
-        .locations
-        .get(player_location)
-        .get_map(player_coords)
-        .clone();
 
     draw_batch.target(0);
 
@@ -31,8 +16,8 @@ pub fn map_render(state: &mut State) {
             for x in 0..MAP_WIDTH {
                 let pt = Point::new(x, y);
                 let idx = map_idx(x, y);
-                if map.in_bounds(pt)
-                    && (player_fov.visible_tiles.contains(&pt) | map.revealed_tiles[idx])
+                if mapscreen.in_bounds(pt)
+                    && (player_fov.visible_tiles.contains(&pt) | mapscreen.revealed_tiles[idx])
                 {
                     let tint = if player_fov.visible_tiles.contains(&pt) {
                         // will need to switch this over to darkening various colours in the pallete.
@@ -40,7 +25,7 @@ pub fn map_render(state: &mut State) {
                     } else {
                         DARK_GRAY
                     };
-                    match map.tiles[idx] {
+                    match mapscreen.tiles[idx] {
                         TileType::Floor => {
                             draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('.'));
                         }

@@ -22,7 +22,7 @@ pub struct WantsToRangedAttack {
 pub struct AddToLog {
     pub body: String,
 }
-///message of intent for when something on the overworld wants to enter a location
+///message of intent for when something on the worldmap wants to enter a location
 #[derive(Clone, Debug, PartialEq)]
 pub struct WantsToEnterLocation {
     pub pos: Point,
@@ -35,5 +35,5 @@ pub struct WantsToChangeMap {
     pub entity: Entity,
     pub cardinal_direction: CardinalDirection,
     pub map_pos: Point3D,
-    pub current_location: LocationID,
+    pub current_localmap: LocalMapID,
 }

@@ -14,12 +14,12 @@ pub enum SkillType {
     MeleeWeapons,
     Athletics,
     Reflexes,
-    Senses,
+    Perception,
     Stealth,
     Lockpick,
     Technology,
     Medicine,
-    Nature,
+    PlanetSense,
     Threaten,
     Manipulate,
     Charm,
@@ -30,12 +30,12 @@ pub struct Skills {
     melee_weapons: i32,
     athletics: i32,
     reflexes: i32,
-    senses: i32,
+    perception: i32,
     stealth: i32,
     lockpick: i32,
     technology: i32,
     medicine: i32,
-    nature: i32,
+    planetsense: i32,
     threaten: i32,
     manipulate: i32,
     charm: i32,
@@ -49,12 +49,12 @@ impl Skills {
             SkillType::MeleeWeapons => self.melee_weapons,
             SkillType::Athletics => self.athletics,
             SkillType::Reflexes => self.reflexes,
-            SkillType::Senses => self.senses,
+            SkillType::Perception => self.perception,
             SkillType::Stealth => self.stealth,
             SkillType::Lockpick => self.lockpick,
             SkillType::Technology => self.technology,
             SkillType::Medicine => self.medicine,
-            SkillType::Nature => self.nature,
+            SkillType::PlanetSense => self.planetsense,
             SkillType::Threaten => self.threaten,
             SkillType::Manipulate => self.manipulate,
             SkillType::Charm => self.charm,
@@ -84,9 +84,9 @@ impl Skills {
                     self.reflexes += modifier;
                 }
             }
-            SkillType::Senses => {
-                if self.senses + modifier < 6 && self.senses + modifier > -6 {
-                    self.senses += modifier;
+            SkillType::Perception => {
+                if self.perception + modifier < 6 && self.perception + modifier > -6 {
+                    self.perception += modifier;
                 }
             }
             SkillType::Stealth => {
@@ -109,9 +109,9 @@ impl Skills {
                     self.medicine += modifier;
                 }
             }
-            SkillType::Nature => {
-                if self.nature + modifier < 6 && self.nature + modifier > -6 {
-                    self.nature += modifier;
+            SkillType::PlanetSense => {
+                if self.planetsense + modifier < 6 && self.planetsense + modifier > -6 {
+                    self.planetsense += modifier;
                 }
             }
             SkillType::Threaten => {

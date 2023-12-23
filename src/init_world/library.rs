@@ -28,7 +28,7 @@ pub fn spawn_statue(
     name: String,
     short_desc: String,
     long_desc: String,
-    location: LocationID,
+    localmap: LocalMapID,
     map: Point3D,
 ) {
     ecs.spawn((
@@ -40,7 +40,7 @@ pub fn spawn_statue(
         Name(name),
         ShortDescription(short_desc),
         LongDescription(long_desc),
-        CurrentLocation(location),
+        CurrentLocalMap(localmap),
         map,
     ));
 }
@@ -48,7 +48,7 @@ pub fn spawn_statue(
 pub fn spawn_monster(
     ecs: &mut World,
     rng: &mut RandomNumberGenerator,
-    location: LocationID,
+    localmap: LocalMapID,
     pos_3d: Point3D,
     pos: Point,
 ) {
@@ -59,7 +59,7 @@ pub fn spawn_monster(
 
     ecs.spawn((
         Enemy,
-        CurrentLocation(location),
+        CurrentLocalMap(localmap),
         pos,
         pos_3d,
         Render {
@@ -84,7 +84,7 @@ fn orc() -> (i32, String, FontCharType) {
     (2, "Orc".to_string(), to_cp437('o'))
 }
 
-pub fn spawn_zombie(ecs: &mut World, location: LocationID, pos_3d: Point3D, pos: Point) {
+pub fn spawn_zombie(ecs: &mut World, localmap: LocalMapID, pos_3d: Point3D, pos: Point) {
     ecs.spawn((
         Enemy,
         Render {
@@ -99,7 +99,7 @@ pub fn spawn_zombie(ecs: &mut World, location: LocationID, pos_3d: Point3D, pos:
         Name("Zombie".to_string()),
         ShortDescription("A diseased human left to shamble the earth.".to_string()),
         LongDescription("Infected with some sort of unknown blight, what used to be a person has had their mind and body hollowed away. Somehow barely alive, they stumble blindly, reacting with instinctual aggression.".to_string()),
-        CurrentLocation(location),
+        CurrentLocalMap(localmap),
         pos_3d,
         pos,
         FieldOfView::new(4),

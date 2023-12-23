@@ -7,7 +7,6 @@ mod effects_render;
 mod end_turn;
 mod entity_render;
 mod fov;
-mod get_player_location;
 mod library;
 mod map_render;
 mod map_transition;
@@ -56,7 +55,7 @@ fn input_systems(state: &mut State) {
         MapState::WorldMap => {
             worldmap_systems::worldmap_systems(state, &mut commands);
             commands.run_on(&mut state.ecs);
-            overworld_render::overworld_render(state);
+            worldmap_render::worldmap_render(state);
         }
     }
 
@@ -88,7 +87,7 @@ fn pc_systems(state: &mut State) {
     map_transition::map_transitions(state, &mut commands);
     commands.run_on(&mut state.ecs);
 
-    overworld_render::overworld_render(state);
+    worldmap_render::worldmap_render(state);
     map_render::map_render(state);
     entity_render::entity_render(state);
     effects_render::effects_render(state);
@@ -112,7 +111,7 @@ fn npc_systems(state: &mut State) {
     map_transition::map_transitions(state, &mut commands);
     commands.run_on(&mut state.ecs);
 
-    overworld_render::overworld_render(state);
+    worldmap_render::worldmap_render(state);
     map_render::map_render(state); //WORKING(?)
     entity_render::entity_render(state); //WORKING(?)
     effects_render::effects_render(state); //WORKING(?)
