@@ -18,12 +18,12 @@ pub fn map_idx(x: i32, y: i32) -> usize {
 }
 
 #[derive(Clone, Debug)]
-pub struct Map {
+pub struct MapScreen {
     pub tiles: [TileType; NUM_TILES],
     pub revealed_tiles: [bool; NUM_TILES],
 }
 
-impl Map {
+impl MapScreen {
     pub fn new() -> Self {
         Self {
             tiles: [TileType::Floor; NUM_TILES],
@@ -90,7 +90,7 @@ impl Map {
     fn valid_exit(&self, loc: Point, delta: Point) -> Option<usize> {
         let destination = loc + delta;
         if self.in_bounds(destination) {
-            //make sure the destination is even in the map array to avoid crashes
+            //make sure the destination is even in the mapscreen array to avoid crashes
             if self.can_enter_tile(destination) {
                 let idx = self.point2d_to_index(destination);
                 Some(idx)
@@ -103,7 +103,7 @@ impl Map {
     }
 }
 
-impl Algorithm2D for Map {
+impl Algorithm2D for MapScreen {
     fn dimensions(&self) -> Point {
         Point::new(MAP_WIDTH, MAP_HEIGHT)
     }
@@ -113,7 +113,7 @@ impl Algorithm2D for Map {
     }
 }
 
-impl BaseMap for Map {
+impl BaseMap for MapScreen {
     fn is_opaque(&self, idx: usize) -> bool {
         self.tiles[idx as usize] != TileType::Floor
     }

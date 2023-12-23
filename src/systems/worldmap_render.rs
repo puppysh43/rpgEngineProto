@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-pub fn overworld_render(state: &mut State) {
+pub fn worldmap_render(state: &mut State) {
     if state.map_state == MapState::WorldMap {
         let mut draw_batch = DrawBatch::new();
         draw_batch.target(0);

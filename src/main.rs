@@ -1,16 +1,15 @@
 #![warn(clippy::pedantic)]
-//I'm gonna switch this over to HECS!!
 mod components;
 mod control_state;
 mod init_world;
-mod location;
-mod map;
+mod localmap;
+mod mapscreen;
 mod mapstate;
-mod overworld;
 mod systems;
 mod turn_state;
 mod ui_state;
 mod worldgen;
+mod worldmap;
 
 mod prelude {
     //libraries used
@@ -45,21 +44,21 @@ mod prelude {
     pub use crate::components::rpg_systems::*;
     pub use crate::components::*;
     pub use crate::control_state::*;
-    pub use crate::location::*;
-    pub use crate::map::*;
+    pub use crate::localmap::*;
+    pub use crate::mapscreen::*;
     pub use crate::mapstate::*;
-    pub use crate::overworld::*;
     pub use crate::systems::*;
     pub use crate::turn_state::*;
     pub use crate::ui_state::*;
-    pub use crate::worldgen::gen_locations::NUM_LOCATIONS;
+    pub use crate::worldgen::gen_localmaps::NUM_LOCALMAPS;
+    pub use crate::worldmap::*;
     pub use crate::State;
 }
 
 // use init_world;
 use prelude::*;
-use worldgen::gen_locations;
-use worldgen::gen_overworld;
+use worldgen::gen_localmaps;
+use worldgen::gen_worldmap;
 pub struct State {
     ecs: World,                  //our entity component system
     key: Option<VirtualKeyCode>, //the current key detected as being press
@@ -70,7 +69,7 @@ pub struct State {
     //or even mouse information
     turnstate: TurnState,       //this controls the flow of our turn-based game
     controlstate: ControlState, //keeps track of what the player is doing to decide what keys do what
-    locations: Locations,       //all of the localmaps used to store world data
+    localmaps: LocalMaps,       //all of the localmaps used to store world data
     worldmap: WorldMap,
     player: Entity,
     log: Vec<String>,
@@ -82,8 +81,8 @@ pub struct State {
 impl State {
     fn new() -> Self {
         let mut ecs = World::new();
-        let worldmap = gen_overworld::generate_overworld(); //generate the worldmap
-        let locations = gen_locations::generate_locations(); //generate the game's locations
+        let worldmap = gen_worldmap::generate_worldmap(); //generate the worldmap
+        let localmaps = gen_localmaps::generate_localmaps(); //generate the game's locations
         let log: Vec<String> = Vec::new(); //generate a blank log
         init_world::init_world(&mut ecs); //pass the ecs to this and it will spawn all the entities needed in the gameworld.
 
@@ -96,7 +95,7 @@ impl State {
             alt: false,
             turnstate: TurnState::AwaitingInput,
             controlstate: ControlState::InOverworld,
-            locations,
+            localmaps,
             worldmap,
             player,
             log,
@@ -105,21 +104,10 @@ impl State {
             map_state: MapState::WorldMap, //temporary for now probably best if players start in a town or something first
         }
     }
-    /*
-    temporarily disabled
-    fn reset_game_state(&mut self) {
-        self.ecs = World::default();
-        self.key = None;
-        let map = build_devroom01();
-        self.map = map;
-        self.turnstate = TurnState::AwaitingInput;
-        self.controlstate = ControlState::Default;
-        self.log = vec!["Welcome to my game!".to_string()];
-        self.numberturns = 0;
-        self.uistate = UiState::Default;
-        spawn_player(&mut self.ecs, Point::new(1, 1)); //placeholder position the spawn player function will be handled by the
-                                                       //then I'll need to reset all the entity spawns lmao
-    }*/
+
+    fn reset_gamestate(&mut self) {
+        //this will reset the gamestate! I'll need this later
+    }
 }
 
 impl GameState for State {

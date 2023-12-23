@@ -2,8 +2,8 @@ use crate::prelude::*;
 const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub enum WorldTileType {
-    Town(LocationID),
-    Dungeon(LocationID),
+    Town(LocalMapID),
+    Dungeon(LocalMapID),
     Desert,
 }
 

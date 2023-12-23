@@ -12,12 +12,12 @@ mod library;
 mod map_render;
 mod map_transition;
 mod movement;
-mod overworld_render;
 mod player_input;
 mod tile_triggers;
 mod tooltips;
 mod ui_render;
 mod update_log;
+mod worldmap_render;
 mod worldmap_systems;
 
 pub fn run_systems(state: &mut State) {
