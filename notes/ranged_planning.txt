@@ -99,5 +99,66 @@ Fully automatic fire: usable by full auto capable weapons. Make a stabilization 
 	represents a full success regardless of modifiers
 	
 
-Effective Range
-	when 
+=Effective Range=
+	when firing at a target within effective rnage there's no penalty
+	when firing at targets within the bottom 20% of a gun's effective range there is a +1 bonus
+	you can also fire at a target within arms reach (in this case 1 block) if its a long gun there's a -2 penalty not a bonus
+	pistols can be fired at no penalty within arm's reach
+	when firing @ targets outside the effective range each multiple of the effective range beyond the first gives a -1 penalty to the shot
+
+=Reloading=
+all mags and clips need to be tracked!
+	reloading depends on what kind of magazine they have (single load internal magazine vs external magazine/stripper clip)
+- reloading guns w/ an internal magazine is a firearms or reflex roll (whichever is higher)
+	- on a full success it takes 0 turns meaning the character can take another action that turn
+	- on a partial success it takes 1 turn
+	- on a failure it takes 2 turns
+
+- reloading single load guns like revolvers ALWAYS takes 1 turn and it loads 1d6+firearms/reflex(?)
+
+=Stopping Power=
+- Rifle Stopping Power
+
+-Shotgun Stopping Power
+
+=Cover=
+- Soft Cover is anything that offes concealment but not cover. it imposes a -1 penalty to the firearms roll
+- Hard Cover is anything a bullet can't easily penetrate. it imposes a -2 penalty on the firearms roll to hit
+- Ballistic Shield - a character using a ballistic shield
+
+=Ducking=
+NPCs and PCs will be able to duck as an action (able to do it in reponse to being shot at?)
+ducking making attacks targeting them take a -2 penalty that stacks with cover
+characters must make a reflex roll to determine how quickly they can act again
+	- Full success: can act as soon as it's their turn
+	- Partial success: must pass 1 turn before acting again
+	- Failure: must pass 2 turns before acting again
+firing a gun ducking behind soft cover imposes a -1 penalty
+ 
+HOW DOES SHOOTING ACTUALLY WORK
+	- select a target
+	- choose what kind of ranged attack the player will be making
+- single bullet
+	- apply effective range modifer to firearm roll
+	- apply cover modifiers to firearm roll
+
+- two round burst
+
+- three round burst
+
+- fully automatic fire
+
+
+
+
+gun attributes
+manual, semiautomatic, automatic
+pistol rifle or shotgun
+single load or magazine load
+effective range
+magazine size
+whether they have stopping power or not
+
+
+have half cover and full cover instead of soft and hard (include penetration)
+duck as automatic response to being shot at if they succeed a reflex roll
