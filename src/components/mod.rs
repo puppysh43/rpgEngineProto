@@ -1,4 +1,5 @@
 pub mod ai_components;
+pub mod items;
 pub mod messages_of_intent;
 pub mod rpg_systems;
 

@@ -117,9 +117,12 @@ all mags and clips need to be tracked!
 - reloading single load guns like revolvers ALWAYS takes 1 turn and it loads 1d6+firearms/reflex(?)
 
 =Stopping Power=
-- Rifle Stopping Power
-
--Shotgun Stopping Power
+	- long rifles and shotguns reduce any resulting injury roll by one degree of success or more.
+	- rifles always reduce the injury roll by one
+	= how much a shotgun affects the injury roll is dependent on the range from the target
+		- within 10 yards the injury roll always fails (this is very strong, balance it) (maybe make it unable to penetrate armor?)
+		- within 20 yards it works the same as a rifle
+		- within 45 yards it doesn't affect the injury roll
 
 =Cover=
 - Soft Cover is anything that offes concealment but not cover. it imposes a -1 penalty to the firearms roll
@@ -154,10 +157,11 @@ HOW DOES SHOOTING ACTUALLY WORK
 gun attributes
 manual, semiautomatic, automatic
 pistol rifle or shotgun
+stocked or unstocked bool hasstock
 single load or magazine load
 effective range
 magazine size
-whether they have stopping power or not
+current ammunition
 
 
 have half cover and full cover instead of soft and hard (include penetration)
