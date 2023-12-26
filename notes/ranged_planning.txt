@@ -144,13 +144,29 @@ HOW DOES SHOOTING ACTUALLY WORK
 - single bullet
 	- apply effective range modifer to firearm roll
 	- apply cover modifiers to firearm roll
+  - roll to see if target is able to duck in time and if they are apply duck modifier to firearm roll
+- do the firearm roll, if it hits apply damage if not do a woo roll
 
 - two round burst
+  - if the weapon doesn't have a stock do a stabilization roll and apply the modifiers
+- apply effective range modifer to firearm roll
+	- apply cover modifiers to firearm roll
+  - roll to see if target is able to duck in time and if they are apply duck modifier to firearm roll
+- do the firearm rolls, if it hits apply damage if not do a woo roll
 
 - three round burst
+  - if the weapon doesn't have a stock do a stabilization roll and apply the modifiers
+- apply effective range modifer to firearm roll
+	- apply cover modifiers to firearm roll
+  - roll to see if target is able to duck in time and if they are apply duck modifier to firearm roll
+- do the firearm rolls, if it hits apply damage if not do a woo roll
 
 - fully automatic fire
-
+  -  do a stabilization roll and apply the modifiers
+- apply effective range modifer to firearm roll
+	- apply cover modifiers to firearm roll
+  - roll to see if target is able to duck in time and if they are apply duck modifier to firearm roll
+- do the firearm rolls, if it hits apply damage if not do a woo roll
 
 
 
