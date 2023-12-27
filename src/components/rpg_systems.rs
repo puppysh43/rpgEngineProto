@@ -1,14 +1,29 @@
+use crate::prelude::*;
 ///this enum contains all the traits in the game that can be used by characters
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Trait {
     NullTrait,
     Trait01,
     Trait02,
     Trait03,
 }
+#[derive(Copy, Clone, Debug, PartialEq)]
 ///array that holds an entities traits in a simple tuple
 pub struct Traits([Trait; 20]);
 
+#[derive(Clone, Debug, PartialEq)]
+pub struct EquippedRangedWeapon(Option<Firearm>);
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum CoverType {
+    Half,
+    Full,
+}
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct IsDucking(bool);
+
 ///Skills component
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum SkillType {
     RangedWeapons,
     MeleeWeapons,
@@ -25,6 +40,8 @@ pub enum SkillType {
     Charm,
     SocialCues,
 }
+
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Skills {
     ranged_weapons: i32,
     melee_weapons: i32,

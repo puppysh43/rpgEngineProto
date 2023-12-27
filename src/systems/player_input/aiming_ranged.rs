@@ -1,14 +1,17 @@
 use crate::prelude::*;
+use crate::systems::library::*;
 
 pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
     //this is gonna handle the player input for when they're aiming a ranged weapon.
     //player will aim the reticule and then be able to confirm the attack with f again
     //later the player will be able to select what kind of ranged attack they do w/ shift and alt
 
+    let (player_localmap, player_mapscreen, player_pos, current_mapscreen_data) =
+        get_player_info_and_map(state);
     let key = state.key.expect("this should never happen");
-    let _shift = state.shift;
-    let _control = state.control;
-    let _alt = state.alt;
+    let shift = state.shift;
+    let control = state.control;
+    let alt = state.alt;
     let reticule_delta = match key {
         //simple arrow key movement for beginners or laptop users
         VirtualKeyCode::Left => Point::new(-1, 0),
@@ -31,6 +34,38 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
             }
 
             state.controlstate = ControlState::Default;
+            Point::new(0, 0)
+        }
+        VirtualKeyCode::F => {
+            //this will then split off into no extra key being pressed, w/ shift, and w/ cntrl
+            //check if the player's equipped weapon has the ability for that
+            //if so then check if the position of the reticule is the same as an entity at that position in the same mapscreen
+            //query for all entities in the current mapscreen
+            let mut all_entities = state
+                .ecs
+                .query::<(&CurrentLocalMap, &Point3D, &Point, &Health, &Skills)>();
+            all_entities
+                .iter()
+                .filter(|(_, (localmap, mapscreen, _, _, _))| {
+                    localmap.0 == player_localmap && **mapscreen == player_mapscreen
+                });
+            if !control && !shift && !alt {
+                //this will always do a single shot
+                //do a big query of all the necessary information
+                //check if the player has a weapon, if the weapon can do the selected attack type
+                //and if the reticule is over an entity
+                //if so spawn in an MOI for the appropriate ranged attack
+            }
+            if !control && shift && !alt {
+                //this will do a two shot burst
+            }
+            if control && !shift && !alt {
+                //this will do a three shot burst
+            }
+            if !control && !shift && alt {
+                //this will do a full auto attack
+            }
+
             Point::new(0, 0)
         }
 

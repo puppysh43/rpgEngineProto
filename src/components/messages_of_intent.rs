@@ -12,10 +12,25 @@ pub struct WantsToAttack {
     pub attacker: Entity,
     pub victim: Entity,
 }
+
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub enum RangedAttackType {
+    SingleShot,
+    TwoRoundBurst,
+    ThreeRoundBurst,
+    FullAutoFire,
+}
+#[derive(Clone, Debug, PartialEq)]
 pub struct WantsToRangedAttack {
     pub shooter: Entity,
+    pub attack_type: RangedAttackType,
+    pub shooter_weapon: Firearm,
+    pub shooter_skills: Skills,
     pub target: Entity,
+    pub target_skills: Skills,
+    pub target_armor: ArmorType,
+    pub is_target_ducking: bool,
+    pub is_in_cover: Option<CoverType>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -28,6 +43,10 @@ pub struct WantsToEnterLocation {
     pub pos: Point,
     pub entity: Entity,
 }
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+///Attach this tag to an entity and it will be unable to do ANYTHING for the specified number of rounds
+pub struct UnableToAct(i32);
 ///
 #[derive(Clone, Debug, PartialEq)]
 pub struct WantsToChangeMap {

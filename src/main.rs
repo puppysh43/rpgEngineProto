@@ -40,6 +40,7 @@ mod prelude {
     pub const UI_LAYER: usize = 3;
 
     pub use crate::components::ai_components::*;
+    pub use crate::components::items::*;
     pub use crate::components::messages_of_intent::*;
     pub use crate::components::rpg_systems::*;
     pub use crate::components::*;

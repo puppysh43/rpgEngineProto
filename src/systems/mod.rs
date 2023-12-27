@@ -70,7 +70,7 @@ fn input_systems(state: &mut State) {
 fn pc_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
     //localmap only system
-    combat::combat(state, &mut commands);
+    combat::combat_systems(state, &mut commands);
     commands.run_on(&mut state.ecs);
     //localmap only system will maybe need worldmap movement system
     movement::movement(state, &mut commands);
@@ -100,7 +100,7 @@ fn pc_systems(state: &mut State) {
 fn npc_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
     ai::ai_systems(state, &mut commands);
-    combat::combat(state, &mut commands); //WORKING (????)
+    combat::combat_systems(state, &mut commands); //WORKING (????)
     commands.run_on(&mut state.ecs);
     movement::movement(state, &mut commands); //WORKING (????)
     commands.run_on(&mut state.ecs);

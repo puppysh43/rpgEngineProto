@@ -1,8 +1,7 @@
+use crate::prelude::*;
 use std::ops::DerefMut;
 
-use crate::prelude::*;
-
-pub fn combat(state: &mut State, commands: &mut CommandBuffer) {
+pub fn melee_combat(state: &mut State, commands: &mut CommandBuffer) {
     let mut attackers = state.ecs.query::<&WantsToAttack>();
 
     let player_entity = state.player.clone(); //player entity to check if the victim of an attack is the player
