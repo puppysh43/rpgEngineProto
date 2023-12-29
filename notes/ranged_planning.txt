@@ -123,7 +123,6 @@ all mags and clips need to be tracked!
 		- within 10 yards the injury roll always fails (this is very strong, balance it) (maybe make it unable to penetrate armor?)
 		- within 20 yards it works the same as a rifle
 		- within 45 yards it doesn't affect the injury roll
-
 =Cover=
 - Soft Cover is anything that offes concealment but not cover. it imposes a -1 penalty to the firearms roll
 - Hard Cover is anything a bullet can't easily penetrate. it imposes a -2 penalty on the firearms roll to hit

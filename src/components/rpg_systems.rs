@@ -42,22 +42,8 @@ pub enum SkillType {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct Skills {
-    ranged_weapons: i32,
-    melee_weapons: i32,
-    athletics: i32,
-    reflexes: i32,
-    perception: i32,
-    stealth: i32,
-    lockpick: i32,
-    technology: i32,
-    medicine: i32,
-    planetsense: i32,
-    threaten: i32,
-    manipulate: i32,
-    charm: i32,
-    social_cues: i32,
-}
+pub struct Skills([i32; 14]);
+
 impl Skills {
     pub fn new(
         ranged_weapons: i32,
@@ -75,7 +61,7 @@ impl Skills {
         charm: i32,
         social_cues: i32,
     ) -> Self {
-        Self {
+        Self([
             ranged_weapons,
             melee_weapons,
             athletics,
@@ -90,117 +76,52 @@ impl Skills {
             manipulate,
             charm,
             social_cues,
-        }
+        ])
     }
     pub fn new_blank() -> Self {
-        Self {
-            ranged_weapons: 0,
-            melee_weapons: 0,
-            athletics: 0,
-            reflexes: 0,
-            perception: 0,
-            stealth: 0,
-            lockpick: 0,
-            technology: 0,
-            medicine: 0,
-            planetsense: 0,
-            threaten: 0,
-            manipulate: 0,
-            charm: 0,
-            social_cues: 0,
-        }
+        Self([0; 14])
     }
     pub fn get_skill(&self, skill: SkillType) -> i32 {
-        match skill {
-            SkillType::RangedWeapons => self.ranged_weapons,
-            SkillType::MeleeWeapons => self.melee_weapons,
-            SkillType::Athletics => self.athletics,
-            SkillType::Reflexes => self.reflexes,
-            SkillType::Perception => self.perception,
-            SkillType::Stealth => self.stealth,
-            SkillType::Lockpick => self.lockpick,
-            SkillType::Technology => self.technology,
-            SkillType::Medicine => self.medicine,
-            SkillType::PlanetSense => self.planetsense,
-            SkillType::Threaten => self.threaten,
-            SkillType::Manipulate => self.manipulate,
-            SkillType::Charm => self.charm,
-            SkillType::SocialCues => self.social_cues,
-            _ => 0,
-        }
+        self.0[skill as usize]
     }
     pub fn change_skill(&mut self, skill: SkillType, modifier: i32) {
-        match skill {
-            SkillType::RangedWeapons => {
-                if self.ranged_weapons + modifier < 6 && self.ranged_weapons + modifier > -6 {
-                    self.ranged_weapons += modifier;
-                }
-            }
-            SkillType::MeleeWeapons => {
-                if self.melee_weapons + modifier < 6 && self.melee_weapons + modifier > -6 {
-                    self.melee_weapons += modifier;
-                }
-            }
-            SkillType::Athletics => {
-                if self.athletics + modifier < 6 && self.athletics + modifier > -6 {
-                    self.athletics += modifier;
-                }
-            }
-            SkillType::Reflexes => {
-                if self.reflexes + modifier < 6 && self.reflexes + modifier > -6 {
-                    self.reflexes += modifier;
-                }
-            }
-            SkillType::Perception => {
-                if self.perception + modifier < 6 && self.perception + modifier > -6 {
-                    self.perception += modifier;
-                }
-            }
-            SkillType::Stealth => {
-                if self.stealth + modifier < 6 && self.stealth + modifier > -6 {
-                    self.stealth += modifier;
-                }
-            }
-            SkillType::Lockpick => {
-                if self.lockpick + modifier < 6 && self.lockpick + modifier > -6 {
-                    self.lockpick += modifier;
-                }
-            }
-            SkillType::Technology => {
-                if self.technology + modifier < 6 && self.technology + modifier > -6 {
-                    self.technology += modifier;
-                }
-            }
-            SkillType::Medicine => {
-                if self.medicine + modifier < 6 && self.medicine + modifier > -6 {
-                    self.medicine += modifier;
-                }
-            }
-            SkillType::PlanetSense => {
-                if self.planetsense + modifier < 6 && self.planetsense + modifier > -6 {
-                    self.planetsense += modifier;
-                }
-            }
-            SkillType::Threaten => {
-                if self.threaten + modifier < 6 && self.threaten + modifier > -6 {
-                    self.threaten += modifier;
-                }
-            }
-            SkillType::Manipulate => {
-                if self.manipulate + modifier < 6 && self.manipulate + modifier > -6 {
-                    self.manipulate += modifier;
-                }
-            }
-            SkillType::Charm => {
-                if self.charm + modifier < 6 && self.charm + modifier > -6 {
-                    self.charm += modifier;
-                }
-            }
-            SkillType::SocialCues => {
-                if self.social_cues + modifier < 6 && self.social_cues + modifier > -6 {
-                    self.social_cues += modifier;
-                }
-            }
-        };
+        if self.0[skill as usize] + modifier < 6 && self.0[skill as usize] > -6 {
+            self.0[skill as usize] += modifier;
+        }
     }
+    ///does a standard skillcheck when given the skilltype and any outside modifiers
+    pub fn skillcheck(self, skill: SkillType, modifier: i32) -> RollResult {
+        //rng struct needed to do dicerolls
+        let mut rng = RandomNumberGenerator::new();
+        //base skill roll is a simple 2d6 and we need an unmodified roll to check for special results
+        let roll = rng.roll_dice(2, 6);
+        if roll == 2 {
+            //if it's "snake eyes" (two 1's) it's always a failure
+            return RollResult::Failure;
+        } else if roll == 12 {
+            //if it's "boxcars" (two 6's) it's always a success
+            return RollResult::FullSuccess;
+        }
+        //now that we've checked for special conditions we can move on to the normal diceroll
+        let roll_with_mods = roll + modifier + self.get_skill(skill); //apply the skill modifier and any contextual mods
+        if roll_with_mods < 7 {
+            //anything less than a 7 is a failure
+            return RollResult::Failure;
+        } else if roll_with_mods > 6 && roll_with_mods < 10 {
+            //7, 8, and 9 is a partial success
+            return RollResult::PartialSuccess;
+        } else if roll_with_mods > 9 {
+            //10 or above is a full success
+            return RollResult::FullSuccess;
+        } else {
+            //this should never happen but the compiler was getting mad at me if I didn't include it.
+            return RollResult::FullSuccess;
+        }
+    }
+}
+
+pub enum RollResult {
+    Failure,
+    PartialSuccess,
+    FullSuccess,
 }

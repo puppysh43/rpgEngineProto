@@ -22,6 +22,7 @@ pub enum RangedAttackType {
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct WantsToRangedAttack {
+    //might need to add a field for if the shooter is ducking and if so if they're behind cover and what kind
     pub shooter: Entity,
     pub attack_type: RangedAttackType,
     pub shooter_weapon: Firearm,

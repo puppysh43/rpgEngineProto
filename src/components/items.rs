@@ -19,13 +19,13 @@ pub enum ReloadType {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Firearm {
-    ammo_type: AmmoType,
-    action: ActionType,
-    has_stock: bool,
-    reload_type: ReloadType,
-    effective_range: i32,
-    current_ammo: i32,
-    ammo_capacity: i32,
+    pub ammo_type: AmmoType,
+    pub action: ActionType,
+    pub has_stock: bool,
+    pub reload_type: ReloadType,
+    pub effective_range: i32,
+    pub current_ammo: i32,
+    pub ammo_capacity: i32,
 }
 
 impl Firearm {
