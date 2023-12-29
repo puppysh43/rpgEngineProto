@@ -5,7 +5,6 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
     //this is gonna handle the player input for when they're aiming a ranged weapon.
     //player will aim the reticule and then be able to confirm the attack with f again
     //later the player will be able to select what kind of ranged attack they do w/ shift and alt
-
     let (player_localmap, player_mapscreen, player_pos, current_mapscreen_data) =
         get_player_info_and_map(state);
     let key = state.key.expect("this should never happen");
@@ -50,6 +49,15 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
                     localmap.0 == player_localmap && **mapscreen == player_mapscreen
                 });
             if !control && !shift && !alt {
+                let mut shooter_skills = Skills::new_blank();
+                let mut player_weapon = EquippedRangedWeapon(None);
+                let mut shooter_query = state
+                    .ecs
+                    .query::<With<(&EquippedRangedWeapon, &Skills), &Player>>();
+                for (_, (equipped_ranged_weapon, skills)) in shooter_query.iter() {
+                    player_weapon = *equipped_ranged_weapon;
+                    shooter_skills = *skills;
+                }
                 //this will always do a single shot
                 //do a big query of all the necessary information
                 //check if the player has a weapon, if the weapon can do the selected attack type
@@ -57,6 +65,24 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
                 //check if there's any walls in a line between the player and the shooter and then
                 //check if there's any entities in the line before the reticule and instead have the ranged moi target them
                 //if so spawn in an MOI for the appropriate ranged attack
+                if player_weapon.0.is_some() {
+                    commands.spawn((
+                        //push the moi into the ECS
+                        (),
+                        WantsToRangedAttack {
+                            shooter: state.player.clone(),
+                            attack_type: RangedAttackType::SingleShot,
+                            shooter_weapon: player_weapon.0.unwrap(),
+                            shooter_skills,
+                            target,
+                            target_skills,
+                            target_armor,
+                            distance,
+                            is_target_ducking,
+                            is_in_cover,
+                        },
+                    ));
+                }
             }
             if !control && shift && !alt {
                 //this will do a two shot burst

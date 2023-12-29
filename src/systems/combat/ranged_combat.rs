@@ -1,3 +1,4 @@
+use std::ops::DerefMut;
 use std::ops::RangeBounds;
 
 use crate::prelude::*;
@@ -29,44 +30,237 @@ pub fn ranged_combat(state: &mut State, commands: &mut CommandBuffer) {
             ranged_moi.is_target_ducking,
             ranged_moi.is_in_cover,
         );
+        let player_entity = state.player.clone(); //player entity to check if the victim of an attack is the player
+        let is_player = target == player_entity;
+        let health_entity_ref = state.ecs.entity(target).unwrap();
+        let mut health_component_ref = health_entity_ref
+            .get::<&mut Health>()
+            .expect("Entity doesn't have a health component!");
         match attack_type {
             RangedAttackType::SingleShot => {
-                //calculate the effective ranged modifier by checking the weapon and comparing it to the distance from the moi
-                //check to see if target is in cover (if in_cover is okay then see what kind of cover and apply the difference)
-                //will need to implement penetratable cover and map tile health etc but will do that LATER
-                //have the victim do the reflexes roll to see if they duck and if they do apply the duck bonus
-                //allow player to decide if they want to autoduck or not
-                //do a firearm skill check
-                let (eff_range_mod, cover_mod, ducking_mod) = (
-                    get_eff_range_mod(shooter_weapon.clone(), distance),
+                let (stabilization_mod, effective_range_mod, cover_mod, ducking_mod) = (
+                    get_stabilization_mod(shooter_weapon.clone(), shooter_skills, attack_type),
+                    get_effective_range_mod(shooter_weapon.clone(), distance),
+                    get_cover_mod(is_in_cover),
+                    get_ducking_mod(is_target_ducking),
+                );
+                println!("A shot has been fired!");
+                match shooter_skills.skillcheck(
+                    SkillType::RangedWeapons,
+                    stabilization_mod + effective_range_mod + cover_mod + ducking_mod,
+                ) {
+                    RollResult::FullSuccess => {
+                        println!("Shot Hit!");
+
+                        if let mut health = health_component_ref.deref_mut() {
+                            health.current -= 1;
+
+                            if health.current < 1 && !is_player {
+                                commands.despawn(target);
+                            }
+                        }
+                        //check target armor to decide how much damage to deal
+
+                        //filler damage math to get this working taken from the melee damage system
+                    }
+                    RollResult::PartialSuccess => {
+                        println!("Shot Missed!");
+                        //roll on the woo table!
+                    }
+                    RollResult::Failure => {
+                        //roll on the woo table with a -2 modifier
+                        println!("Shot Missed!");
+                    }
+                }
+            }
+
+            RangedAttackType::TwoRoundBurst => {
+                let (stabilization_mod, effective_range_mod, cover_mod, ducking_mod) = (
+                    get_stabilization_mod(shooter_weapon.clone(), shooter_skills, attack_type),
+                    get_effective_range_mod(shooter_weapon.clone(), distance),
+                    get_cover_mod(is_in_cover),
+                    get_ducking_mod(is_target_ducking),
+                );
+                println!("A shot has been fired!");
+                match shooter_skills.skillcheck(
+                    SkillType::RangedWeapons,
+                    stabilization_mod + effective_range_mod + cover_mod + ducking_mod,
+                ) {
+                    RollResult::FullSuccess => {
+                        println!("Shot Hit!");
+
+                        if let mut health = health_component_ref.deref_mut() {
+                            health.current -= 1;
+
+                            if health.current < 1 && !is_player {
+                                commands.despawn(target);
+                            }
+                        }
+                        //check target armor to decide how much damage to deal
+                    }
+                    RollResult::PartialSuccess => {
+                        println!("Shot Missed!");
+
+                        //roll on the woo table!
+                    }
+                    RollResult::Failure => {
+                        //roll on the woo table with a -2 modifier
+
+                        println!("Shot Missed!");
+                    }
+                }
+                match shooter_skills.skillcheck(
+                    SkillType::RangedWeapons,
+                    effective_range_mod + cover_mod + ducking_mod,
+                ) {
+                    RollResult::FullSuccess => {
+                        println!("Shot Hit!");
+
+                        if let mut health = health_component_ref.deref_mut() {
+                            health.current -= 1;
+
+                            if health.current < 1 && !is_player {
+                                commands.despawn(target);
+                            }
+                        }
+                        //check target armor to decide how much damage to deal
+                    }
+                    RollResult::PartialSuccess => {
+                        println!("Shot Missed!");
+                        //roll on the woo table!
+                    }
+                    RollResult::Failure => {
+                        //roll on the woo table with a -2 modifier
+
+                        println!("Shot Missed!");
+                    }
+                }
+            }
+
+            RangedAttackType::ThreeRoundBurst => {
+                let (stabilization_mod, effective_range_mod, cover_mod, ducking_mod) = (
+                    get_stabilization_mod(shooter_weapon.clone(), shooter_skills, attack_type),
+                    get_effective_range_mod(shooter_weapon.clone(), distance),
+                    get_cover_mod(is_in_cover),
+                    get_ducking_mod(is_target_ducking),
+                );
+                println!("A shot has been fired!");
+                match shooter_skills.skillcheck(
+                    SkillType::RangedWeapons,
+                    stabilization_mod + effective_range_mod + cover_mod + ducking_mod,
+                ) {
+                    RollResult::FullSuccess => {
+                        println!("Shot Hit!");
+
+                        if let mut health = health_component_ref.deref_mut() {
+                            health.current -= 1;
+
+                            if health.current < 1 && !is_player {
+                                commands.despawn(target);
+                            }
+                        }
+                        //check target armor to decide how much damage to deal
+                    }
+                    RollResult::PartialSuccess => {
+                        println!("Shot Missed!");
+                        //roll on the woo table!
+                    }
+                    RollResult::Failure => {
+                        //roll on the woo table with a -2 modifier
+
+                        println!("Shot Missed!");
+                    }
+                }
+                for _ in 0..2 {
+                    match shooter_skills.skillcheck(
+                        SkillType::RangedWeapons,
+                        effective_range_mod + cover_mod + ducking_mod,
+                    ) {
+                        RollResult::FullSuccess => {
+                            println!("Shot Hit!");
+
+                            if let mut health = health_component_ref.deref_mut() {
+                                health.current -= 1;
+
+                                if health.current < 1 && !is_player {
+                                    commands.despawn(target);
+                                }
+                            }
+                            //check target armor to decide how much damage to deal
+                        }
+                        RollResult::PartialSuccess => {
+                            println!("Shot Missed!");
+                            //roll on the woo table!
+                        }
+                        RollResult::Failure => {
+                            //roll on the woo table with a -2 modifier
+
+                            println!("Shot Missed!");
+                        }
+                    }
+                }
+            }
+            RangedAttackType::FullAutoFire => {
+                let (stabilization_mod, effective_range_mod, cover_mod, ducking_mod) = (
+                    get_stabilization_mod(shooter_weapon.clone(), shooter_skills, attack_type),
+                    get_effective_range_mod(shooter_weapon.clone(), distance),
                     get_cover_mod(is_in_cover),
                     get_ducking_mod(is_target_ducking),
                 );
                 match shooter_skills.skillcheck(
                     SkillType::RangedWeapons,
-                    eff_range_mod + cover_mod + ducking_mod,
+                    stabilization_mod + effective_range_mod + cover_mod + ducking_mod,
                 ) {
                     RollResult::FullSuccess => {
+                        println!("Shot Hit!");
+
+                        if let mut health = health_component_ref.deref_mut() {
+                            health.current -= 1;
+
+                            if health.current < 1 && !is_player {
+                                commands.despawn(target);
+                            }
+                        }
                         //check target armor to decide how much damage to deal
                     }
                     RollResult::PartialSuccess => {
+                        println!("Shot Missed!");
                         //roll on the woo table!
                     }
                     RollResult::Failure => {
                         //roll on the woo table with a -2 modifier
+
+                        println!("Shot Missed!");
                     }
                 }
-            }
-            RangedAttackType::TwoRoundBurst => {
-                //
-            }
-            RangedAttackType::ThreeRoundBurst => {
-                //filler
-                let eff_range_mod = get_eff_range_mod(shooter_weapon.clone(), distance);
-            }
-            RangedAttackType::FullAutoFire => {
-                //filler
-                let eff_range_mod = get_eff_range_mod(shooter_weapon.clone(), distance);
+                for _ in 0..5 {
+                    match shooter_skills.skillcheck(
+                        SkillType::RangedWeapons,
+                        effective_range_mod + cover_mod + ducking_mod,
+                    ) {
+                        RollResult::FullSuccess => {
+                            println!("Shot Hit!");
+
+                            if let mut health = health_component_ref.deref_mut() {
+                                health.current -= 1;
+
+                                if health.current < 1 && !is_player {
+                                    commands.despawn(target);
+                                }
+                            }
+                            //check target armor to decide how much damage to deal
+                        }
+                        RollResult::PartialSuccess => {
+                            println!("Shot Missed!");
+                            //roll on the woo table!
+                        }
+                        RollResult::Failure => {
+                            //roll on the woo table with a -2 modifier
+
+                            println!("Shot Missed!");
+                        }
+                    }
+                }
             }
         }
         commands.despawn(moi_id);
@@ -80,9 +274,10 @@ fn get_stabilization_mod(
 ) -> i32 {
     let rng = RandomNumberGenerator::new();
     match attack_type {
-        RangedAttackType::SingleShot
-        | RangedAttackType::TwoRoundBurst
-        | RangedAttackType::ThreeRoundBurst => {
+        RangedAttackType::SingleShot => {
+            return 0;
+        }
+        RangedAttackType::TwoRoundBurst | RangedAttackType::ThreeRoundBurst => {
             if !shooter_weapon.has_stock {
                 //if the weapon doesn't have a stock they need to roll for stabilization
                 if shooter_skills.get_skill(SkillType::RangedWeapons)
@@ -130,7 +325,7 @@ fn get_stabilization_mod(
     }
 }
 
-fn get_eff_range_mod(firearm: Firearm, distance: i32) -> i32 {
+fn get_effective_range_mod(firearm: Firearm, distance: i32) -> i32 {
     let effective_range = firearm.effective_range;
     let is_long_gun = firearm.ammo_type == AmmoType::Rifle;
     if distance <= effective_range {

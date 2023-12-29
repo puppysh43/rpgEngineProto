@@ -12,7 +12,7 @@ pub enum Trait {
 pub struct Traits([Trait; 20]);
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct EquippedRangedWeapon(Option<Firearm>);
+pub struct EquippedRangedWeapon(pub Option<Firearm>);
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum CoverType {
