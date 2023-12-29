@@ -29,6 +29,7 @@ pub struct WantsToRangedAttack {
     pub target: Entity,
     pub target_skills: Skills,
     pub target_armor: ArmorType,
+    pub distance: i32,
     pub is_target_ducking: bool,
     pub is_in_cover: Option<CoverType>,
 }

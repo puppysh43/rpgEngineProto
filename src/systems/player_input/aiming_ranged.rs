@@ -54,6 +54,8 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
                 //do a big query of all the necessary information
                 //check if the player has a weapon, if the weapon can do the selected attack type
                 //and if the reticule is over an entity
+                //check if there's any walls in a line between the player and the shooter and then
+                //check if there's any entities in the line before the reticule and instead have the ranged moi target them
                 //if so spawn in an MOI for the appropriate ranged attack
             }
             if !control && shift && !alt {

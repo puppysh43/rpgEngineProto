@@ -59,7 +59,57 @@ pub struct Skills {
     social_cues: i32,
 }
 impl Skills {
-    // pub fn new() -> Self {}
+    pub fn new(
+        ranged_weapons: i32,
+        melee_weapons: i32,
+        athletics: i32,
+        reflexes: i32,
+        perception: i32,
+        stealth: i32,
+        lockpick: i32,
+        technology: i32,
+        medicine: i32,
+        planetsense: i32,
+        threaten: i32,
+        manipulate: i32,
+        charm: i32,
+        social_cues: i32,
+    ) -> Self {
+        Self {
+            ranged_weapons,
+            melee_weapons,
+            athletics,
+            reflexes,
+            perception,
+            stealth,
+            lockpick,
+            technology,
+            medicine,
+            planetsense,
+            threaten,
+            manipulate,
+            charm,
+            social_cues,
+        }
+    }
+    pub fn new_blank() -> Self {
+        Self {
+            ranged_weapons: 0,
+            melee_weapons: 0,
+            athletics: 0,
+            reflexes: 0,
+            perception: 0,
+            stealth: 0,
+            lockpick: 0,
+            technology: 0,
+            medicine: 0,
+            planetsense: 0,
+            threaten: 0,
+            manipulate: 0,
+            charm: 0,
+            social_cues: 0,
+        }
+    }
     pub fn get_skill(&self, skill: SkillType) -> i32 {
         match skill {
             SkillType::RangedWeapons => self.ranged_weapons,
