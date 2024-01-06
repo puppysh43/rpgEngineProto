@@ -11,6 +11,12 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
     let shift = state.shift;
     let control = state.control;
     let alt = state.alt;
+    //current position of the reticule
+    let mut reticule_pos = Point::new(0, 0);
+    for (_, pos) in state.ecs.query::<With<&Point, &Reticule>>().iter() {
+        //use a simple query to grab the reticule's position
+        reticule_pos = *pos;
+    }
     let reticule_delta = match key {
         //simple arrow key movement for beginners or laptop users
         VirtualKeyCode::Left => Point::new(-1, 0),
@@ -36,52 +42,60 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
             Point::new(0, 0)
         }
         VirtualKeyCode::F => {
-            //this will then split off into no extra key being pressed, w/ shift, and w/ cntrl
             //check if the player's equipped weapon has the ability for that
             //if so then check if the position of the reticule is the same as an entity at that position in the same mapscreen
             //query for all entities in the current mapscreen
             let mut all_entities = state
                 .ecs
                 .query::<(&CurrentLocalMap, &Point3D, &Point, &Health, &Skills)>();
-            all_entities
-                .iter()
-                .filter(|(_, (localmap, mapscreen, _, _, _))| {
-                    localmap.0 == player_localmap && **mapscreen == player_mapscreen
-                });
+            let potential_targets =
+                all_entities
+                    .iter()
+                    .filter(|(_, (localmap, mapscreen, _, _, _))| {
+                        localmap.0 == player_localmap && **mapscreen == player_mapscreen
+                    });
+            let mut shooter_skills = Skills::new_blank();
+            let mut player_weapon = EquippedRangedWeapon(None);
+            let mut shooter_query = state
+                .ecs
+                .query::<With<(&EquippedRangedWeapon, &Skills), &Player>>();
+            for (_, (equipped_ranged_weapon, skills)) in shooter_query.iter() {
+                player_weapon = equipped_ranged_weapon.clone();
+                shooter_skills = *skills;
+            }
+            //this will always do a single shot
             if !control && !shift && !alt {
-                let mut shooter_skills = Skills::new_blank();
-                let mut player_weapon = EquippedRangedWeapon(None);
-                let mut shooter_query = state
-                    .ecs
-                    .query::<With<(&EquippedRangedWeapon, &Skills), &Player>>();
-                for (_, (equipped_ranged_weapon, skills)) in shooter_query.iter() {
-                    player_weapon = *equipped_ranged_weapon;
-                    shooter_skills = *skills;
-                }
-                //this will always do a single shot
-                //do a big query of all the necessary information
-                //check if the player has a weapon, if the weapon can do the selected attack type
-                //and if the reticule is over an entity
-                //check if there's any walls in a line between the player and the shooter and then
-                //check if there's any entities in the line before the reticule and instead have the ranged moi target them
-                //if so spawn in an MOI for the appropriate ranged attack
-                if player_weapon.0.is_some() {
-                    commands.spawn((
-                        //push the moi into the ECS
-                        (),
-                        WantsToRangedAttack {
-                            shooter: state.player.clone(),
-                            attack_type: RangedAttackType::SingleShot,
-                            shooter_weapon: player_weapon.0.unwrap(),
-                            shooter_skills,
-                            target,
-                            target_skills,
-                            target_armor,
-                            distance,
-                            is_target_ducking,
-                            is_in_cover,
-                        },
-                    ));
+                //go through all targets in the local area and check for
+                for (target_id, (_, _, target_pos, _health, skills)) in potential_targets {
+                    let target_armor = ArmorType::None;
+                    let distance =
+                        DistanceAlg::Pythagoras.distance2d(player_pos, reticule_pos) as i32;
+                    let is_target_ducking = false;
+                    let is_in_cover = None;
+                    //bool to check if there's any obstacles between the player and the reticule position
+                    let clear_shot = false;
+                    //check if there's any walls in a line between the player and the shooter and then
+                    //check if there's any entities in the line before the reticule and instead have the ranged moi target them
+                    //if so spawn in an MOI for the appropriate ranged attack
+
+                    //this feels really janky but it's the best I can do w/out being hassled by variable lifetimes
+                    if player_weapon.0.is_some() && reticule_pos == *target_pos {
+                        commands.spawn((
+                            (),
+                            WantsToRangedAttack {
+                                shooter: state.player.clone(),
+                                attack_type: RangedAttackType::SingleShot,
+                                shooter_weapon: player_weapon.0.clone().unwrap(),
+                                shooter_skills,
+                                target: target_id,
+                                target_skills: *skills,
+                                target_armor,
+                                distance,
+                                is_target_ducking,
+                                is_in_cover,
+                            },
+                        ));
+                    }
                 }
             }
             if !control && shift && !alt {

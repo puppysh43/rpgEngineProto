@@ -73,6 +73,7 @@ pub fn spawn_monster(
         },
         Name(name),
         FieldOfView::new(6),
+        Skills::new_blank(),
     ));
 }
 
@@ -103,5 +104,6 @@ pub fn spawn_zombie(ecs: &mut World, localmap: LocalMapID, pos_3d: Point3D, pos:
         pos_3d,
         pos,
         FieldOfView::new(4),
+        Skills::new_blank(),
     ));
 }

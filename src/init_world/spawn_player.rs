@@ -17,6 +17,8 @@ pub fn spawn_player(ecs: &mut World) {
             max: 10,
         },
         FieldOfView::new(16),
+        Skills::new(2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), //placeholder for testing purposes
+        EquippedRangedWeapon(Some(Firearm::manual_rifle())),
     )); //gives the bare essentials, stuff like location or position will be added after the player
         //enters a worldmap tile in the overworld.
 
