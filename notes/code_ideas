@@ -94,38 +94,3 @@ pub struct Rooms {
     /// List of indexes in `rooms` for [`Room`]s that have been deleted
     deleted_rooms: Vec<usize>,
 }
-
-impl Rooms {
-    /// Get a new [`RoomId`] for a new [`Room`]
-    pub fn new_room_id(&mut self) -> RoomId {
-        if let Some(id) = self.deleted_rooms.pop() {
-            RoomId(id)
-        } else {
-            self.rooms.push(Room::default());
-            RoomId(self.rooms.len() - 1)
-        }
-    }
-
-    /// Create a new [`Room`] and populate it immediately
-    pub fn new_room(&mut self, tiles: &[MapPoint]) -> RoomId {
-        let id = self.new_room_id();
-        self.set_room(id, tiles);
-
-        id
-    }
-    /// Delete a [`Room`]
-    ///
-    /// Returns an iterator over the [`Tile`] [`MapPoint`] positions in the [`Room`].
-    ///
-    /// # Panics
-    ///
-    /// If the supplied [`RoomId`] is invalid this method will panic.
-    ///
-    /// [`Tile`]: super::Tile
-    pub fn delete_room(&mut self, RoomId(id): RoomId) -> impl Iterator<Item = MapPoint> + '_ {
-        roomid_assert!(self, id);
-
-        self.deleted_rooms.push(id);
-        self.rooms[id].0.drain(..)
-    }
-}

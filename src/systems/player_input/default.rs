@@ -33,16 +33,6 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
         VirtualKeyCode::Numpad9 => Point::new(1, -1), //move northeast
         VirtualKeyCode::Numpad3 => Point::new(1, 1),  //move southeast
         VirtualKeyCode::Numpad1 => Point::new(-1, 1), //move southwest
-        VirtualKeyCode::V => {
-            spawn_reticule(commands, player_pos);
-            state.controlstate = ControlState::Looking;
-            Point::new(0, 0)
-        }
-        VirtualKeyCode::F => {
-            spawn_reticule(commands, player_pos);
-            state.controlstate = ControlState::AimingRanged;
-            Point::new(0, 0)
-        }
         VirtualKeyCode::NumpadSubtract => {
             //will send some kind of message of intent, either having a separate one for each direction or with one including
             commands.spawn((
@@ -68,6 +58,23 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
                     current_localmap: player_localmap,
                 },
             ));
+            Point::new(0, 0)
+        }
+        VirtualKeyCode::V => {
+            spawn_reticule(commands, player_pos);
+            state.controlstate = ControlState::Looking;
+            Point::new(0, 0)
+        }
+        VirtualKeyCode::F => {
+            spawn_reticule(commands, player_pos);
+            state.controlstate = ControlState::AimingRanged;
+            Point::new(0, 0)
+        }
+        VirtualKeyCode::M => {
+            if state.shift {
+                state.controlstate = ControlState::ViewingLog;
+                state.uistate = UiState::ViewingLog;
+            }
             Point::new(0, 0)
         }
         _ => Point::new(0, 0),

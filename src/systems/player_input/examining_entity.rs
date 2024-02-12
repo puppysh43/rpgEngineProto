@@ -2,9 +2,6 @@ use crate::prelude::*;
 
 pub fn examining_entity(state: &mut State, commands: &mut CommandBuffer) {
     let key = state.key.expect("this should never happen.");
-    let shift = state.shift;
-    let control = state.control;
-    let alt = state.alt;
     match key {
         VirtualKeyCode::Escape => {
             state.controlstate = ControlState::Default;

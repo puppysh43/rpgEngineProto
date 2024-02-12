@@ -5,6 +5,7 @@ mod examining_entity;
 mod in_overworld;
 mod library;
 mod looking;
+mod viewing_log;
 
 pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
     let key = state.key;
@@ -28,6 +29,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             ControlState::AimingRanged => {
                 aiming_ranged::aiming_ranged(state, commands);
             }
+            ControlState::ViewingLog => {
+                viewing_log::viewing_log(state);
+            }
             _ => {
                 println!("This shouldn't happen!")
             }
@@ -39,7 +43,8 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             ControlState::Looking
             | ControlState::ExaminingEntity
             | ControlState::InWorldMap
-            | ControlState::AimingRanged => state.turnstate = TurnState::AwaitingInput,
+            | ControlState::AimingRanged
+            | ControlState::ViewingLog => state.turnstate = TurnState::AwaitingInput,
         }
     }
 }

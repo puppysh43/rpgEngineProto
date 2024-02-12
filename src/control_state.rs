@@ -16,4 +16,5 @@ pub enum ControlState {
     // TargetingItem,
     ExaminingEntity,
     InWorldMap,
+    ViewingLog,
 }
