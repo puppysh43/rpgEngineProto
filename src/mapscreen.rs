@@ -144,3 +144,7 @@ impl BaseMap for MapScreen {
         DistanceAlg::Pythagoras.distance2d(self.index_to_point2d(idx1), self.index_to_point2d(idx2))
     }
 }
+
+
+//this block will be for the mapscreen file to act as an intermediary between game files and json files
+
