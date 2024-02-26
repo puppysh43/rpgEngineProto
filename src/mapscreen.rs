@@ -146,5 +146,4 @@ impl BaseMap for MapScreen {
 }
 
 
-//this block will be for the mapscreen file to act as an intermediary between game files and json files
 

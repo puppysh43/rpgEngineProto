@@ -7,10 +7,6 @@ mod init_first_town;
 mod library; //maybe don't need this one
 mod spawn_player;
 
-// use init_first_dungeon::*;
-// use init_first_town::*;
-// use spawn_player::*;
-
 pub fn init_world(ecs: &mut World) {
     //filler
     //will need function to spawn in the player as well as the player token
