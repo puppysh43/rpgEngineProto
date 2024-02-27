@@ -108,6 +108,11 @@ pub fn aiming_ranged(state: &mut State, commands: &mut CommandBuffer) {
                 //this will do a full auto attack
             }
 
+            for (reticule, _) in state.ecs.query::<With<&Point, &Reticule>>().iter() {
+                commands.despawn(reticule);
+            }
+
+            state.controlstate = ControlState::Default;
             Point::new(0, 0)
         }
 

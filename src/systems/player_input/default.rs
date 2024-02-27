@@ -10,10 +10,9 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
     }
     let mut player_delta = Point::new(0, 0);
     let key = state.key.expect("this should never happen.");
-    let shift = state.shift;
-    let control = state.control;
-    let alt = state.alt;
-    let control_state = state.controlstate;
+    let _shift = state.shift;
+    let _control = state.control;
+    let _alt = state.alt;
     let player_entity = state.player.clone();
     let (player_localmap, player_mapscreen, player_pos, _) = get_player_info_and_map(state);
 

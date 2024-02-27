@@ -64,6 +64,7 @@ fn input_systems(state: &mut State) {
     ui_render::ui_render(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
 
+    //this gates turnstate progression until the player is done doing their "action" for the round
     debugging::println_debugger(state);
 }
 ///All player related functions go here.

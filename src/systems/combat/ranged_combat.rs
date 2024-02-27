@@ -44,14 +44,23 @@ pub fn ranged_combat(state: &mut State, commands: &mut CommandBuffer) {
                     get_cover_mod(is_in_cover),
                     get_ducking_mod(is_target_ducking),
                 );
-                println!("A shot has been fired!");
+                // commands.spawn((
+                // (),
+                // AddToLog {
+                // body: "An attack has occured!".to_string(),
+                // },
+                // ));
                 match shooter_skills.skillcheck(
                     SkillType::RangedWeapons,
                     stabilization_mod + effective_range_mod + cover_mod + ducking_mod,
                 ) {
                     RollResult::FullSuccess => {
-                        println!("Shot Hit!");
-
+                        commands.spawn((
+                            (),
+                            AddToLog {
+                                body: "Shot Hit!".to_string(),
+                            },
+                        ));
                         if let mut health = health_component_ref.deref_mut() {
                             health.current -= 1;
 
@@ -64,12 +73,22 @@ pub fn ranged_combat(state: &mut State, commands: &mut CommandBuffer) {
                         //filler damage math to get this working taken from the melee damage system
                     }
                     RollResult::PartialSuccess => {
-                        println!("Shot Missed!");
+                        commands.spawn((
+                            (),
+                            AddToLog {
+                                body: "Shot Missed!".to_string(),
+                            },
+                        ));
                         //roll on the woo table!
                     }
                     RollResult::Failure => {
                         //roll on the woo table with a -2 modifier
-                        println!("Shot Missed!");
+                        commands.spawn((
+                            (),
+                            AddToLog {
+                                body: "Shot Missed!".to_string(),
+                            },
+                        ));
                     }
                 }
             }

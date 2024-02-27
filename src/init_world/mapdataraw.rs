@@ -53,11 +53,11 @@ impl MapDataRaw {
         let mapscreen = MapScreen::new();
         let mut index: usize = 0;
         if first_layer.height == MAP_HEIGHT && first_layer.width == MAP_WIDTH {
-            for tileID in first_layer.data {
-                //will need to get the integer from the data vec and somehow convert it into a tiletype enum and then
-                //add it into the mapscreen variable, with an index variable to keep track of how far we are into
-                //the mapscreen.
-            }
+            // for tileID in first_layer.data {
+            //will need to get the integer from the data vec and somehow convert it into a tiletype enum and then
+            //add it into the mapscreen variable, with an index variable to keep track of how far we are into
+            //the mapscreen.
+            // }
         }
     }
 }

@@ -9,7 +9,7 @@ mod viewing_log;
 
 pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
     let key = state.key;
-    let control_state = state.controlstate;
+    let mut control_state = state.controlstate;
 
     if key.is_some() {
         match control_state {
@@ -38,6 +38,7 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
         };
 
         //This match statement ensures the turn only continues if the player is done with inputs e.g targeting ranged attack, looking around, etc
+        control_state = state.controlstate; //controlstate can be changed by the player input functions so we need to update our variable again
         match control_state {
             ControlState::Default => state.turnstate = TurnState::PcTurn,
             ControlState::Looking
