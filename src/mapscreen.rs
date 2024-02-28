@@ -11,6 +11,8 @@ pub enum TileType {
     MapTransitionEast,
     MapTransitionSouth,
     MapTransitionWest,
+    //ThinWall,
+    //ThickWall,
 }
 
 pub fn map_idx(x: i32, y: i32) -> usize {
@@ -144,6 +146,3 @@ impl BaseMap for MapScreen {
         DistanceAlg::Pythagoras.distance2d(self.index_to_point2d(idx1), self.index_to_point2d(idx2))
     }
 }
-
-
-

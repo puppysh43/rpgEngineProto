@@ -15,10 +15,10 @@ mod prelude {
     //libraries used
     pub use bracket_lib::prelude::*;
     pub use hecs::*;
+    pub use serde::*;
+    pub use serde_json::*;
     pub use std::collections::BTreeMap;
     pub use std::collections::HashMap;
-    pub use serde::{Deserialize, Serialize};
-    pub use serde_json::*;
     //size of the full window including UI elements
     pub const SCREEN_WIDTH: i32 = 70;
     pub const SCREEN_HEIGHT: i32 = 35;
