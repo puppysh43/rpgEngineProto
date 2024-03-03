@@ -1,3 +1,19 @@
+use crate::prelude::*;
+//GENERIC ITEM COMPONENTS
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Item;
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ProvidesHealing {
+    pub amount: i32,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Carried(pub Entity);
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Key(pub String);
+//ALL OF THESE COMPONENTS ARE ABOUT THE GUN SYSTEM
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum AmmoType {
     Pistol,

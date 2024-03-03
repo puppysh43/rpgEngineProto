@@ -76,9 +76,9 @@ pub struct State {
     worldmap: WorldMap,
     player: Entity,
     log: Vec<String>,
-    numberturns: u32, //each turn represents 1 second
-    uistate: UiState, //used to track what menu the player is in
-    map_state: MapState,
+    numberturns: u32,    //each turn represents 1 second
+    uistate: UiState,    //used to track what menu the player is in
+    map_state: MapState, //tracks if the player is in the worldmap or localmap
 }
 
 impl State {

@@ -1,8 +1,8 @@
-mod carried_ui;
 mod default_ui;
 mod dialogue_ui;
 mod equipped_ui;
 mod examining_ui;
+mod inventory_ui;
 mod journal_ui;
 mod library;
 mod log_ui;
@@ -19,7 +19,7 @@ pub fn ui_render(state: &mut State, commands: &mut CommandBuffer) {
     let ui_state = state.uistate;
     match ui_state {
         UiState::Default => default_ui::default_ui(state),
-        UiState::ViewingCarried => carried_ui::view_carried(state),
+        UiState::ViewingInventory => inventory_ui::view_inventory(state),
         UiState::ViewingEquipped => equipped_ui::view_equipped(state),
         UiState::ExaminingEntity => examining_ui::examine_entity(state, commands),
         UiState::InDialogue => dialogue_ui::render_dialogue(state),

@@ -18,6 +18,12 @@ pub fn init_first_town(ecs: &mut World) {
         LocalMapID::FirstTown,
     Point3D::new(0,0,0)
     );
+    spawn_key(
+        ecs,
+        LocalMapID::FirstTown,
+        Point3D::new(0, 0, 0),
+        Point::new(16, 8),
+    );
 
     //this will spawn in all the NPCs and entities like statues in the first town
 }

@@ -4,6 +4,8 @@ use crate::prelude::*;
 use crate::systems::ui_render::library::*;
 
 pub fn default_ui(state: &mut State) {
+    //HAVE ALL NECESSARY QUERIES HERE
+    let player_health = state.ecs.query_one_mut::<&Health>(state.player).unwrap();
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(UI_LAYER);
     //draw the border between the gameplay zone and the UI
@@ -14,10 +16,11 @@ pub fn default_ui(state: &mut State) {
             ColorPair::new(GREEN, BLACK),
         );
     }
-
+    //display the player's current health
+    let health_element = format!("Health {}/{}", player_health.current, player_health.max);
     draw_batch.print_color(
         Point::new(UI_XSTART, 0),
-        "Health 10/10",
+        &health_element,
         ColorPair::new(RED, GREEN),
     );
 
@@ -27,11 +30,12 @@ pub fn default_ui(state: &mut State) {
     // ControlState::ExaminingEntity => todo!(),
     // }
 
-    draw_batch.print_color(
-        Point::new(UI_XSTART, 1),
-        "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-        ColorPair::new(BLUE, BLACK),
-    );
+    //don't know what this was for
+    // draw_batch.print_color(
+    // Point::new(UI_XSTART, 1),
+    // "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+    // ColorPair::new(BLUE, BLACK),
+    // );
 
     draw_batch.print_color(
         Point::new(UI_XSTART, 10),

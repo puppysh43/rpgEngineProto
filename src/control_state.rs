@@ -4,7 +4,7 @@ pub enum ControlState {
     // Melee,       //control state for when selecting the direction to melee attack in
     AimingRanged, //control state for when the player is moving a reticule to shoot a gun
     Looking,      //ctrl state for when the player is moving a reticule to examine something
-    //Inventory //control state for when the player has opened up the inventory menu
+    Inventory,    //control state for when the player has opened up the inventory menu
     // Dropping, //ctrl state for when the player is selecting what item to drop (using alphanumeric keys)
     // Interacting, //ctrl state for when the player needs to select what to interact with
     // Throwing, //ctrl state for when the player is selecting where they want to throw something.

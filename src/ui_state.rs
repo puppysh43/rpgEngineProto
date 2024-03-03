@@ -2,7 +2,7 @@
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum UiState {
     Default,
-    ViewingCarried,
+    ViewingInventory,
     ViewingEquipped,
     ExaminingEntity,
     InDialogue,

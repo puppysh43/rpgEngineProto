@@ -12,9 +12,11 @@ pub struct Render {
     pub glyph: FontCharType,
 }
 
+///tagging component to mark the player. Only one entity should ever have this!!
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Player;
 
+///Tagging component to mark the representation of the player on the worldmap
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct OverworldPlayerToken; //rename to player worldmap token
 

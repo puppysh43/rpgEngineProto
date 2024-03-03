@@ -3,14 +3,9 @@ use crate::systems::library::*;
 use crate::systems::player_input::library::*;
 
 pub fn default(state: &mut State, commands: &mut CommandBuffer) {
-    let mut player_pos = Point::new(0, 0); //init the var to store the player's position
-    for (_, pos) in state.ecs.query_mut::<With<&Point, &Player>>() {
-        //query for the player's position and assign it to the player_pos var
-        player_pos = *pos;
-    }
     let mut player_delta = Point::new(0, 0);
     let key = state.key.expect("this should never happen.");
-    let _shift = state.shift;
+    let shift = state.shift;
     let _control = state.control;
     let _alt = state.alt;
     let player_entity = state.player.clone();
@@ -70,12 +65,37 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
             Point::new(0, 0)
         }
         VirtualKeyCode::M => {
-            if state.shift {
+            if shift {
                 state.controlstate = ControlState::ViewingLog;
                 state.uistate = UiState::ViewingLog;
             }
             Point::new(0, 0)
         }
+        VirtualKeyCode::G => {
+            //get all items and then filter out any not in the same mapscreen as the player
+            let mut all_items = state
+                .ecs
+                .query::<With<(&CurrentLocalMap, &Point3D, &Point), &Item>>();
+            let valid_items = all_items.iter().filter(|(_, (localmap, mapscreen, _))| {
+                localmap.0 == player_localmap && **mapscreen == player_mapscreen
+            });
+            //go through all valid items and see if there's one on the same tile as the player
+            for (item_id, (_, _, item_pos)) in valid_items {
+                if item_pos.x == player_pos.x && item_pos.y == player_pos.y {
+                    //to add items to the player's inventory we just need to
+                    commands.insert_one(item_id, Carried(player_entity));
+                    commands.remove_one::<Point>(item_id);
+                }
+            }
+            Point::new(0, 0)
+        }
+        VirtualKeyCode::I => {
+            //this will open up the inventory
+            state.controlstate = ControlState::Inventory;
+            state.uistate = UiState::ViewingInventory;
+            Point::new(0, 0)
+        }
+
         _ => Point::new(0, 0),
     };
     //end of key match statement

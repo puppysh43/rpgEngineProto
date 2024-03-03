@@ -2,8 +2,8 @@ use crate::prelude::*;
 //this is where the system that does stuff like handling entering locations and calculating random encounters or whatever other worldmap logic will be in here
 //will start as one file but may grow into a directory module
 pub fn worldmap_systems(state: &mut State, commands: &mut CommandBuffer) {
+    //this function handles entering locations in the worldmap
     for (moi_id, moi_data) in state.ecs.query_mut::<&WantsToEnterLocation>() {
-        //fille
         let entity = moi_data.entity;
         let worldpos_idx = map_idx(moi_data.pos.x, moi_data.pos.y);
 
@@ -23,6 +23,8 @@ pub fn worldmap_systems(state: &mut State, commands: &mut CommandBuffer) {
                 commands.insert_one(entity, spawn_pos);
                 state.map_state = MapState::LocalMap;
                 state.controlstate = ControlState::Default;
+                //some point in here I need to fix the player's fov and make it dirty so it doesn't get applied to
+                //their new map!
             }
             WorldTileType::Dungeon(localmap_id) => {
                 let spawn_pos = state.localmaps.get(localmap_id).get_spawnpos();

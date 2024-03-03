@@ -13,7 +13,6 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
         let direction = moi.cardinal_direction;
         let start_3dpos = moi.map_pos;
         let localmap_id = moi.current_localmap;
-        //TODO make it so all the necessary information is included in the moi instead of being queried
         match direction {
             //TODO optimize - move any repeated code between all cases to outside the match statement
             CardinalDirection::North
@@ -50,8 +49,6 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                         }
                         _ => {}
                     }
-                    //TODO will also need to change their position according to which direction they moved
-                    //this will probably be a separate function within this system
                 }
             }
             CardinalDirection::Up | CardinalDirection::Down => {
@@ -60,7 +57,7 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                 //current location and switch to being in the overworld.
                 //2) ignoring the possibility of leaving the current location you will need to check both if there's an appropriate map in that direction
                 //AND if the player is on a tiletype that allows for vertical movement such as stairs or an elevator, you do NOT want players to be able
-                //to magically phase through ceilings and floors at the touch of a button!!
+                //to magically phase through ceilings and floors at the press of a button!!
                 let location = state.localmaps.get(localmap_id);
                 let current_mapscreen = location.get_mapscreen(start_3dpos);
                 let delta_3d = delta_from_direction(direction);
@@ -88,8 +85,6 @@ pub fn map_transitions(state: &mut State, commands: &mut CommandBuffer) {
                     } else if start_3dpos.z == 0 {
                         //if the player is on ground level and they aren't on stairs
                         //and they wanna move up, then take them to the overworld
-                        //to do this we need to remove the entity's 2d position, their 3D position, and their currentlocation component
-                        //and set the player to being in the overworld manually TODO figure out a better solution
                         commands.remove_one::<&CurrentLocalMap>(entity);
                         commands.remove_one::<&Point3D>(entity);
                         commands.remove_one::<&Point>(entity);

@@ -3,6 +3,7 @@ mod aiming_ranged;
 mod default;
 mod examining_entity;
 mod in_overworld;
+mod inventory;
 mod library;
 mod looking;
 mod viewing_log;
@@ -32,6 +33,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             ControlState::ViewingLog => {
                 viewing_log::viewing_log(state);
             }
+            ControlState::Inventory => {
+                inventory::inventory(state);
+            }
             _ => {
                 println!("This shouldn't happen!")
             }
@@ -45,7 +49,8 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             | ControlState::ExaminingEntity
             | ControlState::InWorldMap
             | ControlState::AimingRanged
-            | ControlState::ViewingLog => state.turnstate = TurnState::AwaitingInput,
+            | ControlState::ViewingLog
+            | ControlState::Inventory => state.turnstate = TurnState::AwaitingInput,
         }
     }
 }

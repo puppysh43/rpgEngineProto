@@ -107,3 +107,23 @@ pub fn spawn_zombie(ecs: &mut World, localmap: LocalMapID, pos_3d: Point3D, pos:
         Skills::new_blank(),
     ));
 }
+
+pub fn spawn_key(ecs: &mut World, localmap: LocalMapID, pos_3d: Point3D, pos: Point) {
+    ecs.spawn((
+        Render {
+            color: ColorPair::new(MAGENTA, BLACK),
+            glyph: to_cp437('♀'),
+        },
+        pos,
+        pos_3d,
+        CurrentLocalMap(localmap),
+        Item,
+        Key("Test".to_string()),
+        Name("test key".to_string()),
+        ShortDescription("A mysterious key... but to what?".to_string()),
+        LongDescription(
+            "This should be a long and evocative description of the key but this is just a test"
+                .to_string(),
+        ),
+    ));
+}
