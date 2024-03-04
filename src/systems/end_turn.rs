@@ -18,6 +18,7 @@ pub fn end_turn(state: &mut State) {
     });
 
     if current_state == TurnState::NpcTurn {
+        //increment the gametime
         state.numberturns += 1;
         let numberturns = state.numberturns;
         // println!("Turn Number: {}", numberturns);

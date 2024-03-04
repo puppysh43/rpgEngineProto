@@ -17,7 +17,6 @@ mod prelude {
     pub use hecs::*;
     pub use serde::*;
     pub use serde_json::*;
-    pub use std::collections::BTreeMap;
     pub use std::collections::HashMap;
     //size of the full window including UI elements
     pub const SCREEN_WIDTH: i32 = 70;

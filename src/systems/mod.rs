@@ -13,6 +13,7 @@ mod map_transition;
 mod movement;
 mod player_input;
 mod tile_triggers;
+mod time;
 mod tooltips;
 mod ui_render;
 mod update_log;
@@ -100,6 +101,7 @@ fn pc_systems(state: &mut State) {
 ///the spread of fire, growth of plants, etc.
 fn npc_systems(state: &mut State) {
     let mut commands = CommandBuffer::new();
+    time::time_systems(state, &mut commands);
     ai::ai_systems(state, &mut commands);
     combat::combat_systems(state, &mut commands); //WORKING (????)
     commands.run_on(&mut state.ecs);
