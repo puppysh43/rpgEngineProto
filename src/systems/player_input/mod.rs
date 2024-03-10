@@ -3,6 +3,7 @@ mod aiming_ranged;
 mod default;
 mod examining_entity;
 mod in_overworld;
+mod interaction_menu;
 mod inventory;
 mod library;
 mod looking;
@@ -17,7 +18,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             ControlState::Default => {
                 default::default(state, commands);
             }
-
+            ControlState::InteractionMenu(_) => {
+                //
+            }
             ControlState::Looking => {
                 looking::looking(state, commands);
             }

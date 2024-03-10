@@ -13,8 +13,14 @@ pub enum ControlState {
     // RangedSkill, //ctrl state for selecting a ranged point to use the skill (may not need this one)
     // PickingUp, //ctrl state for when deciding what to pick up out of multiple items
     // SelectingItem,
-    // TargetingItem,
+    InteractionMenu(InteractionMenuState),
     ExaminingEntity,
     InWorldMap,
     ViewingLog,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum InteractionMenuState {
+    MakingChoice,
+    ViewingResult,
 }

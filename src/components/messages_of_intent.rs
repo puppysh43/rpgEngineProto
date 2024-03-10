@@ -58,3 +58,37 @@ pub struct WantsToChangeMap {
     pub map_pos: Point3D,
     pub current_localmap: LocalMapID,
 }
+
+/*
+    Interaction Menu Related Components
+*/
+#[derive(Clone, Debug, PartialEq)]
+///Simple wrapper component that holds the key to accessing the entity's related interaction menu.
+pub struct InteractionMenuKey(pub String);
+
+#[derive(Copy, Clone, Debug)]
+///Tagging component used to let the game know which interaction menu is active!
+pub struct ActiveInteractionMenu;
+
+///MOI to communicate what choice in an interaction menu was selected by the player
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct InteractionMenuChoiceMOI {
+    pub index: usize,
+}
+#[derive(Clone, Copy, Debug, PartialEq)]
+///MOI that carries the result of an interaction menu
+pub struct InteractionMenuResult {
+    pub choice_result: Option<ChoiceResult>,
+    pub current_option_index: usize,
+}
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum DegreeOfSuccess {
+    Failure,
+    PartialSuccess,
+    FullSuccess,
+}
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum ChoiceResult {
+    BinaryResult(bool),
+    DegOfSuccess(DegreeOfSuccess),
+}

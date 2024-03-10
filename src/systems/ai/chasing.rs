@@ -16,8 +16,8 @@ pub fn chasing(state: &mut State, commands: &mut CommandBuffer) {
 
     let search_targets = vec![player_index];
     let dijkstra_map = DijkstraMap::new(
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT,
+        MAP_WIDTH,
+        MAP_HEIGHT,
         &search_targets,
         &current_mapscreen,
         1024.0,
