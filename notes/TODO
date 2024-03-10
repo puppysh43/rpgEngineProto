@@ -2,6 +2,7 @@ TODO List
 
 HIGH PRIORITY
 
+
 	- cluster all render systems in the systems/mod
 	- need to be able to use <> for level navigation
 	- rename overworld to worldmap, location to localmap, locations to localmaps, and map(s) to mapscreen(s)
@@ -20,6 +21,7 @@ LOW PRIORITY
 	- add water management element that drains when you travel/according to amount of turns (it'll be once every 24 hours)
 	- condsider changing examining component name to "BeingExamined"
 	- implement a pallete system for locations so that a core palette of a tiles can represent a variety of environments
+	- work out basic interaction system
 	
 	RANGED_COMBAT
 		- Figure out a dodging system
