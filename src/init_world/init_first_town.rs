@@ -25,5 +25,18 @@ pub fn init_first_town(ecs: &mut World) {
         Point::new(16, 8),
     );
 
+    ecs.spawn((
+        (),
+        CurrentLocalMap(LocalMapID::FirstTown),
+        Point3D::new(0, 0, 0),
+        Point::new(9, 9),
+        Render {
+            color: ColorPair::new(YELLOW, BLACK),
+            glyph: to_cp437('♣'),
+        },
+        Name("Boulder".to_string()),
+        InteractionMenuKey("Boulder".to_string()),
+    ));
+
     //this will spawn in all the NPCs and entities like statues in the first town
 }

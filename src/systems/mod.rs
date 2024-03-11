@@ -7,6 +7,7 @@ mod effects_render;
 mod end_turn;
 mod entity_render;
 mod fov;
+mod interaction_processing;
 mod library;
 mod map_render;
 mod map_transition;
@@ -59,6 +60,8 @@ fn input_systems(state: &mut State) {
             worldmap_render::worldmap_render(state);
         }
     }
+    interaction_processing::process_interactions(state, &mut commands);
+    commands.run_on(&mut state.ecs);
 
     effects_render::effects_render(state);
     tooltips::tooltips(state); //needs to be updated to work w/ multiple locations plus tweak text

@@ -95,7 +95,11 @@ pub fn default(state: &mut State, commands: &mut CommandBuffer) {
             state.uistate = UiState::ViewingInventory;
             Point::new(0, 0)
         }
-
+        VirtualKeyCode::Space => {
+            //this will enter interaction selection
+            state.controlstate = ControlState::SelectingInteraction;
+            Point::new(0, 0)
+        }
         _ => Point::new(0, 0),
     };
     //end of key match statement

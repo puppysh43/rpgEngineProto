@@ -2,6 +2,7 @@ mod default_ui;
 mod dialogue_ui;
 mod equipped_ui;
 mod examining_ui;
+mod interaction_menu_ui;
 mod inventory_ui;
 mod journal_ui;
 mod library;
@@ -25,5 +26,6 @@ pub fn ui_render(state: &mut State, commands: &mut CommandBuffer) {
         UiState::InDialogue => dialogue_ui::render_dialogue(state),
         UiState::ViewingJournal => journal_ui::view_journal(state),
         UiState::ViewingLog => log_ui::view_log(state),
+        UiState::InteractionMenu => interaction_menu_ui::render_interaction_menu(state),
     }
 }

@@ -44,12 +44,6 @@ pub fn ranged_combat(state: &mut State, commands: &mut CommandBuffer) {
                     get_cover_mod(is_in_cover),
                     get_ducking_mod(is_target_ducking),
                 );
-                // commands.spawn((
-                // (),
-                // AddToLog {
-                // body: "An attack has occured!".to_string(),
-                // },
-                // ));
                 match shooter_skills.skillcheck(
                     SkillType::RangedWeapons,
                     stabilization_mod + effective_range_mod + cover_mod + ducking_mod,

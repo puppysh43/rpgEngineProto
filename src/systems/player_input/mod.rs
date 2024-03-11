@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{interactionmenu, prelude::*};
 mod aiming_ranged;
 mod default;
 mod examining_entity;
@@ -7,6 +7,7 @@ mod interaction_menu;
 mod inventory;
 mod library;
 mod looking;
+mod selectinginteraction;
 mod viewing_log;
 
 pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
@@ -18,8 +19,11 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             ControlState::Default => {
                 default::default(state, commands);
             }
+            ControlState::SelectingInteraction => {
+                selectinginteraction::selecting_interaction(state, commands);
+            }
             ControlState::InteractionMenu(_) => {
-                //
+                interaction_menu::interaction_menu_input(state, commands);
             }
             ControlState::Looking => {
                 looking::looking(state, commands);
@@ -53,7 +57,9 @@ pub fn player_input(state: &mut State, commands: &mut CommandBuffer) {
             | ControlState::InWorldMap
             | ControlState::AimingRanged
             | ControlState::ViewingLog
-            | ControlState::Inventory => state.turnstate = TurnState::AwaitingInput,
+            | ControlState::Inventory
+            | ControlState::SelectingInteraction
+            | ControlState::InteractionMenu(_) => state.turnstate = TurnState::AwaitingInput,
         }
     }
 }

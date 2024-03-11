@@ -8,4 +8,5 @@ pub enum UiState {
     InDialogue,
     ViewingJournal,
     ViewingLog,
+    InteractionMenu,
 }
