@@ -1,0 +1,18 @@
+the game engine will have support for a light system that will be used for stealth and calculating FOV
+Dynamic color type will be used for the render component
+ - a dynamic color type is simply a tuple of 3 colors and will consist of constants
+ - the actual color can be accessed with methods like .bright() .dim() .dark()
+ - this will allow objects to be given colors that change w/ the lighting
+Light system
+ - light system will be used to make things prettier/add additional depth to stealth gameplay
+ - same system for casting an FOV will be used for light
+ - each light source will increase in a shadowcast circle around it the light level of the mapscreen (if it has a lighting component)
+ - if Z level is 0 or over its light level will be effected by the time of day
+ - for indoor outdoor lighting consider having it be based on outdoor vs indoor floor types 
+(maybe for ease of use in map editor or something outdoor floors will be set w/ a period and indoor w/ the centered dot)
+that way buildings on ground level and above will NOT be well lit
+maybe windows can be light sources determined by time of day
+each mapscreen will have an array of light levels to be updated by the lighting system each tick (only for active mapscreen but maybe global?)
+
+consider having each localmap have its own pallete for tiletypes (such as outdoor floors, thin walls, thick walls, etc)
+(no need to do bitmasking b/c its happening in tiled?)
