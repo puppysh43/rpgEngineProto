@@ -20,16 +20,16 @@ mod prelude {
     pub use serde_json::*;
     pub use std::collections::HashMap;
     //size of the full window including UI elements
-    pub const SCREEN_WIDTH: i32 = 70;
-    pub const SCREEN_HEIGHT: i32 = 35;
+    pub const SCREEN_WIDTH: i32 = 120;
+    pub const SCREEN_HEIGHT: i32 = 40;
     //size of the ingame map and play area, the rest is reserved for UI, menus, log, etc
-    pub const MAP_WIDTH: i32 = 50;
-    pub const MAP_HEIGHT: i32 = 35;
+    pub const MAP_WIDTH: i32 = 70;
+    pub const MAP_HEIGHT: i32 = 40;
     pub const NUM_TILES: usize = (MAP_WIDTH * MAP_HEIGHT) as usize;
     //UI sizing information
 
-    pub const UI_XSTART: i32 = (MAP_WIDTH * 2) + 1;
-    pub const UI_BORDER_X: i32 = MAP_WIDTH * 2;
+    pub const UI_XSTART: i32 = (MAP_WIDTH) + 1;
+    pub const UI_BORDER_X: i32 = MAP_WIDTH;
     pub const LOG_YSTART: i32 = 11;
 
     ///virtual terminal where the main game is displayed - map, entities, etc    
@@ -145,16 +145,17 @@ fn main() -> BError {
         .with_fitscreen(false)
         .with_fullscreen(false)
         .with_dimensions(SCREEN_WIDTH, SCREEN_HEIGHT)
-        .with_tile_dimensions(24, 24)
+        .with_tile_dimensions(16, 24)
         .with_resource_path("resources/")
-        .with_font("main_font.png", 24, 24)
-        .with_font("effects_font.png", 24, 24)
-        .with_font("tooltip_font.png", 12, 12)
-        .with_font("ui_font.png", 12, 24)
+        .with_font("main_font.png", 16, 24)
+        .with_font("effects_font.png", 16, 24)
+        .with_font("tooltip_font.png", 16, 24)
+        .with_font("ui_font.png", 16, 24)
         .with_simple_console(SCREEN_WIDTH, SCREEN_HEIGHT, "main_font.png") //console that the map prints to
         .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "effects_font.png") //console for effects
-        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "tooltip_font.png") //console for text popups in game
-        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT, "ui_font.png") //console for text on the sidebar for the UI and logs
+        // .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "tooltip_font.png") //console for text popups in game
+        .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "tooltip_font.png") //console for text popups in game
+        .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "ui_font.png") //console for text on the sidebar for the UI and logs
         .build()?;
 
     main_loop(context, State::new())

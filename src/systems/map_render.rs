@@ -27,7 +27,7 @@ pub fn map_render(state: &mut State) {
                     };
                     match mapscreen.tiles[idx] {
                         TileType::Floor => {
-                            draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('.'));
+                            draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('·'));
                         }
                         TileType::Wall => {
                             draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('#'));

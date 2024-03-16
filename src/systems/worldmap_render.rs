@@ -18,7 +18,7 @@ pub fn worldmap_render(state: &mut State) {
                             draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('‼'));
                         }
                         WorldTileType::Desert => {
-                            draw_batch.set(pt, ColorPair::new(DARKGRAY, LIGHTGRAY), to_cp437('≈'));
+                            draw_batch.set(pt, ColorPair::new(DARKGRAY, BLACK), to_cp437('≈'));
                         }
                     }
                 }
