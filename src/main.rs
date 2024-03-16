@@ -1,6 +1,7 @@
 #![warn(clippy::pedantic)]
 mod components;
 mod control_state;
+mod gfx_config;
 mod init_world;
 mod interactionmenu;
 mod localmap;
@@ -40,6 +41,10 @@ mod prelude {
     pub const TOOLTIP_LAYER: usize = 2;
     ///virtual terminal used for the text bar on the side of the screen w/ the log, stats, etc
     pub const UI_LAYER: usize = 3;
+
+    //import constants defining the graphics
+    pub use crate::gfx_config::pallete::*;
+    pub use crate::gfx_config::tileset::*;
 
     pub use crate::components::ai_components::*;
     pub use crate::components::items::*;

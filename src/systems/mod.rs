@@ -9,6 +9,7 @@ mod entity_render;
 mod fov;
 mod interaction_processing;
 mod library;
+mod lighting_system;
 mod map_render;
 mod map_transition;
 mod movement;
@@ -70,6 +71,8 @@ fn input_systems(state: &mut State) {
 
     //this gates turnstate progression until the player is done doing their "action" for the round
     debugging::println_debugger(state);
+    lighting_system::lighting_system(state, &mut commands);
+    commands.run_on(&mut state.ecs);
 }
 ///All player related functions go here.
 fn pc_systems(state: &mut State) {
@@ -90,6 +93,8 @@ fn pc_systems(state: &mut State) {
     update_log::update_log(state, &mut commands);
     commands.run_on(&mut state.ecs);
     map_transition::map_transitions(state, &mut commands);
+    commands.run_on(&mut state.ecs);
+    lighting_system::lighting_system(state, &mut commands);
     commands.run_on(&mut state.ecs);
 
     worldmap_render::worldmap_render(state);
@@ -115,6 +120,9 @@ fn npc_systems(state: &mut State) {
     update_log::update_log(state, &mut commands); //WORKING(?)
     commands.run_on(&mut state.ecs);
     map_transition::map_transitions(state, &mut commands);
+    commands.run_on(&mut state.ecs);
+
+    lighting_system::lighting_system(state, &mut commands);
     commands.run_on(&mut state.ecs);
 
     worldmap_render::worldmap_render(state);

@@ -39,3 +39,21 @@ pub fn get_active_interactionmenu(state: &State) -> Option<InteractionMenu> {
     let interaction_menu = state.int_menu_db.get_interaction_menu(interaction_menu_key);
     interaction_menu
 }
+
+pub fn get_bg_color(state: &State) -> (u8, u8, u8) {
+    let mut num_turns = state.numberturns;
+    if num_turns > 17280 {
+        num_turns = num_turns % 17280;
+    }
+    if num_turns < 4320 {
+        DYN_BG.dark
+    } else if num_turns < 7200 {
+        DYN_BG.dim
+    } else if num_turns < 11520 {
+        DYN_BG.bright
+    } else if num_turns < 14400 {
+        DYN_BG.dim
+    } else {
+        DYN_BG.dark
+    }
+}

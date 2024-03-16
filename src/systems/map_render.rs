@@ -6,6 +6,8 @@ pub fn map_render(state: &mut State) {
     //don't do this unless the player isn't in the overworld
     let mut fov = state.ecs.query::<With<&FieldOfView, &Player>>();
     let mut draw_batch = DrawBatch::new();
+    // let bg_color = get_bg_color(state);
+    let bg_color = BLACK;
 
     draw_batch.target(0);
 
@@ -16,6 +18,7 @@ pub fn map_render(state: &mut State) {
             for x in 0..MAP_WIDTH {
                 let pt = Point::new(x, y);
                 let idx = map_idx(x, y);
+                //here you will need to get the background color PER TILE
                 if mapscreen.in_bounds(pt)
                     && (player_fov.visible_tiles.contains(&pt) | mapscreen.revealed_tiles[idx])
                 {
@@ -27,28 +30,28 @@ pub fn map_render(state: &mut State) {
                     };
                     match mapscreen.tiles[idx] {
                         TileType::Floor => {
-                            draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('·'));
+                            draw_batch.set(pt, ColorPair::new(tint, bg_color), to_cp437('·'));
                         }
                         TileType::Wall => {
-                            draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('#'));
+                            draw_batch.set(pt, ColorPair::new(tint, bg_color), to_cp437('#'));
                         }
                         TileType::StairUp => {
-                            draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('<'));
+                            draw_batch.set(pt, ColorPair::new(tint, bg_color), to_cp437('<'));
                         }
                         TileType::StairDown => {
-                            draw_batch.set(pt, ColorPair::new(tint, BLACK), to_cp437('>'));
+                            draw_batch.set(pt, ColorPair::new(tint, bg_color), to_cp437('>'));
                         }
                         TileType::MapTransitionNorth => {
-                            draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('↑'));
+                            draw_batch.set(pt, ColorPair::new(GREEN, bg_color), to_cp437('↑'));
                         }
                         TileType::MapTransitionEast => {
-                            draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('→'));
+                            draw_batch.set(pt, ColorPair::new(GREEN, bg_color), to_cp437('→'));
                         }
                         TileType::MapTransitionSouth => {
-                            draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('↓'));
+                            draw_batch.set(pt, ColorPair::new(GREEN, bg_color), to_cp437('↓'));
                         }
                         TileType::MapTransitionWest => {
-                            draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('←'));
+                            draw_batch.set(pt, ColorPair::new(GREEN, bg_color), to_cp437('←'));
                         }
                     }
                 }

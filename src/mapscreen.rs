@@ -23,6 +23,7 @@ pub fn map_idx(x: i32, y: i32) -> usize {
 pub struct MapScreen {
     pub tiles: [TileType; NUM_TILES],
     pub revealed_tiles: [bool; NUM_TILES],
+    pub light_map: [i32; NUM_TILES],
 }
 
 impl MapScreen {
@@ -30,6 +31,7 @@ impl MapScreen {
         Self {
             tiles: [TileType::Floor; NUM_TILES],
             revealed_tiles: [false; NUM_TILES],
+            light_map: [0; NUM_TILES],
         }
     }
 
@@ -37,6 +39,7 @@ impl MapScreen {
         Self {
             tiles: [tile; NUM_TILES],
             revealed_tiles: [false; NUM_TILES],
+            light_map: [0; NUM_TILES],
         }
     }
     ///create a new map file from a given string
@@ -62,11 +65,13 @@ impl MapScreen {
             return Self {
                 tiles: map,
                 revealed_tiles: [false; NUM_TILES],
+                light_map: [0; NUM_TILES],
             };
         } else {
             return Self {
                 tiles: [TileType::Floor; NUM_TILES],
                 revealed_tiles: [false; NUM_TILES],
+                light_map: [0; NUM_TILES],
             };
         }
     }

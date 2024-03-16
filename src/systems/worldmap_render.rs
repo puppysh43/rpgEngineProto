@@ -1,10 +1,13 @@
 use crate::prelude::*;
+use crate::systems::library::*;
 
 pub fn worldmap_render(state: &mut State) {
     if state.map_state == MapState::WorldMap {
         let mut draw_batch = DrawBatch::new();
         draw_batch.target(0);
         let worldmap = &state.worldmap;
+        let bg_color = get_bg_color(state);
+        // let bg_color = BLACK;
         for y in 0..MAP_HEIGHT {
             for x in 0..MAP_WIDTH {
                 let pt = Point::new(x, y);
@@ -12,13 +15,13 @@ pub fn worldmap_render(state: &mut State) {
                 if worldmap.in_bounds(pt) {
                     match worldmap.tiles[idx] {
                         WorldTileType::Town(_) => {
-                            draw_batch.set(pt, ColorPair::new(YELLOW, BLACK), to_cp437('⌂'));
+                            draw_batch.set(pt, ColorPair::new(YELLOW, bg_color), to_cp437('⌂'));
                         }
                         WorldTileType::Dungeon(_) => {
-                            draw_batch.set(pt, ColorPair::new(GREEN, BLACK), to_cp437('‼'));
+                            draw_batch.set(pt, ColorPair::new(GREEN, bg_color), to_cp437('‼'));
                         }
                         WorldTileType::Desert => {
-                            draw_batch.set(pt, ColorPair::new(DARKGRAY, BLACK), to_cp437('≈'));
+                            draw_batch.set(pt, ColorPair::new(DARKGRAY, bg_color), to_cp437('~'));
                         }
                     }
                 }

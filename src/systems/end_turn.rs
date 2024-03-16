@@ -19,6 +19,10 @@ pub fn end_turn(state: &mut State) {
 
     if current_state == TurnState::NpcTurn {
         //increment the gametime
+        match state.map_state {
+            MapState::LocalMap => state.numberturns += 1,
+            MapState::WorldMap => state.numberturns += 720,
+        }
         state.numberturns += 1;
         let numberturns = state.numberturns;
         // println!("Turn Number: {}", numberturns);

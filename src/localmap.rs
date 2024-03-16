@@ -174,7 +174,14 @@ impl LocalMaps {
     pub fn update(&mut self, location_id: LocalMapID, location: LocalMap) {
         self.0[location_id as usize] = location;
     }
+    pub fn update_mapscreen(
+        &mut self,
+        localmap_id: LocalMapID,
+        pos_3d: Point3D,
+        mapscreen: MapScreen,
+    ) {
+        self.0[localmap_id as usize].update_mapscreen(pos_3d, mapscreen);
+    }
 }
 
-
-//this block will be for the actual 
+//this block will be for the actual
