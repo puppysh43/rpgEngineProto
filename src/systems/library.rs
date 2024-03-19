@@ -1,5 +1,7 @@
 use crate::prelude::*;
 
+use super::lighting_system::TimePhase;
+
 ///gets you all the necessary information to limit an AI system to the player's current
 ///map screen as a tuple.
 pub fn get_player_info_and_map(state: &mut State) -> (LocalMapID, Point3D, Point, MapScreen) {
@@ -55,5 +57,27 @@ pub fn get_bg_color(state: &State) -> (u8, u8, u8) {
         DYN_BG.dim
     } else {
         DYN_BG.dark
+    }
+}
+
+pub fn current_timephase(state: &State) -> TimePhase {
+    //each turn is 5 seconds
+    //each minute is 12 turns
+    //each hour is 720 turns
+    //each day is 17280 turns
+    let mut num_turns = state.numberturns;
+    if num_turns > 17280 {
+        num_turns = num_turns % 17280;
+    }
+    if num_turns < 4320 {
+        TimePhase::Night
+    } else if num_turns < 7200 {
+        TimePhase::Dawn
+    } else if num_turns < 11520 {
+        TimePhase::Midday
+    } else if num_turns < 14400 {
+        TimePhase::Dusk
+    } else {
+        TimePhase::Night
     }
 }

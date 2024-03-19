@@ -57,6 +57,31 @@ pub struct Examining;
 ///Tagging component that marks something as a reticule for selecting stuff in game
 pub struct Reticule;
 
+///Component that marks something as emitting light
+#[derive(Clone, Debug, PartialEq)]
+pub struct LightSource {
+    pub lit_tiles: HashSet<Point>,
+    pub radius: i32,
+    pub is_dirty: bool,
+}
+impl LightSource {
+    pub fn new(radius: i32) -> Self {
+        Self {
+            lit_tiles: HashSet::new(),
+            radius,
+            is_dirty: true,
+        }
+    }
+
+    pub fn clone_dirty(&self) -> Self {
+        Self {
+            lit_tiles: HashSet::new(),
+            radius: self.radius,
+            is_dirty: true,
+        }
+    }
+}
+
 //FOV Related Components
 #[derive(Clone, Debug, PartialEq)]
 pub struct FieldOfView {

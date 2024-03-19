@@ -10,9 +10,9 @@ pub struct DynamicColor {
 }
 
 pub const DYN_BG: DynamicColor = DynamicColor {
-    dark: (25, 25, 25),
-    dim: (50, 50, 50),
-    bright: (75, 75, 75),
+    dark: (5, 15, 5),
+    dim: (25, 35, 25),
+    bright: (35, 45, 35),
 };
 
 pub const DYN_RED: DynamicColor = DynamicColor {

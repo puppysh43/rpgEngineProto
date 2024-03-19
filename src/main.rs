@@ -162,6 +162,7 @@ fn main() -> BError {
         .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "tooltip_font.png") //console for text popups in game
         .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "ui_font.png") //console for text on the sidebar for the UI and logs
         .build()?;
+    // context.with_post_scanlines(true);
 
     main_loop(context, State::new())
 }
