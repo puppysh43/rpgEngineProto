@@ -15,18 +15,26 @@ pub enum TileType {
     //ThickWall,
 }
 
+///Utility function that gives you an index for accessing the mapscreen given a 2D Point
 pub fn map_idx(x: i32, y: i32) -> usize {
     ((y * MAP_WIDTH) + x) as usize
 }
 
 #[derive(Clone, Debug)]
+///Smallest unit of the the worldspace. Holds all the information you need to actually render the gameworld,
+///from the tiles of the map to lighting or FOV information.
 pub struct MapScreen {
+    ///Array of tiletypes with a predefined size
     pub tiles: [TileType; NUM_TILES],
+    ///Array of what tiles have fallen within the player's FOV ever
     pub revealed_tiles: [bool; NUM_TILES],
+    ///Array of the light level of each worldtile. Dynamically changed by time of day, light sources, etc
     pub light_map: [i32; NUM_TILES],
+    //pub default_lightlevel: Option<i32>
 }
 
 impl MapScreen {
+    ///Generate a new mapscreen composed entirely of a floor.
     pub fn new() -> Self {
         Self {
             tiles: [TileType::Floor; NUM_TILES],
@@ -35,6 +43,7 @@ impl MapScreen {
         }
     }
 
+    ///Generate a new mapscreen composed entirely of one tiletype
     pub fn blank_canvas(tile: TileType) -> Self {
         Self {
             tiles: [tile; NUM_TILES],
